@@ -1,5 +1,6 @@
 package com.rexy.widgets.layout;
 
+import android.app.Activity;
 import android.content.Context;
 import android.content.res.Resources;
 import android.graphics.Camera;
@@ -20,6 +21,7 @@ import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewConfiguration;
 import android.view.ViewGroup;
+import android.view.Window;
 
 import java.util.Iterator;
 import java.util.LinkedList;
@@ -90,7 +92,7 @@ public class HierarchyLayout extends WrapLayout {
     private int mViewShadowColor = 0xFF000000;
     private int mHierarchyColor = 0xAA000000;
 
-    private int mNodeLeafStrokeColor=0xFFFFFFFF;
+    private int mNodeLeafStrokeColor = 0xFFFFFFFF;
     private int mTreeNodeColor = 0xFF00FF00;
     private int mTreeLeafColor = 0xFFFF0000;
     private int mTreeBranchColor = 0xFFFFFFFF;
@@ -161,7 +163,7 @@ public class HierarchyLayout extends WrapLayout {
             if (action == MotionEvent.ACTION_DOWN) {
                 mPointDown.set(ev.getX(), ev.getY());
             }
-            if (action == MotionEvent.ACTION_UP||action==MotionEvent.ACTION_CANCEL) {
+            if (action == MotionEvent.ACTION_UP || action == MotionEvent.ACTION_CANCEL) {
                 handleClickUp(ev.getX(), ev.getY());
             }
         }
@@ -192,7 +194,7 @@ public class HierarchyLayout extends WrapLayout {
                     return true;
                 }
             }
-            if (action == MotionEvent.ACTION_UP||action==MotionEvent.ACTION_CANCEL) {
+            if (action == MotionEvent.ACTION_UP || action == MotionEvent.ACTION_CANCEL) {
                 handleClickUp(event.getX(), event.getY());
             }
             return super.onTouchEvent(event);
@@ -326,7 +328,7 @@ public class HierarchyLayout extends WrapLayout {
 
     @Override
     protected void doAfterDraw(Canvas canvas, Rect inset) {
-        super.doAfterDraw(canvas,inset);
+        super.doAfterDraw(canvas, inset);
         if (mTree != null && mLeafSize > 0) {
             if ((mHierarchyNodeEnable || mHierarchyViewEnable)) {
                 if (mHierarchyColor != 0) {
@@ -340,9 +342,7 @@ public class HierarchyLayout extends WrapLayout {
                 }
             }
             mTreePaint.setColor(0xAA00FF00);
-            canvas.drawRect(0,0,mLayoutBounds.right,mOptionRect.bottom+mDensity*3,mTreePaint);
-            canvas.drawRect(mOptionRect, mViewBorderPaint);
-
+            canvas.drawRect(0, mOptionRect.top - mDensity * 3, mLayoutBounds.right, mOptionRect.bottom + mDensity * 3, mTreePaint);
             mTreePaint.setColor(mTreeSumTextColor);
             mTreePaint.setTextSize(mTreeSumTextSize * mDensity);
             mTreePaint.setTextAlign(Paint.Align.LEFT);
@@ -415,16 +415,18 @@ public class HierarchyLayout extends WrapLayout {
         float textHeight = mTreePaint.descent() - mTreePaint.ascent();
         if (mOptionRect.isEmpty()) {
             mOptionRect.set(mLayoutBounds);
-            mOptionRect.bottom = mOptionRect.top + textHeight;
+            mOptionRect.top = mOptionRect.bottom - textHeight;
             mOptionRect.left = mOptionRect.right - textHeight * 5;
-            textHeight = mDensity * 3;
-            mOptionRect.offset(-textHeight, textHeight);
+            mOptionRect.offset(-mDensity * 3, -textHeight);
             postInvalidate();
         }
         float midX = mOptionRect.centerX();
+        float d = mTreePaint.descent();
+        float a = mTreePaint.ascent();
+        float baseY = mOptionRect.centerY() + (d - a) / 2 - d;
         canvas.drawLine(midX, mOptionRect.top, midX, mOptionRect.bottom, mViewBorderPaint);
-        canvas.drawText("NODE", mOptionRect.left, textHeight, mTreePaint);
-        canvas.drawText("VIEW", mOptionRect.right - calculateTextBounds("VIEW", mTreePaint, mTempRect).width() - mDensity, textHeight, mTreePaint);
+        canvas.drawText("NODE", mOptionRect.left, baseY, mTreePaint);
+        canvas.drawText("VIEW", mOptionRect.right - calculateTextBounds("VIEW", mTreePaint, mTempRect).width() - mDensity, baseY, mTreePaint);
 
         mTreePaint.setColor(mHierarchyNodeEnable ? 0x880000FF : 0x220000FF);
         canvas.drawRect(mOptionRect.left, mOptionRect.top, midX - mDensity, mOptionRect.bottom, mTreePaint);
@@ -439,7 +441,9 @@ public class HierarchyLayout extends WrapLayout {
         mStringBuilder.append("结点(").append(mTree.getCountOfNode()).append(',').append(mTree.getCountOfViewGroup()).append(',').append(mTree.getCountOfView()).append(")").append(',');
         mStringBuilder.append("测绘(").append(mLastMeasureCost).append(',').append(mLastLayoutCost).append(',').append(mLastDrawCost).append(")");
         float textHeight = mTreePaint.descent() - mTreePaint.ascent();
-        canvas.drawText(mStringBuilder.toString(), textHeight / 2, textHeight, mTreePaint);
+        float d = mTreePaint.descent();
+        float a = mTreePaint.ascent();
+        canvas.drawText(mStringBuilder.toString(), textHeight / 2, mOptionRect.centerY() + (d - a) / 2 - d, mTreePaint);
     }
 
     protected void drawTreeNode(Canvas canvas, ViewHierarchyInfo info, float radius) {
@@ -454,7 +458,7 @@ public class HierarchyLayout extends WrapLayout {
             canvas.drawLine(x, y, px, py, mTreePaint);
         }
         mTreePaint.setColor(mNodeLeafStrokeColor);
-        canvas.drawCircle(x, y, radius+mDensity, mTreePaint);
+        canvas.drawCircle(x, y, radius + mDensity, mTreePaint);
 
         mTreePaint.setColor(info.isLeaf() ? mTreeLeafColor : mTreeNodeColor);
         canvas.drawCircle(x, y, radius, mTreePaint);
@@ -999,6 +1003,53 @@ public class HierarchyLayout extends WrapLayout {
             super.destroy(true);
             mHierarchyCountArray.clear();
             mHierarchyNodeArray.clear();
+        }
+    }
+
+
+    public static boolean isHierarchyInstalled(Activity activity){
+        Window window = activity.getWindow();
+        ViewGroup decorView = (ViewGroup) window.getDecorView();
+        ViewGroup parent = (ViewGroup) decorView.findViewById(android.R.id.content);
+        return  parent instanceof HierarchyLayout;
+    }
+
+    public static void hierarchy(Activity activity, boolean install) {
+        Window window = activity.getWindow();
+        ViewGroup decorView = (ViewGroup) window.getDecorView();
+        ViewGroup parent = (ViewGroup) decorView.findViewById(android.R.id.content);
+        if (install) {
+            if (!(parent instanceof HierarchyLayout)) {
+                SparseArray<View> childs = new SparseArray();
+                int count = parent.getChildCount();
+                for (int i = 0; i < count; i++) {
+                    childs.put(i, parent.getChildAt(i));
+                }
+                parent.removeAllViews();
+                parent.setId(NO_ID);
+                HierarchyLayout hierarchy = new HierarchyLayout(activity);
+                hierarchy.setId(android.R.id.content);
+                for (int i = 0; i < count; i++) {
+                    hierarchy.addView(childs.get(i));
+                }
+                parent.addView(hierarchy);
+            }
+        } else {
+            if (parent instanceof HierarchyLayout) {
+                SparseArray<View> childs = new SparseArray();
+                int count = parent.getChildCount();
+                for (int i = 0; i < count; i++) {
+                    childs.put(i, parent.getChildAt(i));
+                }
+                parent.removeAllViews();
+                parent.setId(NO_ID);
+                ViewGroup realParent = (ViewGroup) parent.getParent();
+                realParent.setId(android.R.id.content);
+                realParent.removeAllViews();
+                for (int i = 0; i < count; i++) {
+                    realParent.addView(childs.get(i));
+                }
+            }
         }
     }
 }

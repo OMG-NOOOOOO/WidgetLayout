@@ -181,7 +181,6 @@ public class LabelLayout extends WrapLayout {
         super.onDetachedFromWindow();
         setOnHierarchyChangeListener(null);
         mCachedView.clear();
-        removeAllViewsInLayout();
     }
 
     public ItemProvider getItemProvider() {

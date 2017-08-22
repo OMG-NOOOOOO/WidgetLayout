@@ -192,8 +192,8 @@ public class ColumnLayout extends BaseViewGroup {
     protected void dispatchMeasure(int widthMeasureSpecContent, int heightMeasureSpecContent) {
         final int childCount = getChildCount();
         final int columnCount = Math.max(1, mColumnNumber);
-        final int middleMarginHorizontal = mDividerMargin.getContentMarginHorizontal();
-        final int middleMarginVertical = mDividerMargin.getContentMarginVertical();
+        final int middleMarginHorizontal = mBorderDivider.getContentMarginHorizontal();
+        final int middleMarginVertical = mBorderDivider.getContentMarginVertical();
 
         mLineHeight.clear();
         mColumnWidth = computeColumnWidth(MeasureSpec.getSize(widthMeasureSpecContent), middleMarginHorizontal, columnCount);
@@ -253,8 +253,8 @@ public class ColumnLayout extends BaseViewGroup {
     protected void dispatchLayout(int contentLeft, int contentTop) {
         final int lineCount = mLineHeight.size();
         final int columnWidth = mColumnWidth;
-        final int middleMarginHorizontal = mDividerMargin.getContentMarginHorizontal();
-        final int middleMarginVertical = mDividerMargin.getContentMarginVertical();
+        final int middleMarginHorizontal = mBorderDivider.getContentMarginHorizontal();
+        final int middleMarginVertical = mBorderDivider.getContentMarginVertical();
         int childIndex = 0, childLastIndex, columnIndex;
         int columnLeft, columnTop = contentTop, columnRight, columnBottom;
         for (int lineIndex = 0; lineIndex < lineCount; lineIndex++) {
@@ -291,12 +291,12 @@ public class ColumnLayout extends BaseViewGroup {
     @Override
     protected void doAfterDraw(Canvas canvas, Rect inset) {
         final int lineCount = mLineHeight.size();
-        boolean dividerHorizontal = mDividerMargin.isVisibleDividerHorizontal(true) && lineCount > 1;
-        boolean dividerVertical = mDividerMargin.isVisibleDividerVertical(true) && mColumnNumber > 1;
+        boolean dividerHorizontal = mBorderDivider.isVisibleDividerHorizontal(true) && lineCount > 1;
+        boolean dividerVertical = mBorderDivider.isVisibleDividerVertical(true) && mColumnNumber > 1;
         if (dividerHorizontal || dividerVertical) {
             final int columnWidth = mColumnWidth;
-            final int middleMarginHorizontal = mDividerMargin.getContentMarginHorizontal();
-            final int middleMarginVertical = mDividerMargin.getContentMarginVertical();
+            final int middleMarginHorizontal = mBorderDivider.getContentMarginHorizontal();
+            final int middleMarginVertical = mBorderDivider.getContentMarginVertical();
             final int contentMarginLeft = inset.left, contentMarginTop = inset.top, contentMarginBottom = inset.bottom;
             int parentLeft = getPaddingLeft(), parentRight = getWidth() - getPaddingRight(), parentBottom = getHeight() - getPaddingBottom();
             int contentLeft = getContentLeft();
@@ -311,7 +311,7 @@ public class ColumnLayout extends BaseViewGroup {
                 columnBottom = columnTop + mLineHeight.get(lineIndex) + halfMiddleVertical;
                 if (dividerHorizontal) {
                     if (lineIndex < lineCount - 1 || (bottomCoincide = (columnBottom + contentMarginBottom) < parentBottom)) {
-                        mDividerMargin.drawDividerH(canvas, parentLeft, parentRight, columnBottom);
+                        mBorderDivider.drawDividerH(canvas, parentLeft, parentRight, columnBottom);
                     }
                 }
                 if (dividerVertical) {
@@ -322,7 +322,7 @@ public class ColumnLayout extends BaseViewGroup {
                         final View child = getChildAt(lineIndex);
                         if (mColumnIndex == maxColumnIndex || skipChild(child)) continue;
                         columnRight = columnLeft + columnWidth;
-                        mDividerMargin.drawDividerV(canvas, dividerTop, dividerBottom, columnRight + (middleMarginHorizontal > 0 ? middleMarginHorizontal / 2 : 0));
+                        mBorderDivider.drawDividerV(canvas, dividerTop, dividerBottom, columnRight + (middleMarginHorizontal > 0 ? middleMarginHorizontal / 2 : 0));
                         columnLeft = columnRight;
                         if (middleMarginHorizontal > 0) {
                             columnLeft += middleMarginHorizontal;

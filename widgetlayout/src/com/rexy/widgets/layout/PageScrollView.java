@@ -381,7 +381,7 @@ public class PageScrollView extends ScrollLayout {
         int itemWidthMeasureSpec, itemHeightMeasureSpec;
         int accessWidth = MeasureSpec.getSize(widthMeasureSpec) - widthUsed;
         int accessHeight = MeasureSpec.getSize(heightMeasureSpec) - heightUsed;
-        int itemMargin = horizontal ? this.mDividerMargin.getContentMarginHorizontal() : this.mDividerMargin.getContentMarginVertical();
+        int itemMargin = horizontal ? this.mBorderDivider.getContentMarginHorizontal() : this.mBorderDivider.getContentMarginVertical();
         boolean fixedOrientationSize = mSizeFixedPercent > 0 && mSizeFixedPercent <= 1;
         if (fixedOrientationSize) {
             if (horizontal) {
@@ -600,7 +600,7 @@ public class PageScrollView extends ScrollLayout {
             mPageFooterView.layout(childLeft, childTop, childRight, childBottom);
         }
 
-        final int count = getChildCount(), mMiddleMargin = mDividerMargin.getContentMarginVertical();
+        final int count = getChildCount(), mMiddleMargin = mBorderDivider.getContentMarginVertical();
         childTop = baseTop;
         for (int i = 0; i < count; i++) {
             final View child = getChildAt(i);
@@ -639,7 +639,7 @@ public class PageScrollView extends ScrollLayout {
             mPageFooterView.layout(childLeft, childTop, childRight, childBottom);
         }
 
-        final int count = getChildCount(), mMiddleMargin = mDividerMargin.getContentMarginHorizontal();
+        final int count = getChildCount(), mMiddleMargin = mBorderDivider.getContentMarginHorizontal();
         childLeft = baseLeft;
         for (int i = 0; i < count; i++) {
             final View child = getChildAt(i);
@@ -1025,7 +1025,7 @@ public class PageScrollView extends ScrollLayout {
 
     private void dispatchTransformPosition(int scrolled, int itemCount, boolean horizontal) {
         int childCount = getChildCount(), pageItemIndex = 0;
-        int mMiddleMargin = horizontal ? mDividerMargin.getContentMarginHorizontal() : mDividerMargin.getContentMarginVertical();
+        int mMiddleMargin = horizontal ? mBorderDivider.getContentMarginHorizontal() : mBorderDivider.getContentMarginVertical();
         int pageItemStart = Math.max(0, mFirstVisiblePosition - 1);
         int pageItemEnd = Math.min(itemCount - 1, mLastVisiblePosition + 1);
         for (int i = 0; i < childCount && pageItemIndex <= pageItemEnd; i++) {

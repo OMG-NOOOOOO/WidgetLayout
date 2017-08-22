@@ -1,5 +1,5 @@
 # WidgetLayout 介绍
-**WidgetLayout**是一组继承于`ViewGroup`的自定义容器集合，大部分支持描边和内容分割线，目前实现了以下实用容器:
+**WidgetLayout**是一组继承于`ViewGroup`的自定义容器集合，均支持按百分比测绘,限定最大最小宽高，和gravity 属性，自身描边，大部分支持内容分割线，权重等，目前实现了以下实用容器:
 
 1. `ColumnLayout` 以等分列方式布局，每列可设置内容居左，中，右，及铺满，可设置最小最大列宽高限定。
 2. `NestRefreshLayout` 一个精简强大的支持任意类型`View`的下拉刷新，上拉加载更多,可添加头部和尾部且可设置悬停模式。
@@ -75,7 +75,7 @@ Demo 入口 和 `NestFloatLayout`的演示效果。
 ### 通用属性说明和介绍
 **注;所有xml 中使用自定义属性的地方，请在根标签中加上`xmlns:app="http://schemas.android.com/apk/res-auto"`**
 
-**1. 所有容器自身和子 `View` 对于 `maxWidth,maxHeight,gravity` 支持。**
+**1. 所有容器自身和子 `View` 对于 `maxWidth,maxHeight,gravity，widthPercent,heightPercent` 支持。**
 
  a. 容器控件自身标签下使用 `android:gravity,android:maxWidth ,android:maxHeight`,即可支持容器内容的align 属和最大宽与高的限制。
  java 代码可通过 `setGravity` ,`setMaxWidth`,`setMaxHeight` 来支持。

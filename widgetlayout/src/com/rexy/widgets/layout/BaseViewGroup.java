@@ -111,23 +111,37 @@ import com.rexy.widgets.drawable.FloatDrawable;
  * @author: rexy
  * @date: 2017-04-25 09:32
  */
-public abstract class BaseViewGroup extends ViewGroup {
+public abstract class BaseViewGroup extends ViewGroup implements BorderDivider.Callback {
 
     /**
      * Horizontal layout gesture direction
+     *
      * @see #setOrientation(int)
      */
     public static final int HORIZONTAL = 1;
     /**
      * Vertical layout or gesture direction
+     *
      * @see #setOrientation(int)
      */
     public static final int VERTICAL = 2;
 
-    private static final int[] ATTRS_PROPERTIES = new int[]
-            {android.R.attr.gravity, android.R.attr.maxWidth, android.R.attr.maxHeight, android.R.attr.orientation, android.R.attr.clipToPadding};
-    private static final int[] ATTRS_PARAMS = new int[]
-            {android.R.attr.layout_gravity, android.R.attr.maxWidth, android.R.attr.maxHeight};
+    private static final int[] ATTRS_PROPERTIES = new int[]{
+            android.R.attr.gravity,
+            android.R.attr.maxWidth,
+            android.R.attr.maxHeight,
+            android.R.attr.orientation,
+            android.R.attr.clipToPadding,
+            R.attr.widthPercent,
+            R.attr.heightPercent,
+    };
+    private static final int[] ATTRS_PARAMS = new int[]{
+            android.R.attr.layout_gravity,
+            android.R.attr.maxWidth,
+            android.R.attr.maxHeight,
+            R.attr.widthPercent,
+            R.attr.heightPercent,
+    };
 
     /**
      * content gravity {@link android.view.Gravity}
@@ -135,9 +149,11 @@ public abstract class BaseViewGroup extends ViewGroup {
     int mGravity;
     int mMaxWidth = -1;
     int mMaxHeight = -1;
+    float mWidthPercent = 0;
+    float mHeightPercent = 0;
     /**
-     *@see #HORIZONTAL
-     *@see #VISIBLE
+     * @see #HORIZONTAL
+     * @see #VISIBLE
      */
     int mOrientation;
     boolean mClipToPadding;
@@ -171,7 +187,7 @@ public abstract class BaseViewGroup extends ViewGroup {
     /**
      * control content margin and item divider also it's margin padding
      */
-    protected DividerMargin mDividerMargin = null;
+    protected BorderDivider mBorderDivider = null;
 
     private int mVirtualCount = 0;
     private int mContentWidth = 0;
@@ -212,7 +228,7 @@ public abstract class BaseViewGroup extends ViewGroup {
     private void init(Context context, AttributeSet attrs) {
         mTouchSlop = ViewConfiguration.get(context).getScaledTouchSlop();
         TypedArray a = attrs == null ? null : context.obtainStyledAttributes(attrs, R.styleable.BaseViewGroup);
-        mDividerMargin = DividerMargin.from(context, a);
+        mBorderDivider = BorderDivider.from(context, a);
         if (a != null) {
             mEdgeEffectEnable = a.getBoolean(R.styleable.BaseViewGroup_edgeEffectEnable, mEdgeEffectEnable);
             int floatColor = a.getColor(R.styleable.BaseViewGroup_foregroundColor, 0);
@@ -234,6 +250,8 @@ public abstract class BaseViewGroup extends ViewGroup {
             mMaxHeight = a.getDimensionPixelSize(2, mMaxHeight);
             mOrientation = a.getInt(3, mOrientation - 1) + 1;
             mClipToPadding = a.getBoolean(4, true);
+            mWidthPercent = a.getFraction(5, 1, 1, mWidthPercent);
+            mHeightPercent = a.getFraction(6, 1, 1, mHeightPercent);
             a.recycle();
         }
     }
@@ -295,6 +313,7 @@ public abstract class BaseViewGroup extends ViewGroup {
 
     /**
      * set content gravity
+     *
      * @param gravity
      */
     public void setGravity(int gravity) {
@@ -342,7 +361,8 @@ public abstract class BaseViewGroup extends ViewGroup {
 
     /**
      * set layout and gesture direction
-     * @param orientation  {@link #HORIZONTAL} and {@link #VERTICAL}
+     *
+     * @param orientation {@link #HORIZONTAL} and {@link #VERTICAL}
      */
     public void setOrientation(int orientation) {
         orientation = orientation & (HORIZONTAL | VERTICAL);
@@ -357,6 +377,7 @@ public abstract class BaseViewGroup extends ViewGroup {
 
     /**
      * set whether to support scroll when touch move
+     *
      * @param touchScrollEnable true to support touch scroll
      */
     public void setTouchScrollEnable(boolean touchScrollEnable) {
@@ -371,6 +392,7 @@ public abstract class BaseViewGroup extends ViewGroup {
 
     /**
      * set whether to support horizontal scroll when touch
+     *
      * @see #setTouchScrollEnable(boolean)
      * @see #isTouchScrollHorizontalEnable(boolean)
      */
@@ -390,6 +412,7 @@ public abstract class BaseViewGroup extends ViewGroup {
 
     /**
      * set whether to support vertical scroll when touch
+     *
      * @see #setTouchScrollEnable(boolean)
      * @see #isTouchScrollHorizontalEnable(boolean)
      */
@@ -409,10 +432,11 @@ public abstract class BaseViewGroup extends ViewGroup {
 
     /**
      * set content size after measure,so we can decide the final measure dimension
-     * @see #dispatchMeasure(int, int)
+     *
      * @param contentWidth just content width without margin and padding
      * @param contentHeight just content height without margin and padding
      * @param measureState measure state {@link View#getMeasuredState()}
+     * @see #dispatchMeasure(int, int)
      */
     protected void setContentSize(int contentWidth, int contentHeight, int measureState) {
         mContentWidth = contentWidth;
@@ -454,6 +478,7 @@ public abstract class BaseViewGroup extends ViewGroup {
 
     /**
      * get visible area rect ,scrollX and scrollY are taken into account with a offset
+     *
      * @see #computeVisibleBounds(int, int, boolean, boolean)
      */
     public Rect getVisibleContentBounds() {
@@ -512,6 +537,7 @@ public abstract class BaseViewGroup extends ViewGroup {
 
     /**
      * set hover drawable {@link FloatDrawable}
+     *
      * @param foregroundDrawable
      */
     public void setForegroundDrawable(FloatDrawable foregroundDrawable) {
@@ -564,6 +590,9 @@ public abstract class BaseViewGroup extends ViewGroup {
         super.onAttachedToWindow();
         mAttachLayout = false;
         mVirtualCount = 0;
+        if (mBorderDivider != null) {
+            mBorderDivider.setCallback(this);
+        }
     }
 
     @Override
@@ -571,6 +600,9 @@ public abstract class BaseViewGroup extends ViewGroup {
         super.onDetachedFromWindow();
         mAttachLayout = false;
         mVirtualCount = 0;
+        if (mBorderDivider != null) {
+            mBorderDivider.setCallback(null);
+        }
     }
 
     @Override
@@ -621,6 +653,12 @@ public abstract class BaseViewGroup extends ViewGroup {
         mTimeMeasureStart = System.currentTimeMillis();
         mVirtualCount = 0;
         mContentWidth = mContentHeight = mMeasureState = 0;
+        if (mWidthPercent > 0) {
+            widthMeasureSpec = MeasureSpec.makeMeasureSpec((int) (mWidthPercent * MeasureSpec.getSize(widthMeasureSpec)), MeasureSpec.EXACTLY);
+        }
+        if (mHeightPercent > 0) {
+            heightMeasureSpec = MeasureSpec.makeMeasureSpec((int) (mHeightPercent * MeasureSpec.getSize(heightMeasureSpec)), MeasureSpec.EXACTLY);
+        }
         final int minWidth = getSuggestedMinimumWidth();
         final int minHeight = getSuggestedMinimumHeight();
         final int paddingHorizontal = getPaddingLeft() + getPaddingRight();
@@ -631,7 +669,7 @@ public abstract class BaseViewGroup extends ViewGroup {
         if (mDrawerDecoration != null) {
             mDrawerDecoration.getContentOffsets(mContentInset, this, mostWidthNoPadding, mostHeightNoPadding);
         }
-        mDividerMargin.applyContentMargin(mContentInset);
+        mBorderDivider.applyContentMargin(mContentInset);
         final int contentMarginH = mContentInset.left + mContentInset.right;
         final int contentMarginV = mContentInset.top + mContentInset.bottom;
         dispatchMeasure(
@@ -663,16 +701,17 @@ public abstract class BaseViewGroup extends ViewGroup {
     /**
      * tips:do your measure no need to take content margin into account since we have handled.
      * after all child measure must call {@link #setContentSize(int, int, int)};
-     * @param widthMeasureSpecContent  widthMeasureSpec with out padding and content margin
+     *
+     * @param widthMeasureSpecContent widthMeasureSpec with out padding and content margin
      * @param heightMeasureSpecContent heightMeasureSpec with out padding and content margin.
      */
     protected abstract void dispatchMeasure(int widthMeasureSpecContent, int heightMeasureSpecContent);
 
     /**
-     * @param measuredWidth  self measure width
+     * @param measuredWidth self measure width
      * @param measuredHeight self measure height
-     * @param contentWidth   real content width and content margin horizontal sum
-     * @param contentHeight  real content height and content margin vertical sum
+     * @param contentWidth real content width and content margin horizontal sum
+     * @param contentHeight real content height and content margin vertical sum
      */
     protected void doAfterMeasure(int measuredWidth, int measuredHeight, int contentWidth, int contentHeight) {
     }
@@ -699,7 +738,7 @@ public abstract class BaseViewGroup extends ViewGroup {
      * tips:should take content margin into account when layout child.
      *
      * @param baseLeft format content's left no need to consider margin and padding of content.
-     * @param baseTop  format content's top no need to consider margin and padding of content.
+     * @param baseTop format content's top no need to consider margin and padding of content.
      */
     protected abstract void dispatchLayout(int baseLeft, int baseTop);
 
@@ -712,7 +751,7 @@ public abstract class BaseViewGroup extends ViewGroup {
         doBeforeDraw(canvas, mContentInset);
         super.dispatchDraw(canvas);
         doAfterDraw(canvas, mContentInset);
-        mDividerMargin.drawBorder(canvas, getWidth(), getHeight());
+        mBorderDivider.drawBorder(canvas, getWidth(), getHeight());
         if (mForegroundDrawable != null) {
             mForegroundDrawable.setBounds(0, 0, getWidth(), getHeight());
             mForegroundDrawable.draw(canvas);
@@ -994,6 +1033,7 @@ public abstract class BaseViewGroup extends ViewGroup {
 
     /**
      * get offset from first left item
+     *
      * @param child
      * @param centreInVisibleBounds if true ,refer to parent view centre to get the offset .
      * @param marginInclude take margin into view space.
@@ -1018,6 +1058,7 @@ public abstract class BaseViewGroup extends ViewGroup {
 
     /**
      * get offset from first top item
+     *
      * @param child
      * @param centreInVisibleBounds if true ,refer to parent view centre to get the offset .
      * @param marginInclude take margin into view space.
@@ -1120,289 +1161,12 @@ public abstract class BaseViewGroup extends ViewGroup {
         return Math.max(0, super.computeHorizontalScrollOffset());
     }
 
-    //start:DividerMargin
-    public int getBorderLeftColor() {
-        return mDividerMargin.getBorderLeftColor();
-    }
-
-    public int getBorderLeftWidth() {
-        return mDividerMargin.getBorderLeftWidth();
-    }
-
-    public int getBorderLeftMarginStart() {
-        return mDividerMargin.getBorderLeftMarginStart();
-    }
-
-    public int getBorderLeftMarginEnd() {
-        return mDividerMargin.getBorderLeftMarginEnd();
-    }
-
-    public int getBorderTopColor() {
-        return mDividerMargin.getBorderTopColor();
-    }
-
-    public int getBorderTopWidth() {
-        return mDividerMargin.getBorderTopWidth();
-    }
-
-    public int getBorderTopMarginStart() {
-        return mDividerMargin.getBorderTopMarginStart();
-    }
-
-    public int getBorderTopMarginEnd() {
-        return mDividerMargin.getBorderTopMarginEnd();
-    }
-
-    public int getBorderRightColor() {
-        return mDividerMargin.getBorderRightColor();
-    }
-
-    public int getBorderRightWidth() {
-        return mDividerMargin.getBorderRightWidth();
-    }
-
-    public int getBorderRightMarginStart() {
-        return mDividerMargin.getBorderRightMarginStart();
-    }
-
-    public int getBorderRightMarginEnd() {
-        return mDividerMargin.getBorderRightMarginEnd();
-    }
-
-    public int getBorderBottomColor() {
-        return mDividerMargin.getBorderBottomColor();
-    }
-
-    public int getBorderBottomWidth() {
-        return mDividerMargin.getBorderBottomWidth();
-    }
-
-    public int getBorderBottomMarginStart() {
-        return mDividerMargin.getBorderBottomMarginStart();
-    }
-
-    public int getBorderBottomMarginEnd() {
-        return mDividerMargin.getBorderBottomMarginEnd();
-    }
-
-    public int getContentMarginMiddleHorizontal() {
-        return mDividerMargin.getContentMarginHorizontal();
-    }
-
-    public int getContentMarginMiddleVertical() {
-        return mDividerMargin.getContentMarginVertical();
-    }
-
-    public int getContentMarginLeft() {
-        return mDividerMargin.getContentMarginLeft();
-    }
-
-    public int getContentMarginTop() {
-        return mDividerMargin.getContentMarginTop();
-    }
-
-    public int getContentMarginRight() {
-        return mDividerMargin.getContentMarginRight();
-    }
-
-    public int getContentMarginBottom() {
-        return mDividerMargin.getContentMarginBottom();
-    }
-
-    public int getDividerWidthHorizontal() {
-        return mDividerMargin.getDividerWidthHorizontal();
-    }
-
-    public int getDividerWidthVertical() {
-        return mDividerMargin.getDividerWidthVertical();
-    }
-
-    public int getDividerColorHorizontal() {
-        return mDividerMargin.getDividerColorHorizontal();
-    }
-
-    public int getDividerColorVertical() {
-        return mDividerMargin.getDividerColorVertical();
-    }
-
-    public int getDividerPaddingStartHorizontal() {
-        return mDividerMargin.getDividerPaddingHorizontalStart();
-    }
-
-    public int getDividerPaddingStartVertical() {
-        return mDividerMargin.getDividerPaddingVerticalStart();
-    }
-
-    public int getDividerPaddingEndHorizontal() {
-        return mDividerMargin.getDividerPaddingHorizontalEnd();
-    }
-
-    public int getDividerPaddingEndVertical() {
-        return mDividerMargin.getDividerPaddingVerticalEnd();
-    }
-
-    public void setBorderLeftColor(int color) {
-        mDividerMargin.setBorderLeftColor(color);
-        invalidate();
-    }
-
-    public void setBorderLeftWidth(int width) {
-        mDividerMargin.setBorderLeftWidth(width);
-        invalidate();
-    }
-
-    public void setBorderLeftMarginStart(int marginStart) {
-        mDividerMargin.setBorderLeftMarginStart(marginStart);
-        invalidate();
-    }
-
-    public void setBorderLeftMarginEnd(int marginEnd) {
-        mDividerMargin.setBorderLeftMarginEnd(marginEnd);
-        invalidate();
-    }
-
-    public void setBorderTopColor(int color) {
-        mDividerMargin.setBorderTopColor(color);
-        invalidate();
-    }
-
-    public void setBorderTopWidth(int width) {
-        mDividerMargin.setBorderTopWidth(width);
-        invalidate();
-    }
-
-    public void setBorderTopMarginStart(int marginStart) {
-        mDividerMargin.setBorderTopMarginStart(marginStart);
-        invalidate();
-    }
-
-    public void setBorderTopMarginEnd(int marginEnd) {
-        mDividerMargin.setBorderTopMarginEnd(marginEnd);
-        invalidate();
-    }
-
-    public void setBorderRightColor(int color) {
-        mDividerMargin.setBorderRightColor(color);
-        invalidate();
-    }
-
-    public void setBorderRightWidth(int width) {
-        mDividerMargin.setBorderRightWidth(width);
-        invalidate();
-    }
-
-    public void setBorderRightMarginStart(int marginStart) {
-        mDividerMargin.setBorderRightMarginStart(marginStart);
-        invalidate();
-    }
-
-    public void setBorderRightMarginEnd(int marginEnd) {
-        mDividerMargin.setBorderRightMarginEnd(marginEnd);
-        invalidate();
-    }
-
-    public void setBorderBottomColor(int color) {
-        mDividerMargin.setBorderBottomColor(color);
-        invalidate();
-    }
-
-    public void setBorderBottomWidth(int width) {
-        mDividerMargin.setBorderBottomWidth(width);
-        invalidate();
-    }
-
-    public void setBorderBottomMarginStart(int marginStart) {
-        mDividerMargin.setBorderBottomMarginStart(marginStart);
-        invalidate();
-    }
-
-    public void setBorderBottomMarginEnd(int marginEnd) {
-        mDividerMargin.setBorderBottomMarginEnd(marginEnd);
-        invalidate();
-    }
-
-    public void setContentMarginMiddleHorizontal(int contentMarginMiddleHorizontal) {
-        if (contentMarginMiddleHorizontal != mDividerMargin.getContentMarginHorizontal()) {
-            mDividerMargin.setContentMarginHorizontal(contentMarginMiddleHorizontal);
-            requestLayoutIfNeed();
+    public BorderDivider getBorderDivider() {
+        if (mBorderDivider == null) {
+            mBorderDivider = BorderDivider.from(getContext(), null);
         }
+        return mBorderDivider;
     }
-
-    public void setContentMarginMiddleVertical(int contentMarginMiddleVertical) {
-        if (contentMarginMiddleVertical != mDividerMargin.getContentMarginVertical()) {
-            mDividerMargin.setContentMarginVertical(contentMarginMiddleVertical);
-            requestLayoutIfNeed();
-        }
-    }
-
-    public void setContentMarginLeft(int contentMarginLeft) {
-        if (contentMarginLeft != mDividerMargin.getContentMarginLeft()) {
-            mDividerMargin.setContentMarginLeft(contentMarginLeft);
-            requestLayoutIfNeed();
-        }
-    }
-
-    public void setContentMarginTop(int contentMarginTop) {
-        if (contentMarginTop != mDividerMargin.getContentMarginTop()) {
-            mDividerMargin.setContentMarginTop(contentMarginTop);
-            requestLayoutIfNeed();
-        }
-    }
-
-    public void setContentMarginRight(int contentMarginRight) {
-        if (contentMarginRight != mDividerMargin.getContentMarginRight()) {
-            mDividerMargin.setContentMarginRight(contentMarginRight);
-            requestLayoutIfNeed();
-        }
-    }
-
-    public void setContentMarginBottom(int contentMarginBottom) {
-        if (contentMarginBottom != mDividerMargin.getContentMarginBottom()) {
-            mDividerMargin.setContentMarginBottom(contentMarginBottom);
-            requestLayoutIfNeed();
-        }
-    }
-
-    public void setDividerWidthHorizontal(int dividerWidthHorizontal) {
-        mDividerMargin.setDividerWidthHorizontal(dividerWidthHorizontal);
-        invalidate();
-    }
-
-    public void setDividerWidthVertical(int dividerWidthVertical) {
-        mDividerMargin.setDividerWidthVertical(dividerWidthVertical);
-        invalidate();
-    }
-
-    public void setDividerColorHorizontal(int dividerColorHorizontal) {
-        mDividerMargin.setDividerColorHorizontal(dividerColorHorizontal);
-        invalidate();
-    }
-
-    public void setDividerColorVertical(int dividerColorVertical) {
-        mDividerMargin.setDividerColorVertical(dividerColorVertical);
-        invalidate();
-    }
-
-    public void setDividerPaddingStartHorizontal(int dividerPaddingStartHorizontal) {
-        mDividerMargin.setDividerPaddingHorizontalStart(dividerPaddingStartHorizontal);
-        invalidate();
-    }
-
-    public void setDividerPaddingStartVertical(int dividerPaddingStartVertical) {
-        mDividerMargin.setDividerPaddingVerticalStart(dividerPaddingStartVertical);
-        invalidate();
-    }
-
-    public void setDividerPaddingEndHorizontal(int dividerPaddingEndHorizontal) {
-        mDividerMargin.setDividerPaddingHorizontalEnd(dividerPaddingEndHorizontal);
-        invalidate();
-    }
-
-    public void setDividerPaddingEndVertical(int dividerPaddingEndVertical) {
-        mDividerMargin.setDividerPaddingVerticalEnd(dividerPaddingEndVertical);
-        invalidate();
-    }
-    //end:DividerMargin
 
     /**
      * custom LayoutParams which support layout_gravity,maxWidth and maxHeight in xml attr
@@ -1413,6 +1177,8 @@ public abstract class BaseViewGroup extends ViewGroup {
         public int maxWidth = -1;
         public int maxHeight = -1;
         private int mPosition = -1;
+        float mWidthPercent = 0;
+        float mHeightPercent = 0;
 
         private Rect mInsets = new Rect();
 
@@ -1422,6 +1188,8 @@ public abstract class BaseViewGroup extends ViewGroup {
             gravity = a.getInt(0, gravity);
             maxWidth = a.getDimensionPixelSize(1, maxWidth);
             maxHeight = a.getDimensionPixelSize(2, maxHeight);
+            mWidthPercent = a.getFraction(3, 1, 1, mWidthPercent);
+            mHeightPercent = a.getFraction(4, 1, 1, mHeightPercent);
             a.recycle();
         }
 
@@ -1513,9 +1281,18 @@ public abstract class BaseViewGroup extends ViewGroup {
          * subclass of BaseViewGroup should aways use this measure function to apply extra property such as maxWidth,maxHeight,layout_gravity
          */
         public void measure(View view, int itemPosition, int parentWidthMeasureSpec, int parentHeightMeasureSpec, int widthUsed, int heightUsed) {
+            int widthDimension=width,heightDimension=height;
+            if (!(view instanceof BaseViewGroup)) {
+                if (mWidthPercent > 0) {
+                    widthDimension= (int) (MeasureSpec.getSize(parentWidthMeasureSpec) * mWidthPercent);
+                }
+                if (mHeightPercent > 0) {
+                    heightDimension=(int) (MeasureSpec.getSize(parentHeightMeasureSpec) * mHeightPercent);
+                }
+            }
             measure(view, itemPosition
-                    , BaseViewGroup.getChildMeasureSpec(parentWidthMeasureSpec, widthUsed, width)
-                    , BaseViewGroup.getChildMeasureSpec(parentHeightMeasureSpec, heightUsed, height));
+                    , BaseViewGroup.getChildMeasureSpec(parentWidthMeasureSpec, widthUsed, widthDimension)
+                    , BaseViewGroup.getChildMeasureSpec(parentHeightMeasureSpec, heightUsed, heightDimension));
         }
 
         private int limitMeasureSpec(int measureSpec, int maxSize, int used, boolean mostToExactly) {

@@ -5,6 +5,11 @@ import android.content.Intent;
 import android.os.Build;
 import android.os.Bundle;
 import android.support.v4.app.FragmentActivity;
+import android.text.TextUtils;
+import android.view.Menu;
+import android.view.MenuItem;
+
+import com.rexy.widgets.layout.HierarchyLayout;
 
 import java.util.Stack;
 
@@ -38,6 +43,21 @@ public class BaseActivity extends FragmentActivity {
         }
         super.onCreate(savedInstanceState);
         mActivities.push(this);
+    }
+
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        menu.add("HIERARCHY").setShowAsAction(MenuItem.SHOW_AS_ACTION_ALWAYS);
+        return super.onCreateOptionsMenu(menu);
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        if (TextUtils.equals("HIERARCHY", item.getTitle())) {
+            HierarchyLayout.hierarchy(this, !HierarchyLayout.isHierarchyInstalled(this));
+            return true;
+        }
+        return super.onOptionsItemSelected(item);
     }
 
     @Override
@@ -110,4 +130,5 @@ public class BaseActivity extends FragmentActivity {
             android.os.Process.killProcess(android.os.Process.myPid());
         }
     }
+
 }

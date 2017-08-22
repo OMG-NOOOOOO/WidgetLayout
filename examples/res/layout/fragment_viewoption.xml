@@ -117,7 +117,7 @@
         android:layout_marginRight="15dp"
         android:layout_marginTop="10dp"
         android:layout_height="wrap_content"
-        android:background="@color/partBackground"
+        android:background="@color/optionBackground"
         app:contentMarginLeft="5dp"
         app:contentMarginTop="5dp"
         app:contentMarginRight="5dp"

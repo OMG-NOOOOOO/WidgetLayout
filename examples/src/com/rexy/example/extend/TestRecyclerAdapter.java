@@ -51,7 +51,7 @@ public class TestRecyclerAdapter extends RecyclerView.Adapter {
         textView.setTextSize(18);
         textView.setClickable(true);
         textView.setTextColor(ColorStateList.valueOf(mContext.getColor(R.color.textButton)));
-        textView.setBackgroundColor(mContext.getColor(R.color.itemBackground));
+        textView.setBackgroundColor(mContext.getColor(R.color.optionBackground));
         textView.setLayoutParams(new RecyclerView.LayoutParams(-1, -2));
         return new TestRecyclerHolder(textView);
     }

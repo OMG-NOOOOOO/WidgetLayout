@@ -3,15 +3,21 @@
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:gravity="center_horizontal"
+    android:layout_gravity="center"
     android:orientation="horizontal"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:background="#7700"
+    app:widthPercent="95%"
+    app:heightPercent="90%"
     app:floatViewStartIndex="0">
     <com.rexy.widgets.layout.ColumnLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_margin="15dp"
         android:background="@color/contentBackground"
+        android:layout_gravity="center_horizontal"
+        app:widthPercent="95%"
         app:columnNumber="1"
         app:columnCenterVertical="true"
         app:stretchColumns="*"
@@ -24,8 +30,8 @@
         app:borderBottomColor="#000"
         app:borderBottomWidth="3dp"
         app:contentMarginBottom="10dp"
-        app:contentMarginLeft="20dp"
-        app:contentMarginRight="20dp"
+        app:contentMarginLeft="15dp"
+        app:contentMarginRight="15dp"
         app:contentMarginTop="10dp"
         app:contentMarginHorizontal="6dp"
         app:dividerColorHorizontal="#619FC6"
@@ -46,8 +52,8 @@
             android:paddingLeft="5dp"
             android:paddingRight="5dp"
             android:text="NestRefreshLayout"
-            android:textColor="@color/optionBackground"
-            android:textSize="18sp"
+            android:textColor="@color/textMain"
+            android:textSize="16sp"
             android:textStyle="bold" />
         <com.rexy.example.extend.FadeTextButton
             android:id="@+id/buttonColumn"
@@ -59,8 +65,8 @@
             android:paddingLeft="5dp"
             android:paddingRight="5dp"
             android:text="ColumnLayout"
-            android:textColor="@color/optionBackground"
-            android:textSize="18sp"
+            android:textColor="@color/textMain"
+            android:textSize="16sp"
             android:textStyle="bold" />
         <com.rexy.example.extend.FadeTextButton
             android:id="@+id/buttonNestFloat"
@@ -72,8 +78,8 @@
             android:paddingLeft="5dp"
             android:paddingRight="5dp"
             android:text="NestFloatLayout"
-            android:textColor="@color/optionBackground"
-            android:textSize="18sp"
+            android:textColor="@color/textMain"
+            android:textSize="16sp"
             android:textStyle="bold" />
         <com.rexy.example.extend.FadeTextButton
             android:id="@+id/buttonWrapLabel"
@@ -85,8 +91,8 @@
             android:paddingLeft="5dp"
             android:paddingRight="5dp"
             android:text="WrapLayout 、LabelLayout"
-            android:textColor="@color/optionBackground"
-            android:textSize="18sp"
+            android:textColor="@color/textMain"
+            android:textSize="16sp"
             android:textStyle="bold" />
         <com.rexy.example.extend.FadeTextButton
             android:id="@+id/buttonPageScroll"
@@ -98,8 +104,8 @@
             android:paddingLeft="5dp"
             android:paddingRight="5dp"
             android:text="PageScrollView 、PageScrollTab"
-            android:textColor="@color/optionBackground"
-            android:textSize="18sp"
+            android:textColor="@color/textMain"
+            android:textSize="16sp"
             android:textStyle="bold" />
 
         <com.rexy.example.extend.FadeTextButton
@@ -112,11 +118,12 @@
             android:paddingLeft="5dp"
             android:paddingRight="5dp"
             android:text="HierarchyLayout"
-            android:textColor="@color/optionBackground"
-            android:textSize="18sp"
+            android:textColor="@color/textMain"
+            android:textSize="16sp"
             android:textStyle="bold" />
     </com.rexy.widgets.layout.ColumnLayout>
     <ImageView
+        app:heightPercent="50%"
         android:id="@+id/imageView"
         android:layout_marginLeft="15dp"
         android:layout_marginRight="15dp"

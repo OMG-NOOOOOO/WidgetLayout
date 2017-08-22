@@ -18,6 +18,7 @@
         <attr name="edgeEffectEnable" format="boolean"/>
 
         <!--left border color,width and padding-->
+        <attr name="borderLeft" format="reference"/>
         <attr name="borderLeftColor" format="color"/>
         <attr name="borderLeftWidth" format="dimension"/>
         <attr name="borderLeftMargin" format="dimension"/>
@@ -25,6 +26,7 @@
         <attr name="borderLeftMarginEnd" format="dimension"/>
 
         <!--top border color,width and padding-->
+        <attr name="borderTop" format="reference"/>
         <attr name="borderTopColor" format="color"/>
         <attr name="borderTopWidth" format="dimension"/>
         <attr name="borderTopMargin" format="dimension"/>
@@ -32,6 +34,7 @@
         <attr name="borderTopMarginEnd" format="dimension"/>
 
         <!--right border color,width and padding-->
+        <attr name="borderRight" format="reference"/>
         <attr name="borderRightColor" format="color"/>
         <attr name="borderRightWidth" format="dimension"/>
         <attr name="borderRightMargin" format="dimension"/>
@@ -39,6 +42,7 @@
         <attr name="borderRightMarginEnd" format="dimension"/>
 
         <!--bottom border color,width and padding-->
+        <attr name="borderBottom" format="reference"/>
         <attr name="borderBottomColor" format="color"/>
         <attr name="borderBottomWidth" format="dimension"/>
         <attr name="borderBottomMargin" format="dimension"/>
@@ -71,5 +75,8 @@
         <attr name="dividerPaddingVertical" format="dimension"/>
         <attr name="dividerPaddingVerticalStart" format="dimension"/>
         <attr name="dividerPaddingVerticalEnd" format="dimension"/>
+
+        <attr name="widthPercent" format="fraction"/>
+        <attr name="heightPercent" format="fraction"/>
     </declare-styleable>
 </resources>

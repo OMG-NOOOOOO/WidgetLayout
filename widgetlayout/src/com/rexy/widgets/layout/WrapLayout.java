@@ -100,7 +100,7 @@ public class WrapLayout extends BaseViewGroup {
 
     private void adjustMeasureWithWeight(int measureSpec, int remain, int[] r, boolean vertical) {
         int size = mWeightView.size();
-        int itemMargin = vertical ? mDividerMargin.getContentMarginVertical() : mDividerMargin.getContentMarginHorizontal();
+        int itemMargin = vertical ? mBorderDivider.getContentMarginVertical() : mBorderDivider.getContentMarginHorizontal();
         for (int i = 0; i < size; i++) {
             int childIndex = mWeightView.keyAt(i);
             View child = mWeightView.get(childIndex);
@@ -177,8 +177,8 @@ public class WrapLayout extends BaseViewGroup {
         int currentLineItemCount = 0;
 
         int contentWidth = 0, contentHeight = 0, childState = 0, itemPosition = 0;
-        int middleMarginHorizontal = mDividerMargin.getContentMarginHorizontal();
-        int middleMarginVertical = mDividerMargin.getContentMarginVertical();
+        int middleMarginHorizontal = mBorderDivider.getContentMarginHorizontal();
+        int middleMarginVertical = mBorderDivider.getContentMarginVertical();
 
         final boolean supportWeight = mSupportWeight && ((mEachLineMaxItemCount == 1) || (mEachLineMinItemCount >= childCount || mEachLineMinItemCount <= 0));
         for (int childIndex = 0; childIndex < childCount; childIndex++) {
@@ -274,8 +274,8 @@ public class WrapLayout extends BaseViewGroup {
         final int lineCount = mLineEndIndex.size(), gravity = getGravity();
         final boolean lineVertical = mEachLineCenterVertical || ((gravity & Gravity.VERTICAL_GRAVITY_MASK) == Gravity.CENTER_VERTICAL && lineCount == 1);
         final boolean lineHorizontal = mEachLineCenterHorizontal || ((gravity & Gravity.HORIZONTAL_GRAVITY_MASK) == Gravity.CENTER_HORIZONTAL && lineCount == 1);
-        final int middleMarginHorizontal = mDividerMargin.getContentMarginHorizontal();
-        final int middleMarginVertical = mDividerMargin.getContentMarginVertical();
+        final int middleMarginHorizontal = mBorderDivider.getContentMarginHorizontal();
+        final int middleMarginVertical = mBorderDivider.getContentMarginVertical();
         final int contentWidthNoMargin = getContentPureWidth();
         int lineEndIndex, lineMaxHeight, childIndex = 0, lineTop = contentTop;
         int childLeft, childTop, childRight, childBottom;
@@ -315,12 +315,12 @@ public class WrapLayout extends BaseViewGroup {
 
     @Override
     protected void doAfterDraw(Canvas canvas, Rect inset) {
-        boolean dividerHorizontal = mDividerMargin.isVisibleDividerHorizontal(true);
-        boolean dividerVertical = mDividerMargin.isVisibleDividerVertical(true);
+        boolean dividerHorizontal = mBorderDivider.isVisibleDividerHorizontal(true);
+        boolean dividerVertical = mBorderDivider.isVisibleDividerVertical(true);
         if (dividerHorizontal || dividerVertical) {
             final int lineCount = mLineEndIndex.size();
-            final int middleMarginHorizontal = mDividerMargin.getContentMarginHorizontal();
-            final int middleMarginVertical = mDividerMargin.getContentMarginVertical();
+            final int middleMarginHorizontal = mBorderDivider.getContentMarginHorizontal();
+            final int middleMarginVertical = mBorderDivider.getContentMarginVertical();
             final int contentMarginTop = inset.top;
 
             int parentLeft = getPaddingLeft();
@@ -332,14 +332,14 @@ public class WrapLayout extends BaseViewGroup {
                 int lineEndIndex = mLineEndIndex.get(lineIndex);
                 lineBottom = lineTop + mLineHeight.get(lineIndex);
                 if (dividerHorizontal && lineIndex != lineCount - 1) {
-                    mDividerMargin.drawDividerH(canvas, parentLeft, parentRight, lineBottom + (middleMarginVertical > 0 ? middleMarginVertical / 2 : 0));
+                    mBorderDivider.drawDividerH(canvas, parentLeft, parentRight, lineBottom + (middleMarginVertical > 0 ? middleMarginVertical / 2 : 0));
                 }
                 if (dividerVertical && mLineItemCount.get(lineIndex) > 1) {
                     for (; childIndex < lineEndIndex; childIndex++) {
                         final View child = getChildAt(childIndex);
                         if (skipChild(child)) continue;
                         LayoutParams params = (LayoutParams) child.getLayoutParams();
-                        mDividerMargin.drawDividerV(canvas, lineTop, lineBottom, child.getRight() + params.rightMargin() + (middleMarginHorizontal > 0 ? middleMarginHorizontal / 2 : 0));
+                        mBorderDivider.drawDividerV(canvas, lineTop, lineBottom, child.getRight() + params.rightMargin() + (middleMarginHorizontal > 0 ? middleMarginHorizontal / 2 : 0));
                     }
                 }
                 childIndex = lineEndIndex + 1;

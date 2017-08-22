@@ -200,7 +200,7 @@ public class ScrollLayout extends BaseViewGroup implements ScrollingView, Nested
         int contentWidth = 0, contentHeight = 0, childState = 0;
         int itemPosition = 0, itemMargin;
         if (isOrientationHorizontal()) {
-            itemMargin = mDividerMargin.getContentMarginHorizontal();
+            itemMargin = mBorderDivider.getContentMarginHorizontal();
             widthMeasureSpecContent = MeasureSpec.makeMeasureSpec(MeasureSpec.getSize(widthMeasureSpecContent), MeasureSpec.UNSPECIFIED);
             for (int i = 0; i < childCount; i++) {
                 final View child = getChildAt(i);
@@ -216,7 +216,7 @@ public class ScrollLayout extends BaseViewGroup implements ScrollingView, Nested
                 childState |= child.getMeasuredState();
             }
         } else {
-            itemMargin = mDividerMargin.getContentMarginVertical();
+            itemMargin = mBorderDivider.getContentMarginVertical();
             heightMeasureSpecContent = MeasureSpec.makeMeasureSpec(MeasureSpec.getSize(heightMeasureSpecContent), MeasureSpec.UNSPECIFIED);
             for (int i = 0; i < childCount; i++) {
                 final View child = getChildAt(i);
@@ -240,7 +240,7 @@ public class ScrollLayout extends BaseViewGroup implements ScrollingView, Nested
         final int count = getChildCount();
         int childLeft = contentLeft, childTop = contentTop, childRight, childBottom, itemMargin;
         if (isOrientationHorizontal()) {
-            itemMargin = mDividerMargin.getContentMarginHorizontal();
+            itemMargin = mBorderDivider.getContentMarginHorizontal();
             final int baseTop = contentTop, baseBottom = contentTop + getContentPureHeight();
             for (int i = 0; i < count; i++) {
                 final View child = getChildAt(i);
@@ -254,7 +254,7 @@ public class ScrollLayout extends BaseViewGroup implements ScrollingView, Nested
                 childLeft = childRight + params.rightMargin + itemMargin;
             }
         } else {
-            itemMargin = mDividerMargin.getContentMarginVertical();
+            itemMargin = mBorderDivider.getContentMarginVertical();
             final int baseLeft = contentLeft, baseRight = contentLeft + getContentPureWidth();
             for (int i = 0; i < count; i++) {
                 final View child = getChildAt(i);
