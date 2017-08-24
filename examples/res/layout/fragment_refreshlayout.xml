@@ -1,7 +1,7 @@
-<com.rexy.widgets.group.NestRefreshLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:layout_width="match_parent"
-    android:layout_height="match_parent">
-    <com.rexy.widgets.group.ScrollLayout
+<com.rexy.widgets.layout.NestRefreshLayout xmlns:android="http://schemas.android.com/apk/res/android"
+                                           android:layout_width="match_parent"
+                                           android:layout_height="match_parent">
+    <com.rexy.widgets.layout.ScrollLayout
         android:id="@+id/scrollView"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
@@ -9,7 +9,7 @@
         android:orientation="vertical"
         android:paddingLeft="15dp"
         android:paddingRight="15dp" />
-</com.rexy.widgets.group.NestRefreshLayout>
+</com.rexy.widgets.layout.NestRefreshLayout>
 
 
 

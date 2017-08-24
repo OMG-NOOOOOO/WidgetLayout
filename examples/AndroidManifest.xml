@@ -5,7 +5,7 @@
         android:icon="@drawable/ic_launcher"
         android:theme="@style/AppTheme">
         <activity
-            android:name="com.rexy.ui.KActivityLauncher"
+            android:name="com.rexy.example.ActivityLauncher"
             android:theme="@style/Activity_Welcome"
             android:configChanges="locale|fontScale|orientation|keyboardHidden|screenSize"
             android:screenOrientation="portrait">
@@ -16,12 +16,12 @@
         </activity>
 
         <activity
-            android:name="com.rexy.ui.KActivityMain"
+            android:name="com.rexy.example.ActivityMain"
             android:theme="@style/Activity_Main"
             android:alwaysRetainTaskState="true"
             android:configChanges="locale|fontScale|orientation|keyboardHidden|screenSize"
             android:launchMode="singleTask"/>
-        <activity android:name="com.rexy.ui.KActivityCommon"/>
+        <activity android:name="com.rexy.example.ActivityCommon"/>
     </application>
 
 </manifest>

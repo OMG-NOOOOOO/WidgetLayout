@@ -2,7 +2,7 @@
 <merge xmlns:android="http://schemas.android.com/apk/res/android"
        android:layout_width="wrap_content"
        android:layout_height="wrap_content">
-    <com.rexy.widgets.view.FadeTextButton
+    <com.rexy.example.extend.FadeTextButton
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:gravity="center"
@@ -13,7 +13,7 @@
         android:textSize="25sp"
         android:background="#CC363F59"
         android:textStyle="bold"/>
-    <com.rexy.widgets.view.FadeTextButton
+    <com.rexy.example.extend.FadeTextButton
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:minHeight="250dp"
@@ -24,7 +24,7 @@
         android:textSize="25sp"
         android:background="#DD8FC320"
         android:textStyle="bold"/>
-    <com.rexy.widgets.view.FadeTextButton
+    <com.rexy.example.extend.FadeTextButton
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:gravity="center"
@@ -35,7 +35,7 @@
         android:textSize="25sp"
         android:background="#DDEC5413"
         android:textStyle="bold"/>
-    <com.rexy.widgets.view.FadeTextButton
+    <com.rexy.example.extend.FadeTextButton
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:gravity="center"
@@ -46,7 +46,7 @@
         android:textSize="25sp"
         android:background="#DD8FC320"
         android:textStyle="bold"/>
-    <com.rexy.widgets.view.FadeTextButton
+    <com.rexy.example.extend.FadeTextButton
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:gravity="center"
@@ -57,7 +57,7 @@
         android:textSize="25sp"
         android:background="#DDEC5413"
         android:textStyle="bold"/>
-    <com.rexy.widgets.view.FadeTextButton
+    <com.rexy.example.extend.FadeTextButton
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:gravity="center"

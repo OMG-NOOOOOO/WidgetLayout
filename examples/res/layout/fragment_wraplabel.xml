@@ -1,11 +1,11 @@
-<com.rexy.widgets.group.PageScrollView
+<com.rexy.widgets.layout.PageScrollView
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:gravity="center_horizontal"
     android:orientation="vertical">
-    <com.rexy.widgets.group.LabelLayout
+    <com.rexy.widgets.layout.LabelLayout
         android:id="@+id/labelLayout"
         android:layout_marginLeft="5dp"
         android:layout_marginRight="5dp"
@@ -36,7 +36,7 @@
         app:dividerPaddingVertical="1dp"
         app:foregroundColor="#000" />
 
-    <com.rexy.widgets.group.WrapLayout
+    <com.rexy.widgets.layout.WrapLayout
         android:id="@+id/wrapLayout"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
@@ -59,7 +59,7 @@
         app:dividerColorVertical="#4790D3"
         app:dividerPaddingVertical="10dp"/>
 
-    <com.rexy.widgets.group.ColumnLayout
+    <com.rexy.widgets.layout.ColumnLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:background="@color/optionBackground"
@@ -78,7 +78,7 @@
         app:contentMarginVertical="10dp"
         app:dividerColorVertical="#4790D3"
         app:dividerPaddingVertical="10dp" >
-        <com.rexy.widgets.view.FadeTextButton
+        <com.rexy.example.extend.FadeTextButton
             android:id="@+id/viewRemove"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
@@ -87,7 +87,7 @@
             android:padding="5dp"
             android:textColor="@color/textButton"
             android:textSize="16sp" />
-        <com.rexy.widgets.view.FadeTextButton
+        <com.rexy.example.extend.FadeTextButton
             android:id="@+id/viewAdd"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
@@ -96,7 +96,7 @@
             android:padding="5dp"
             android:textColor="@color/textButton"
             android:textSize="16sp" />
-        <com.rexy.widgets.view.FadeTextButton
+        <com.rexy.example.extend.FadeTextButton
             android:id="@+id/viewAddFast"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
@@ -117,9 +117,9 @@
             android:textColor="@color/textButton"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"/>
-    </com.rexy.widgets.group.ColumnLayout>
+    </com.rexy.widgets.layout.ColumnLayout>
 
-    <com.rexy.widgets.group.WrapLayout
+    <com.rexy.widgets.layout.WrapLayout
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginBottom="20dp"
@@ -141,7 +141,7 @@
         app:lineMinItemCount="100"
         app:weightSupport="true">
 
-        <com.rexy.widgets.view.FadeTextButton
+        <com.rexy.example.extend.FadeTextButton
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_gravity="center"
@@ -150,7 +150,7 @@
             android:padding="10dp"
             android:text="weight2" />
 
-        <com.rexy.widgets.view.FadeTextButton
+        <com.rexy.example.extend.FadeTextButton
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_gravity="center"
@@ -158,7 +158,7 @@
             android:padding="10dp"
             android:text="wrap" />
 
-        <com.rexy.widgets.view.FadeTextButton
+        <com.rexy.example.extend.FadeTextButton
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_gravity="center"
@@ -166,5 +166,5 @@
             android:background="#00f"
             android:padding="10dp"
             android:text="weight1" />
-    </com.rexy.widgets.group.WrapLayout>
-</com.rexy.widgets.group.PageScrollView>
+    </com.rexy.widgets.layout.WrapLayout>
+</com.rexy.widgets.layout.PageScrollView>

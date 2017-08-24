@@ -1,11 +1,11 @@
 <?xml version="1.0" encoding="utf-8"?>
-<com.rexy.widgets.group.HierarchyLayout
+<com.rexy.widgets.layout.HierarchyLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:gravity="center_horizontal"
     android:layout_width="match_parent"
     android:layout_height="match_parent" >
-    <com.rexy.widgets.group.PageScrollView
+    <com.rexy.widgets.layout.PageScrollView
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:orientation="vertical">
@@ -38,7 +38,7 @@
                     android:text="标题文本"
                     android:textColor="#333"
                     android:textSize="18sp" />
-                <com.rexy.widgets.view.FadeTextButton
+                <com.rexy.example.extend.FadeTextButton
                     android:id="@+id/expandable_toggle_button"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
@@ -124,7 +124,7 @@
                     android:text="标题文本"
                     android:textColor="#333"
                     android:textSize="18sp" />
-                <com.rexy.widgets.view.FadeTextButton
+                <com.rexy.example.extend.FadeTextButton
                     android:id="@+id/expandable_toggle_button2"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
@@ -204,7 +204,7 @@
                     android:text="标题文本"
                     android:textColor="#333"
                     android:textSize="18sp" />
-                <com.rexy.widgets.view.FadeTextButton
+                <com.rexy.example.extend.FadeTextButton
                     android:id="@+id/expandable_toggle_button3"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
@@ -234,7 +234,7 @@
                 android:paddingTop="5dp"
                 android:paddingRight="5dp"
                 android:orientation="horizontal">
-                <com.rexy.widgets.view.FadeTextButton
+                <com.rexy.example.extend.FadeTextButton
                     android:id="@+id/iv_image3"
                     android:layout_width="90dp"
                     android:layout_height="70dp"
@@ -282,7 +282,7 @@
                     android:text="标题文本"
                     android:textColor="#333"
                     android:textSize="18sp" />
-                <com.rexy.widgets.view.FadeTextButton
+                <com.rexy.example.extend.FadeTextButton
                     android:id="@+id/expandable_toggle_button4"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
@@ -329,5 +329,5 @@
                     android:text="describe" />
             </LinearLayout>
         </LinearLayout>
-    </com.rexy.widgets.group.PageScrollView>
-</com.rexy.widgets.group.HierarchyLayout>
+    </com.rexy.widgets.layout.PageScrollView>
+</com.rexy.widgets.layout.HierarchyLayout>

@@ -1,11 +1,11 @@
-<com.rexy.widgets.group.PageScrollView
+<com.rexy.widgets.layout.PageScrollView
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:gravity="center_horizontal"
     android:orientation="vertical">
-    <com.rexy.widgets.group.ColumnLayout
+    <com.rexy.widgets.layout.ColumnLayout
         android:id="@+id/columnLayout"
         android:layout_marginLeft="5dp"
         android:layout_marginRight="5dp"
@@ -37,7 +37,7 @@
         app:dividerPaddingVertical="1dp"
         app:foregroundColor="#000" />
 
-    <com.rexy.widgets.group.ColumnLayout
+    <com.rexy.widgets.layout.ColumnLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:background="@color/optionBackground"
@@ -56,7 +56,7 @@
         app:dividerPaddingVertical="10dp"
         app:contentMarginVertical="10dp"
         app:stretchColumns="*">
-        <com.rexy.widgets.view.FadeTextButton
+        <com.rexy.example.extend.FadeTextButton
             android:id="@+id/viewRemove"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
@@ -65,7 +65,7 @@
             android:padding="5dp"
             android:textColor="@color/textButton"
             android:textSize="18sp" />
-        <com.rexy.widgets.view.FadeTextButton
+        <com.rexy.example.extend.FadeTextButton
             android:id="@+id/viewAdd"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
@@ -74,7 +74,7 @@
             android:padding="5dp"
             android:textColor="@color/textButton"
             android:textSize="18sp" />
-        <com.rexy.widgets.view.FadeTextButton
+        <com.rexy.example.extend.FadeTextButton
             android:id="@+id/viewAddFast"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
@@ -83,5 +83,5 @@
             android:padding="5dp"
             android:textColor="@color/textButton"
             android:textSize="18sp" />
-    </com.rexy.widgets.group.ColumnLayout>
-</com.rexy.widgets.group.PageScrollView>
+    </com.rexy.widgets.layout.ColumnLayout>
+</com.rexy.widgets.layout.PageScrollView>

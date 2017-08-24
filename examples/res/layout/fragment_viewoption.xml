@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<com.rexy.widgets.group.WrapLayout
+<com.rexy.widgets.layout.WrapLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
@@ -7,7 +7,7 @@
     android:background="@color/windowBackground"
     app:lineCenterHorizontal="true"
     app:lineCenterVertical="true">
-    <com.rexy.widgets.view.FadeTextButton
+    <com.rexy.example.extend.FadeTextButton
         android:layout_marginLeft="15dp"
         android:layout_marginRight="15dp"
         android:layout_marginTop="15dp"
@@ -23,7 +23,7 @@
         android:gravity="center_vertical"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"/>
-    <com.rexy.widgets.group.ColumnLayout
+    <com.rexy.widgets.layout.ColumnLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginLeft="15dp"
@@ -46,7 +46,7 @@
         app:contentMarginVertical="15dp"
         app:dividerColorHorizontal="#5C6BC2"
         app:dividerPaddingHorizontal="15dp">
-        <com.rexy.widgets.view.FadeTextButton
+        <com.rexy.example.extend.FadeTextButton
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:padding="5dp"
@@ -62,7 +62,7 @@
             android:id="@+id/editMinWidth"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"/>
-        <com.rexy.widgets.view.FadeTextButton
+        <com.rexy.example.extend.FadeTextButton
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:padding="5dp"
@@ -78,7 +78,7 @@
             android:id="@+id/editMaxWidth"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"/>
-        <com.rexy.widgets.view.FadeTextButton
+        <com.rexy.example.extend.FadeTextButton
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:padding="5dp"
@@ -94,7 +94,7 @@
             android:id="@+id/editMinHeight"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"/>
-        <com.rexy.widgets.view.FadeTextButton
+        <com.rexy.example.extend.FadeTextButton
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:padding="5dp"
@@ -110,14 +110,14 @@
             android:id="@+id/editMaxHeight"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"/>
-    </com.rexy.widgets.group.ColumnLayout>
-    <com.rexy.widgets.group.LabelLayout
+    </com.rexy.widgets.layout.ColumnLayout>
+    <com.rexy.widgets.layout.LabelLayout
         android:layout_width="wrap_content"
         android:layout_marginLeft="15dp"
         android:layout_marginRight="15dp"
         android:layout_marginTop="10dp"
         android:layout_height="wrap_content"
-        android:background="@color/partBackground"
+        android:background="@color/optionBackground"
         app:contentMarginLeft="5dp"
         app:contentMarginTop="5dp"
         app:contentMarginRight="5dp"
@@ -165,8 +165,8 @@
             android:textOff="BOTTOM"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"/>
-    </com.rexy.widgets.group.LabelLayout>
-    <com.rexy.widgets.group.WrapLayout
+    </com.rexy.widgets.layout.LabelLayout>
+    <com.rexy.widgets.layout.WrapLayout
         android:id="@+id/exampleParent"
         android:layout_width="200dp"
         android:layout_height="wrap_content"
@@ -179,7 +179,7 @@
         app:borderRightColor="#333333"
         app:borderTopColor="#333333"
         app:borderBottomColor="#333333">
-        <com.rexy.widgets.view.FadeTextButton
+        <com.rexy.example.extend.FadeTextButton
             android:id="@+id/exampleView"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
@@ -194,8 +194,8 @@
             android:textColor="@color/titleBackground"
             android:textSize="18sp"
             android:textStyle="bold"/>
-    </com.rexy.widgets.group.WrapLayout>
-    <com.rexy.widgets.group.ColumnLayout
+    </com.rexy.widgets.layout.WrapLayout>
+    <com.rexy.widgets.layout.ColumnLayout
         android:layout_width="40dp"
         android:layout_height="wrap_content"
         app:stretchColumns="*"
@@ -207,36 +207,36 @@
         app:contentMarginRight="4dp"
         app:contentMarginBottom="4.5dp"
         app:contentMarginVertical="5dp">
-        <com.rexy.widgets.view.FadeTextButton
+        <com.rexy.example.extend.FadeTextButton
             android:id="@+id/viewColor1"
             android:minWidth="40dp"
             android:minHeight="30dp"
             android:background="#F00"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"/>
-        <com.rexy.widgets.view.FadeTextButton
+        <com.rexy.example.extend.FadeTextButton
             android:id="@+id/viewColor2"
             android:minWidth="40dp"
             android:minHeight="30dp"
             android:background="#DD5A6390"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"/>
-        <com.rexy.widgets.view.FadeTextButton
+        <com.rexy.example.extend.FadeTextButton
             android:id="@+id/viewColor3"
             android:minWidth="40dp"
             android:minHeight="30dp"
             android:background="#DD7CF499"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"/>
-        <com.rexy.widgets.view.FadeTextButton
+        <com.rexy.example.extend.FadeTextButton
             android:id="@+id/viewColor4"
             android:minWidth="40dp"
             android:minHeight="30dp"
             android:background="#DDff00ff"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"/>
-        </com.rexy.widgets.group.ColumnLayout>
-    <com.rexy.widgets.view.FadeTextButton
+        </com.rexy.widgets.layout.ColumnLayout>
+    <com.rexy.example.extend.FadeTextButton
         android:id="@+id/buttonAddView"
         android:layout_marginLeft="15dp"
         android:layout_marginRight="15dp"
@@ -253,4 +253,4 @@
         android:gravity="center"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"/>
-</com.rexy.widgets.group.WrapLayout>
+</com.rexy.widgets.layout.WrapLayout>

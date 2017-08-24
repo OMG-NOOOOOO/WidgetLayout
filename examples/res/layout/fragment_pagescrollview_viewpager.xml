@@ -1,11 +1,11 @@
 <?xml version="1.0" encoding="utf-8"?>
-<com.rexy.widgets.group.WrapLayout
+<com.rexy.widgets.layout.WrapLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     app:lineCenterHorizontal="true">
-    <com.rexy.widgets.group.ColumnLayout
+    <com.rexy.widgets.layout.ColumnLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:background="@color/optionBackground"
@@ -43,8 +43,8 @@
             android:textColor="@color/textButton"
             android:textOff="footer"
             android:textOn="footer" />
-    </com.rexy.widgets.group.ColumnLayout>
-    <com.rexy.widgets.group.PageScrollTab
+    </com.rexy.widgets.layout.ColumnLayout>
+    <com.rexy.widgets.layout.PageScrollTab
         android:id="@+id/pageTabs"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
@@ -65,7 +65,7 @@
         app:tabItemMinPaddingTop="8dp"
         app:tabItemMinPaddingBottom="8dp"
         app:tabItemTextColor="@color/select_tab_item_text"/>
-    <com.rexy.widgets.group.PageScrollView
+    <com.rexy.widgets.layout.PageScrollView
         android:id="@+id/pageScrollView"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
@@ -83,6 +83,6 @@
         app:floatViewStartIndex="-1"
         app:sizeFixedPercent="0">
         <include layout="@layout/pagescrollview_viewpager_child" />
-    </com.rexy.widgets.group.PageScrollView>
-</com.rexy.widgets.group.WrapLayout>
+    </com.rexy.widgets.layout.PageScrollView>
+</com.rexy.widgets.layout.WrapLayout>
 
