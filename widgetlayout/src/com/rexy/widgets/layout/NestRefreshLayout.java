@@ -413,7 +413,7 @@ public class NestRefreshLayout<INDICATOR extends View & NestRefreshLayout.OnRefr
                 return ViewCompat.canScrollVertically(child, -1) || child.getScrollY() > 0;
             }
         } else {
-            return ViewCompat.canScrollVertically(child, -1);
+            return ViewCompat.canScrollVertically(child, -1) || child.getScrollY() > 0;
         }
     }
 
@@ -436,7 +436,7 @@ public class NestRefreshLayout<INDICATOR extends View & NestRefreshLayout.OnRefr
                 return ViewCompat.canScrollVertically(child, 1) || child.getScrollY() > 0;
             }
         } else {
-            return ViewCompat.canScrollVertically(child, 1);
+            return ViewCompat.canScrollVertically(child, 1) || child.getScrollY() > 0;
         }
     }
 

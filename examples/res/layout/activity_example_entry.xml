@@ -9,7 +9,7 @@
     android:layout_height="match_parent"
     android:background="#7700"
     app:widthPercent="95%"
-    app:heightPercent="90%"
+    app:heightPercent="98%"
     app:floatViewStartIndex="0">
     <com.rexy.widgets.layout.ColumnLayout
         android:layout_width="match_parent"

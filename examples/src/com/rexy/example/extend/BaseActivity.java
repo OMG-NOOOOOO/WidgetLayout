@@ -6,6 +6,7 @@ import android.os.Build;
 import android.os.Bundle;
 import android.support.v4.app.FragmentActivity;
 import android.text.TextUtils;
+import android.view.KeyEvent;
 import android.view.Menu;
 import android.view.MenuItem;
 
@@ -102,6 +103,15 @@ public class BaseActivity extends FragmentActivity {
     protected void onDestroy() {
         super.onDestroy();
         mActivities.remove(this);
+    }
+
+    @Override
+    public boolean onKeyDown(int keyCode, KeyEvent event) {
+        if(HierarchyLayout.isHierarchyInstalled(this)){
+            HierarchyLayout.hierarchy(this,false);
+            return true;
+        }
+        return super.onKeyDown(keyCode, event);
     }
 
     @Override
