@@ -1,5 +1,5 @@
 # WidgetLayout 介绍
-**WidgetLayout**是一组继承于`ViewGroup`的自定义容器集合，均支持按百分比测绘,限定最大最小宽高，和gravity 属性，自身描边，大部分支持内容分割线，权重等，目前实现了以下实用容器(kotlin 实现见kotlin_master分支):
+**WidgetLayout**是一组继承于`ViewGroup`的自定义容器集合，均支持按百分比测绘,限定最大最小宽高，和gravity 属性，自身描边，大部分支持内容分割线，权重等，目前实现了以下实用容器(`kotlin` 实现见[kotlin_master分支][kotlin-widgetlayout]):
 
 1. `ColumnLayout` 以等分列方式布局，每列可设置内容居左，中，右，及铺满，可设置最小最大列宽高限定。
 2. `NestRefreshLayout` 一个精简强大的支持任意类型`View`的下拉刷新，上拉加载更多,可添加头部和尾部且可设置悬停模式。
@@ -446,3 +446,4 @@ java 额外的接口：
 [entry]:image/entry.jpg " 演示入口"
 [hierarchyview]:image/hierarchyView.jpeg " 演示入口"
 [hierarchyviewnode]:image/hierarchyViewNode.jpeg " 演示入口"
+[kotlin-widgetlayout]:https://github.com/rexyren/WidgetLayout/tree/kotlin_master "kotlin project"
