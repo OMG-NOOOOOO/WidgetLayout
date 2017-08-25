@@ -91,7 +91,7 @@ class BorderDivider private constructor(density: Float) {
     private var mResetPaintHorizontal = true
     private var mResetPaintVertical = true
 
-    internal var mDensity = 1f
+    private var mDensity = 1f
 
     //左边线的drawable,颜色，宽度，和边线padding
     internal var mBorderLeft: Drawable? = null

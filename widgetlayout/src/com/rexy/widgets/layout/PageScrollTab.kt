@@ -105,8 +105,8 @@ class PageScrollTab constructor(context: Context, attrs: AttributeSet) : PageScr
     private val mViewPageListener = PageListener()
     var mDelegatePageListener: ViewPager.OnPageChangeListener? = null
 
-    protected var mITabProvider: ItemProvider? = null
-    protected var mTabClick: ITabClickEvent? = null
+    private var mITabProvider: ItemProvider? = null
+    private var mTabClick: ITabClickEvent? = null
     private val mTabItemClick = View.OnClickListener { view ->
         val tag = view?.getTag(TAB_INDEX)
         val cur = tag as? Int ?: selectedPosition
@@ -115,7 +115,7 @@ class PageScrollTab constructor(context: Context, attrs: AttributeSet) : PageScr
         handTabClick(cur, pre, handled)
     }
 
-    protected fun handTabClick(cur: Int, pre: Int, handled: Boolean) {
+    private fun handTabClick(cur: Int, pre: Int, handled: Boolean) {
         if (!handled) {
             if (cur != pre) {
                 if (mViewPager != null) {
@@ -350,7 +350,7 @@ class PageScrollTab constructor(context: Context, attrs: AttributeSet) : PageScr
     private fun updateTabStyles() {
         val itemCount = childCount
         val hasMutiBackground = mItemBackgroundFirst != 0 && mItemBackgroundLast != 0
-        for (i in 0..itemCount - 1) {
+        for (i in 0 until itemCount) {
             var backgroundRes = mItemBackground
             val v = getChildAt(i)
             if (hasMutiBackground) {
@@ -409,7 +409,7 @@ class PageScrollTab constructor(context: Context, attrs: AttributeSet) : PageScr
         if (mDividerWidth > 0) {
             mDividerPaint.color = mDividerColor
             val dividerXOffset = mDividerPaint.strokeWidth / 2
-            for (i in 0..itemCount - 1 - 1) {
+            for (i in 0 until itemCount - 1) {
                 val tab = getVirtualChildAt(i, true)
                 val startX = tab!!.right + dividerXOffset
                 canvas.drawLine(startX, mDividerPadding.toFloat(), startX, (height - mDividerPadding).toFloat(), mDividerPaint)
@@ -530,11 +530,11 @@ class PageScrollTab constructor(context: Context, attrs: AttributeSet) : PageScr
             pos = selectedPosition
         }
         val itemCount = tabItemCount
-        if (pos >= 0 && pos < itemCount) {
+        if (pos in 0..(itemCount - 1)) {
             val v = getVirtualChildAt(pos, true)
             if (v is Checkable) {
-                val cv = v as Checkable?
-                if (cv!!.isChecked != checked) {
+                val cv = v as Checkable
+                if (cv.isChecked != checked) {
                     cv.isChecked = checked
                     return true
                 }
@@ -544,7 +544,7 @@ class PageScrollTab constructor(context: Context, attrs: AttributeSet) : PageScr
     }
 
     val selectedView: View?
-        get() = if (selectedPosition >= 0 && selectedPosition < tabItemCount) {
+        get() = if (selectedPosition in 0..(tabItemCount - 1)) {
             getVirtualChildAt(selectedPosition, true)
         } else null
 

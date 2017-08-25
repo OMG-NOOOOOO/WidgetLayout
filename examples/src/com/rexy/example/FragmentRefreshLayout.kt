@@ -22,15 +22,15 @@ import com.rexy.widgets.layout.ScrollLayout
  * @date: 2017-06-05 15:03
  */
 class FragmentRefreshLayout : BaseFragment(), NestRefreshLayout.OnRefreshListener {
-    internal var mRefreshLayout: NestRefreshLayout<RefreshIndicator>? = null
-    internal var mScrollView: ScrollLayout? = null
+    lateinit var  mRefreshLayout: NestRefreshLayout<RefreshIndicator>
+    lateinit var  mScrollView: ScrollLayout
 
     override fun onCreateView(inflater: LayoutInflater?, container: ViewGroup?, savedInstanceState: Bundle?): View? {
         mRefreshLayout = inflater?.inflate(R.layout.fragment_refreshlayout, container, false) as NestRefreshLayout<RefreshIndicator>
-        mScrollView = mRefreshLayout!!.findViewById(R.id.scrollView) as ScrollLayout
-        initScrollView(mScrollView!!, true)
-        initRefreshLayout(mRefreshLayout!!)
-        mRefreshLayout!!.setScrollChild(mScrollView)//自定义 View 需要。ScrollView ,AbsListView RecyclerView 不需要。
+        mScrollView = mRefreshLayout.findViewById(R.id.scrollView) as ScrollLayout
+        initScrollView(mScrollView, true)
+        initRefreshLayout(mRefreshLayout)
+        mRefreshLayout.setScrollChild(mScrollView)//自定义 View 需要。ScrollView ,AbsListView RecyclerView 不需要。
         return mRefreshLayout
     }
 
@@ -50,8 +50,8 @@ class FragmentRefreshLayout : BaseFragment(), NestRefreshLayout.OnRefreshListene
             scrollView.isVerticalScrollBarEnabled = true
             scrollView.scrollBarStyle = View.SCROLLBARS_INSIDE_OVERLAY
         }
-        val clickListener = View.OnClickListener { v -> mScrollView!!.scrollToItem(mScrollView!!.indexOfChild(v), -1, true) }
-        for (i in 0..scrollView.childCount - 1) {
+        val clickListener = View.OnClickListener { v -> mScrollView.scrollToItem(mScrollView.indexOfChild(v), -1, true) }
+        for (i in 0 until scrollView.childCount) {
             val lp = scrollView.getChildAt(i).layoutParams as BaseViewGroup.LayoutParams
             lp.gravity = Gravity.CENTER_HORIZONTAL
             lp.bottomMargin = 30
@@ -64,16 +64,16 @@ class FragmentRefreshLayout : BaseFragment(), NestRefreshLayout.OnRefreshListene
 
     override fun onRefresh(parent: NestRefreshLayout<*>, refresh: Boolean) {
         Toast.makeText(activity, if (refresh) "pull refresh" else "push load more", Toast.LENGTH_SHORT).show()
-        mScrollView?.postDelayed({
+        mScrollView.postDelayed({
             if (refresh) {
-                mScrollView?.removeAllViews()
-                initScrollView(mScrollView!!, false)
+                mScrollView.removeAllViews()
+                initScrollView(mScrollView, false)
             } else {
                 val tv = TextView(activity)
                 tv.setPadding(20, 20, 20, 20)
                 tv.text = "load more:" + System.currentTimeMillis()
-                mScrollView?.addView(tv)
-                mScrollView?.scrollToItem(mScrollView!!.childCount - 1, -1, false)
+                mScrollView.addView(tv)
+                mScrollView.scrollToItem(mScrollView.childCount - 1, -1, false)
             }
             parent.setRefreshComplete()
         }, 1200)

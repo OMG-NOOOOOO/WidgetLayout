@@ -23,9 +23,9 @@ import com.rexy.widgets.layout.PageScrollView
  */
 class FragmentPageViewPager : FragmentPageBase() {
 
-    internal var mSlideTab: PageScrollTab?=null
-    internal var mToggleHeader: ToggleButton?=null
-    internal var mToggleFooter: ToggleButton?=null
+    private lateinit var mSlideTab: PageScrollTab
+    private lateinit var mToggleHeader: ToggleButton
+    private lateinit var mToggleFooter: ToggleButton
 
     override fun onCreateView(inflater: LayoutInflater?, container: ViewGroup?, savedInstanceState: Bundle?): View? {
         return inflater!!.inflate(R.layout.fragment_pagescrollview_viewpager, container, false).also {
@@ -38,9 +38,9 @@ class FragmentPageViewPager : FragmentPageBase() {
         mSlideTab = root.findViewById(R.id.pageTabs) as PageScrollTab
         mToggleHeader = root.findViewById(R.id.togglePageHeader) as ToggleButton
         mToggleFooter = root.findViewById(R.id.togglePageFooter) as ToggleButton
-        mToggleHeader!!.setOnCheckedChangeListener(this)
-        mToggleFooter!!.setOnCheckedChangeListener(this)
-        initPageTab(mPageScrollView!!, mSlideTab!!)
+        mToggleHeader.setOnCheckedChangeListener(this)
+        mToggleFooter.setOnCheckedChangeListener(this)
+        initPageTab(mPageScrollView, mSlideTab)
     }
 
     private fun initPageTab(scrollView: PageScrollView, tabHost: PageScrollTab) {

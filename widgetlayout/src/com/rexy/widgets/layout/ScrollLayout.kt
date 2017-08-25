@@ -172,7 +172,7 @@ open class ScrollLayout : BaseViewGroup, ScrollingView, NestedScrollingChild {
         if (isOrientationHorizontal) {
             itemMargin = mBorderDivider!!.contentMarginHorizontal
             widthMeasureSpecContent = View.MeasureSpec.makeMeasureSpec(View.MeasureSpec.getSize(widthMeasureSpecContent), View.MeasureSpec.UNSPECIFIED)
-            for (i in 0..childCount - 1) {
+            for (i in 0 until childCount) {
                 val child = getChildAt(i)
                 if (skipChild(child)) continue
                 if (itemPosition != 0) contentWidth += itemMargin
@@ -188,7 +188,7 @@ open class ScrollLayout : BaseViewGroup, ScrollingView, NestedScrollingChild {
         } else {
             itemMargin = mBorderDivider!!.contentMarginVertical
             heightMeasureSpecContent = View.MeasureSpec.makeMeasureSpec(View.MeasureSpec.getSize(heightMeasureSpecContent), View.MeasureSpec.UNSPECIFIED)
-            for (i in 0..childCount - 1) {
+            for (i in 0 until childCount) {
                 val child = getChildAt(i)
                 if (skipChild(child)) continue
                 if (itemPosition != 0) contentHeight += itemMargin
@@ -215,7 +215,7 @@ open class ScrollLayout : BaseViewGroup, ScrollingView, NestedScrollingChild {
         if (isOrientationHorizontal) {
             itemMargin = mBorderDivider!!.contentMarginHorizontal
             val baseBottom = contentTop + contentPureHeight
-            for (i in 0..count - 1) {
+            for (i in 0 until count) {
                 val child = getChildAt(i)
                 if (skipChild(child)) continue
                 val params = child.layoutParams as BaseViewGroup.LayoutParams

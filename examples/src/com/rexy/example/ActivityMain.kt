@@ -3,6 +3,7 @@ package com.rexy.example
 import android.os.Bundle
 import android.view.View
 import com.rexy.example.extend.BaseActivity
+import com.rexy.example.extend.kotlintest.TestObject
 import com.rexy.widgetlayout.example.R
 
 /**
@@ -19,6 +20,8 @@ class ActivityMain : BaseActivity(), View.OnClickListener{
         findViewById(R.id.buttonNestFloat)?.setOnClickListener(this)
         findViewById(R.id.buttonRefresh)?.setOnClickListener(this)
         findViewById(R.id.buttonHierarchy)?.setOnClickListener(this)
+        /* val obj=TestObject
+        obj.sayStaticHellow(this)*/
     }
 
     override fun onClick(v: View) {

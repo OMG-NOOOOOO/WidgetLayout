@@ -15,24 +15,24 @@ import com.rexy.widgetlayout.example.R
  * @author: rexy
  * @date: 2017-07-28 09:24
  */
-class TestRecyclerAdapter(var mContext: Context, var mItems:List<String> ?) :RecyclerView.Adapter<TestRecyclerAdapter.KTestRecyclerHolder>(){
+class TestRecyclerAdapter(private var context: Context, private var items: MutableList<String>?) : RecyclerView.Adapter<TestRecyclerAdapter.KTestRecyclerHolder>() {
 
-    override fun getItemCount()= mItems?.size?:0
+    override fun getItemCount() = items?.size ?: 0
 
     override fun onCreateViewHolder(p: ViewGroup, type: Int): KTestRecyclerHolder {
-        val textView = FadeTextButton(mContext)
+        val textView = FadeTextButton(context)
         textView.textSize = 18f
         textView.isClickable = true
         textView.layoutParams = RecyclerView.LayoutParams(-1, -2)
         textView.setPadding(30, 20, 30, 20)
-        textView.setTextColor(ColorStateList.valueOf(mContext.resources.getColor(R.color.textButton)))
-        textView.setBackgroundColor(mContext.resources.getColor(R.color.itemBackground))
+        textView.setTextColor(ColorStateList.valueOf(context.resources.getColor(R.color.textButton)))
+        textView.setBackgroundColor(context.resources.getColor(R.color.itemBackground))
         return KTestRecyclerHolder(textView)
     }
 
     override fun onBindViewHolder(holder: KTestRecyclerHolder, position: Int) {
-        if(holder.itemView is TextView){
-            holder.itemView.text=mItems?.get(position);
+        if (holder.itemView is TextView) {
+            holder.itemView.text = items?.get(position)
         }
     }
 

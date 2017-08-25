@@ -14,13 +14,13 @@ import com.rexy.widgetlayout.R
 
 
 class RefreshIndicator : WrapLayout, NestRefreshLayout.OnRefreshListener {
-    internal var mProgressBar: ProgressBar? = null
-    internal var mImageView: ImageView? = null //当是刷新时不为null,加载更多时为null .
-    internal var mTextView: TextView? = null
-    internal var mLastRotateType = 0
-    internal var isRefreshViewAdded: Boolean = false
-    internal var isRefreshPullType: Boolean = false
-    internal var mIndicatorTexts = arrayOf("获取数据中", "下拉刷新", "上拉加载更多", "松开刷新", "松开加载更多", "请放手刷新", "请放手加载更多")
+    private var mProgressBar: ProgressBar? = null
+    private var mImageView: ImageView? = null //当是刷新时不为null,加载更多时为null .
+    private var mTextView: TextView? = null
+    private var mLastRotateType = 0
+    private var isRefreshViewAdded: Boolean = false
+    private var isRefreshPullType: Boolean = false
+    private var mIndicatorTexts = arrayOf("获取数据中", "下拉刷新", "上拉加载更多", "松开刷新", "松开加载更多", "请放手刷新", "请放手加载更多")
 
     constructor(context: Context) : super(context) {
         init(context, null)

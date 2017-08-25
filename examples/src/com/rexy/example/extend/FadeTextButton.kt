@@ -48,7 +48,7 @@ class FadeTextButton : TextView {
         initInner(context)
     }
 
-    fun initInner(context: Context) {
+    private fun initInner(context: Context) {
         mTouchSlop = ViewConfiguration.get(context).scaledTouchSlop
     }
 
@@ -141,15 +141,14 @@ class FadeTextButton : TextView {
 
 
     private inner class FadeAnimation(private val mFromAlpha: Float, private val mToAlpha: Float) : Animation() {
-
         init {
             setAnimationListener(object : Animation.AnimationListener {
                 override fun onAnimationStart(animation: Animation) {
                     mFlag = mFlag or FLAG_ANIM_NOW
-                    if (FLAG_TOUCH == FLAG_TOUCH and mFlag) {
-                        mFlag = mFlag or FLAG_LAST_FADE
+                    mFlag = if (FLAG_TOUCH == FLAG_TOUCH and mFlag) {
+                        mFlag or FLAG_LAST_FADE
                     } else {
-                        mFlag = mFlag or FLAG_LAST_FADE.inv()
+                        mFlag or FLAG_LAST_FADE.inv()
                     }
                 }
 

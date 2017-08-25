@@ -23,7 +23,7 @@ interface ItemProvider {
     /**
      * item total count
      */
-    val count: Int
+    open val count: Int
 
     /**
      * a ViewGroup can hold this interface reference to obtain child View

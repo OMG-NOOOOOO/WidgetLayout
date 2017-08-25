@@ -101,9 +101,8 @@ class FragmentViewOption : BaseFragment(){
                 activity.finish()
             } else {
                 if (v is FadeTextButton) {
-                    val fb = v
-                    if (TextUtils.isEmpty(fb.text) && fb.background is ColorDrawable) {
-                        val cd = fb.background as ColorDrawable
+                    if (TextUtils.isEmpty(v.text) && v.background is ColorDrawable) {
+                        val cd = v.background as ColorDrawable
                         mColor = cd.color
                         mExampleView.setBackgroundColor(mColor)
                     }
@@ -126,14 +125,14 @@ class FragmentViewOption : BaseFragment(){
                     .forEach { return mAligns[it + shift] }
         } else {
             val optButton = optList[optIndex]
-            if (optButton.isChecked()) {
+            if (optButton.isChecked) {
                 optList.indices
                         .filter { it != optIndex }
                         .forEach { optList[it].isChecked = false }
                 return mAligns[optIndex + shift]
             }
         }
-        optList[0].setChecked(true)
+        optList[0].isChecked=true
         return mAligns[shift]
     }
 

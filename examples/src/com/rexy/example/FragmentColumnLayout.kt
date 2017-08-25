@@ -4,6 +4,7 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import com.rexy.example.extend.ViewUtils
 import com.rexy.widgetlayout.example.R
 import com.rexy.widgets.layout.ColumnLayout
 
@@ -15,7 +16,7 @@ import com.rexy.widgets.layout.ColumnLayout
  */
 class FragmentColumnLayout : FragmentViewPicker() {
 
-    private val mColumnLayout: ColumnLayout by lazy { view?.findViewById(R.id.columnLayout) as ColumnLayout }
+    private val mColumnLayout: ColumnLayout by lazy { view?.findViewById(R.id.columnLayout) as ColumnLayout  }
 
     override fun onCreateView(inflater: LayoutInflater?, container: ViewGroup?, savedInstanceState: Bundle?): View? {
         return inflater?.inflate(R.layout.fragment_columnlayout, container, false)
@@ -24,6 +25,7 @@ class FragmentColumnLayout : FragmentViewPicker() {
     override fun onActivityCreated(savedInstanceState: Bundle?) {
         super.onActivityCreated(savedInstanceState)
         buildRandomView(10, false)
+
     }
 
     override fun onFastAddView() {

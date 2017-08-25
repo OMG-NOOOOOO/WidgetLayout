@@ -50,20 +50,20 @@ import java.util.regex.Pattern
  */
 class ColumnLayout : BaseViewGroup {
     //列个数-
-    internal var mColumnNumber = 1
+    private var mColumnNumber = 1
     //列内内容全展开的索引 * 或 1,3,5 类似列索引0 开始
-    internal var mStretchColumns: SparseBooleanArray? = null
+    private var mStretchColumns: SparseBooleanArray? = null
     //列内内容全靠中间 * 或 1,3,5 类似列索引0 开始
-    internal var mAlignCenterColumns: SparseBooleanArray? = null
+    private var mAlignCenterColumns: SparseBooleanArray? = null
     //列内内容全靠右 * 或 1,3,5 类似列索引0 开始
-    internal var mAlignRightColumns: SparseBooleanArray? = null
+    private var mAlignRightColumns: SparseBooleanArray? = null
 
     //列的最小宽和高限定。
-    internal var mColumnMinWidth = -1
-    internal var mColumnMaxWidth = -1
-    internal var mColumnMinHeight = -1
-    internal var mColumnMaxHeight = -1
-    internal var mColumnCenterVertical = true
+    private var mColumnMinWidth = -1
+    private var mColumnMaxWidth = -1
+    private var mColumnMinHeight = -1
+    private var mColumnMaxHeight = -1
+    private var mColumnCenterVertical = true
 
     private var mStretchAllColumns: Boolean = false
     private var mAlignCenterAllColumns: Boolean = false

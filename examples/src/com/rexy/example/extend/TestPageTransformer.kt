@@ -14,39 +14,44 @@ class TestPageTransformer : PageScrollView.PageTransformer {
         private val MIN_ALPHA = 0.3f
     }
 
-    private val mAdjustTranslate = false
+    var mAdjustTranslate = false
+
     override fun transformPage(view: View, position: Float, horizontal: Boolean) {
         val pageSize = if (horizontal) view.width else view.height
-        if (position < -1) { // [-Infinity,-1)way off-screen to the left
-            view.alpha = MIN_ALPHA
-            view.scaleX = MIN_SCALE
-            view.scaleY = MIN_SCALE
-        } else if (position <= 1) { // [-1,1]
-            val percent = 1 - Math.abs(position)
-            val scale = MIN_SCALE + (1 - MIN_SCALE) * percent
-            if (mAdjustTranslate) {
-                val horizontalMargin = pageSize * (1 - scale) / 2
-                if (position > 0) {
-                    if (horizontal) {
-                        view.translationX = horizontalMargin
+        when {
+            position < -1 -> { // [-Infinity,-1)way off-screen to the left
+                view.alpha = MIN_ALPHA
+                view.scaleX = MIN_SCALE
+                view.scaleY = MIN_SCALE
+            }
+            position <= 1 -> { // [-1,1]
+                val percent = 1 - Math.abs(position)
+                val scale = MIN_SCALE + (1 - MIN_SCALE) * percent
+                if (mAdjustTranslate) {
+                    val horizontalMargin = pageSize * (1 - scale) / 2
+                    if (position > 0) {
+                        if (horizontal) {
+                            view.translationX = horizontalMargin
+                        } else {
+                            view.translationY = horizontalMargin
+                        }
                     } else {
-                        view.translationY = horizontalMargin
-                    }
-                } else {
-                    if (horizontal) {
-                        view.translationX = -horizontalMargin
-                    } else {
-                        view.translationY = -horizontalMargin
+                        if (horizontal) {
+                            view.translationX = -horizontalMargin
+                        } else {
+                            view.translationY = -horizontalMargin
+                        }
                     }
                 }
+                view.scaleX = scale
+                view.scaleY = scale
+                view.alpha = MIN_ALPHA + (1 - MIN_ALPHA) * percent
             }
-            view.scaleX = scale
-            view.scaleY = scale
-            view.alpha = MIN_ALPHA + (1 - MIN_ALPHA) * percent
-        } else { // (1,+Infinity]page is way off-screen to the right.
-            view.alpha = MIN_ALPHA
-            view.scaleX = MIN_SCALE
-            view.scaleY = MIN_SCALE
+            else -> { // (1,+Infinity]page is way off-screen to the right.
+                view.alpha = MIN_ALPHA
+                view.scaleX = MIN_SCALE
+                view.scaleY = MIN_SCALE
+            }
         }
     }
 

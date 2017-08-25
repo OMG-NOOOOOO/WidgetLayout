@@ -20,22 +20,22 @@ import com.rexy.widgets.layout.PageScrollView
  */
 class FragmentPageScrollView : FragmentPageBase() {
 
-    private var mToggleFloatStart: ToggleButton?=null
-    private var mToggleFloatEnd: ToggleButton?=null
+    private lateinit var mToggleFloatStart: ToggleButton
+    private lateinit var mToggleFloatEnd: ToggleButton
 
     override fun onCreateView(inflater: LayoutInflater?, container: ViewGroup?, savedInstanceState: Bundle?): View? {
-      return inflater!!.inflate(R.layout.fragment_pagescrollview_scrollview, container, false).also {
-          initView(it)
-      }
+        return inflater!!.inflate(R.layout.fragment_pagescrollview_scrollview, container, false).also {
+            initView(it)
+        }
     }
 
     override fun initView(root: View) {
         super.initView(root)
         mToggleFloatStart = root.findViewById(R.id.toggleFloatFirst) as ToggleButton
         mToggleFloatEnd = root.findViewById(R.id.toggleFloatEnd) as ToggleButton
-        mToggleFloatStart!!.setOnCheckedChangeListener(this)
-        mToggleFloatEnd!!.setOnCheckedChangeListener(this)
-        initPageScrollViewItemClick(mPageScrollView!!)
+        mToggleFloatStart.setOnCheckedChangeListener(this)
+        mToggleFloatEnd.setOnCheckedChangeListener(this)
+        initPageScrollViewItemClick(mPageScrollView)
     }
 
     public override fun setContentOrientationInner(vertical: Boolean, init: Boolean): Boolean {
@@ -50,8 +50,8 @@ class FragmentPageScrollView : FragmentPageBase() {
 
     private fun initPageScrollViewItemClick(scrollView: PageScrollView) {
         scrollView.setLogTag("dev", false)
-        val pageClick1 = View.OnClickListener { v ->
-            val index = scrollView.indexOfItemView(v)
+        val pageClick1 = View.OnClickListener {
+            val index = scrollView.indexOfItemView(it)
             if (index >= 0) {
                 scrollView.scrollTo(index, 0, -1)
             }
@@ -63,10 +63,10 @@ class FragmentPageScrollView : FragmentPageBase() {
     }
 
     private fun adjustFloatViewParams(vertical: Boolean) {
-        val pageItemCount = mPageScrollView!!.itemViewCount
+        val pageItemCount = mPageScrollView.itemViewCount
         if (pageItemCount >= 2) {
-            val lp1 = mPageScrollView!!.getItemView(0)!!.layoutParams as BaseViewGroup.LayoutParams
-            val lp2 = mPageScrollView!!.getItemView(pageItemCount - 1)!!.layoutParams as BaseViewGroup.LayoutParams
+            val lp1 = mPageScrollView.getItemView(0)?.layoutParams as BaseViewGroup.LayoutParams
+            val lp2 = mPageScrollView.getItemView(pageItemCount - 1)?.layoutParams as BaseViewGroup.LayoutParams
             val sizeShort = (mDensity * 60).toInt()
             val sizeLong = (mDensity * 350).toInt()
             if (vertical) {
@@ -89,9 +89,9 @@ class FragmentPageScrollView : FragmentPageBase() {
             floatIndex = if (header) 0 else mPageScrollView!!.itemViewCount - 1
         }
         if (header) {
-            mPageScrollView!!.floatViewStartIndex = floatIndex
+            mPageScrollView.floatViewStartIndex = floatIndex
         } else {
-            mPageScrollView!!.floatViewEndIndex = floatIndex
+            mPageScrollView.floatViewEndIndex = floatIndex
         }
     }
 

@@ -73,7 +73,7 @@ class FragmentWrapLabelLayout : FragmentViewPicker() {
     }
 
     private fun buildRandomSize(minSize: Int, maxSize: Int): Int {
-        if (maxSize > minSize && minSize > 0) {
+        if (minSize in 1..(maxSize - 1)) {
             mRandom.setSeed(System.currentTimeMillis() + mRandom.nextInt(maxSize))
             return minSize + mRandom.nextInt(maxSize - minSize + 1)
         }

@@ -23,11 +23,11 @@ import java.util.*
 
 class HierarchyLayout : WrapLayout {
 
-    internal var mLayoutBounds = Rect()
-    internal var mTempRect = Rect()
-    internal var mTempPointF = PointF()
-    internal var mSlop: Float = 0.toFloat()
-    internal var mDensity: Float = 0.toFloat()
+    private var mLayoutBounds = Rect()
+    private var mTempRect = Rect()
+    private var mTempPointF = PointF()
+    private var mSlop: Float = 0.toFloat()
+    private var mDensity: Float = 0.toFloat()
 
 
     private val mOptionRect = RectF()
@@ -84,13 +84,13 @@ class HierarchyLayout : WrapLayout {
     private var mTreeOffsetX = 0f
     private var mTreeOffsetY = 10f
 
-    internal var mLeafSize: Float = 0.toFloat()
-    internal var mLeafMargin: Float = 0.toFloat()
-    internal var mLevelMargin: Float = 0.toFloat()
-    internal var mHierarchyTreeHorizontal: Boolean = false
-    internal var mTree: ViewHierarchyTree? = null
-    internal var mStringBuilder = StringBuilder()
-    internal var mTreePaint = Paint(Paint.ANTI_ALIAS_FLAG)
+    private var mLeafSize: Float = 0.toFloat()
+    private var mLeafMargin: Float = 0.toFloat()
+    private var mLevelMargin: Float = 0.toFloat()
+    private var mHierarchyTreeHorizontal: Boolean = false
+    private var mTree: ViewHierarchyTree? = null
+    private var mStringBuilder = StringBuilder()
+    private var mTreePaint = Paint(Paint.ANTI_ALIAS_FLAG)
 
     constructor(context: Context) : super(context) {
         init(context, null)
@@ -300,9 +300,7 @@ class HierarchyLayout : WrapLayout {
 
     override fun doAfterLayout(firstAttachLayout: Boolean) {
         super.doAfterLayout(firstAttachLayout)
-        if (mTree != null) {
-            mTree!!.destroy()
-        }
+        mTree?.destroy()
         mLeafSize = -1f
         mTree = ViewHierarchyTree.create(this)
         val width = mLayoutBounds.width()
@@ -361,7 +359,7 @@ class HierarchyLayout : WrapLayout {
         val nodes = mTree!!.hierarchyNodeArray
         mViewBorderPaint.color = mViewColor
         mViewBorderPaint.setShadowLayer(0f, 1f, -1f, mViewShadowColor)
-        for (i in 1..nodes.size() - 1) {
+        for (i in 1 until nodes.size()) {
             val node = nodes.get(i)
             val view = node.view
             val layer = node.level
@@ -498,7 +496,7 @@ class HierarchyLayout : WrapLayout {
                     }
                 } else {
                     size = mTempInt.size()
-                    for (i in 0..size - 1) {
+                    for (i in 0 until size) {
                         mTempInt.valueAt(i).setVisibility(View.VISIBLE)
                     }
                     mTempInt.clear()
@@ -562,10 +560,10 @@ class HierarchyLayout : WrapLayout {
         var prevParent: ViewHierarchyInfo? = null
         var parent: ViewHierarchyInfo?
         var child: ViewHierarchyInfo
-        for (line in 1..lineCount - 1) {
+        for (line in 1 until lineCount) {
             startIndex = endIndex
             endIndex = startIndex + lines.get(line)
-            for (i in startIndex..endIndex - 1) {
+            for (i in startIndex until endIndex) {
                 child = list.get(i)
                 parent = child.parent
                 if (parent !== prevParent) {
@@ -630,7 +628,7 @@ class HierarchyLayout : WrapLayout {
     override fun onDetachedFromWindow() {
         super.onDetachedFromWindow()
         if (mTree != null) {
-            mTree!!.destroy()
+            mTree?.destroy()
             mTree = null
         }
         mIdNameArr.clear()
@@ -694,7 +692,7 @@ class HierarchyLayout : WrapLayout {
                 val p = view as ViewGroup
                 val count = p.childCount
                 calculateWeight = true
-                for (i in 0..count - 1) {
+                for (i in 0 until count) {
                     if (View.GONE != p.getChildAt(i).visibility) {
                         calculateWeight = false
                         break
@@ -729,7 +727,7 @@ class HierarchyLayout : WrapLayout {
                 val name = simpleName
                 if (name != null && name.length > 0) {
                     val sb = StringBuilder()
-                    for (i in 0..name.length - 1) {
+                    for (i in 0 until name.length) {
                         val c = name[i]
                         if (c >= 'A' && c <= 'Z') {
                             sb.append(c)
@@ -867,7 +865,7 @@ class HierarchyLayout : WrapLayout {
                 val parent = pair.first
                 val layout = pair.second
                 val size = layout.childCount
-                for (i in 0..size - 1) {
+                for (i in 0 until size) {
                     val child = layout.getChildAt(i)
                     if (child.visibility != View.GONE) {
                         val curLevel = if (parent == null) 0 else parent.level + 1
@@ -889,7 +887,7 @@ class HierarchyLayout : WrapLayout {
 
         fun getViewHierarchyInfo(level: Int, levelIndex: Int): ViewHierarchyInfo? {
             var sum = levelIndex
-            for (i in 0..level - 1) {
+            for (i in 0 until level) {
                 sum += hierarchyCountArray.get(i, 0)
             }
             return if (sum >= 0 && sum < hierarchyNodeArray.size()) {
@@ -938,7 +936,7 @@ class HierarchyLayout : WrapLayout {
                 val sum = countOfNode.toFloat()
                 var result = 0f
                 val hierarchyCount = hierarchyCount
-                for (i in 0..hierarchyCount - 1) {
+                for (i in 0 until hierarchyCount) {
                     result += getCountOfNode(i) * (i + 1) / sum
                 }
                 return result
@@ -949,7 +947,7 @@ class HierarchyLayout : WrapLayout {
             sb = if (sb == null) StringBuilder() else sb
             val size = hierarchyCountArray.size()
             var weight = 0
-            for (i in 0..size - 1) {
+            for (i in 0 until size) {
                 val value = hierarchyCountArray.get(i)
                 weight += value * (i + 1)
                 sb.append(" | ").append(value)
@@ -1007,7 +1005,7 @@ class HierarchyLayout : WrapLayout {
                 if (parent !is HierarchyLayout) {
                     val childs = SparseArray<View>()
                     val count = parent.childCount
-                    for (i in 0..count - 1) {
+                    for (i in 0 until count) {
                         childs.put(i, parent.getChildAt(i))
                     }
                     parent.removeAllViews()
@@ -1023,7 +1021,7 @@ class HierarchyLayout : WrapLayout {
                 if (parent is HierarchyLayout) {
                     val childs = SparseArray<View>()
                     val count = parent.getChildCount()
-                    for (i in 0..count - 1) {
+                    for (i in 0 until count) {
                         childs.put(i, parent.getChildAt(i))
                     }
                     parent.removeAllViews()
@@ -1031,7 +1029,7 @@ class HierarchyLayout : WrapLayout {
                     val realParent = parent.getParent() as ViewGroup
                     realParent.id = android.R.id.content
                     realParent.removeAllViews()
-                    for (i in 0..count - 1) {
+                    for (i in 0 until count) {
                         realParent.addView(childs.get(i))
                     }
                 }

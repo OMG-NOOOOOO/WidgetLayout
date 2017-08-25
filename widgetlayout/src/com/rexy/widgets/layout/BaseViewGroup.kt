@@ -124,42 +124,42 @@ abstract class BaseViewGroup : ViewGroup, BorderDivider.Callback {
     /**
      * content gravity [android.view.Gravity]
      */
-    internal var mGravity: Int = 0
-    internal var mMaxWidth = -1
-    internal var mMaxHeight = -1
-    internal var mWidthPercent = 0f
-    internal var mHeightPercent = 0f
+    private var mGravity: Int = 0
+    private var mMaxWidth = -1
+    private var mMaxHeight = -1
+    private var mWidthPercent = 0f
+    private var mHeightPercent = 0f
     /**
      * @see HORIZONTAL
      *
      * @see VERTICAL
      */
     internal var mOrientation: Int = VERTICAL
-    internal var mClipToPadding: Boolean = false
-    internal var mEdgeEffectEnable: Boolean = false
+    private var mClipToPadding: Boolean = false
+    private var mEdgeEffectEnable: Boolean = false
 
     var isIgnoreForegroundStateWhenTouchOut = false
     /**
      * hove drawable that will draw over the content
      */
-    internal var mForegroundDrawable: FloatDrawable? = null
+    private var mForegroundDrawable: FloatDrawable? = null
 
 
     /**
      * whether it support touch scroll action .
      */
-    internal var mTouchScrollEnable = true
-    internal var mCanTouchScrollHorizontal = false
-    internal var mCanTouchScrollVertical = false
+    private var mTouchScrollEnable = true
+    private var mCanTouchScrollHorizontal = false
+    private var mCanTouchScrollVertical = false
     /**
      * provide a chance let the user to take over touch event.
      */
-    internal var mItemTouchListener: OnItemTouchListener? = null
+    private var mItemTouchListener: OnItemTouchListener? = null
 
     /**
      * a decoration interface to adjust child margin and draw some over or under the child
      */
-    internal var mDrawerDecoration: DrawerDecoration? = null
+    private var mDrawerDecoration: DrawerDecoration? = null
 
 
     protected var mTouchSlop = 0
@@ -201,9 +201,9 @@ abstract class BaseViewGroup : ViewGroup, BorderDivider.Callback {
     private var mTimeMeasureStart: Long = 0
     private var mTimeLayoutStart: Long = 0
     private var mTimeDrawStart: Long = 0
-      var mLastMeasureCost: Long = 0
-      var mLastLayoutCost: Long = 0
-      var mLastDrawCost: Long = 0
+    var mLastMeasureCost: Long = 0
+    var mLastLayoutCost: Long = 0
+    var mLastDrawCost: Long = 0
 
 
     constructor(context: Context) : super(context) {
@@ -273,13 +273,11 @@ abstract class BaseViewGroup : ViewGroup, BorderDivider.Callback {
         print(category, msg, true)
     }
 
-    private fun print(category: CharSequence?, msg: CharSequence?, dev: Boolean) {
-        if(isLogAccess){
+    private fun print(category: CharSequence?, msg: CharSequence, dev: Boolean) {
+        if (isLogAccess) {
             var msg = msg
             var tag = mLogTag + if (dev) "@" else "#"
-            if (category == null || msg == null) {
-                msg = category ?: msg
-            } else {
+            if (category != null) {
                 tag += category
             }
             Log.d(tag, msg.toString())
@@ -348,7 +346,7 @@ abstract class BaseViewGroup : ViewGroup, BorderDivider.Callback {
     /**
      * set layout and gesture direction
      *
-     * @param orientation [.HORIZONTAL] and [.VERTICAL]
+     * @param orientation [HORIZONTAL] and [VERTICAL]
      */
     var orientation: Int
         get() = mOrientation
@@ -374,7 +372,8 @@ abstract class BaseViewGroup : ViewGroup, BorderDivider.Callback {
             mTouchScrollEnable = touchScrollEnable
         }
     }
-    fun isTouchScrollEnable()= mTouchScrollEnable
+
+    fun isTouchScrollEnable() = mTouchScrollEnable
 
     fun isTouchScrollEnable(contentConsidered: Boolean): Boolean {
         return isTouchScrollVerticalEnable(contentConsidered) || isTouchScrollHorizontalEnable(contentConsidered)
@@ -532,7 +531,7 @@ abstract class BaseViewGroup : ViewGroup, BorderDivider.Callback {
         isAttachLayoutFinished = false
         mVirtualCount = 0
         if (mBorderDivider != null) {
-            mBorderDivider!!.mCallback=null
+            mBorderDivider!!.mCallback = null
         }
     }
 
@@ -568,7 +567,7 @@ abstract class BaseViewGroup : ViewGroup, BorderDivider.Callback {
         if (minSize > finalSize) {
             finalSize = minSize
         }
-        if (finalSize > maxSize && maxSize > minSize && maxSize > 0) {
+        if (maxSize > 0 && finalSize > maxSize && maxSize > minSize) {
             finalSize = maxSize
         }
         return Math.max(finalSize - padding, 0)
@@ -698,9 +697,7 @@ abstract class BaseViewGroup : ViewGroup, BorderDivider.Callback {
 
     //start: touch gesture
     override fun requestDisallowInterceptTouchEvent(disallowIntercept: Boolean) {
-        if (mItemTouchListener != null) {
-            mItemTouchListener!!.onRequestDisallowInterceptTouchEvent(disallowIntercept)
-        }
+        mItemTouchListener?.onRequestDisallowInterceptTouchEvent(disallowIntercept)
         super.requestDisallowInterceptTouchEvent(disallowIntercept)
     }
 
@@ -724,7 +721,7 @@ abstract class BaseViewGroup : ViewGroup, BorderDivider.Callback {
             if (action == MotionEvent.ACTION_DOWN) {
                 mItemTouchInvoked = false
             } else {
-                mItemTouchListener!!.onTouchEvent(this, e)
+                mItemTouchListener?.onTouchEvent(this, e)
                 if (action == MotionEvent.ACTION_CANCEL || action == MotionEvent.ACTION_UP) {
                     // Clean up for the next gesture.
                     mItemTouchInvoked = false
@@ -756,7 +753,7 @@ abstract class BaseViewGroup : ViewGroup, BorderDivider.Callback {
         return super.onTouchEvent(e)
     }
 
-    protected fun dispatchDrawableTouch(e: MotionEvent?) {
+    private fun dispatchDrawableTouch(e: MotionEvent?) {
         if (mForegroundDrawable != null && isClickable) {
             if (e == null) {
                 mForegroundDrawable!!.start(false)
@@ -786,7 +783,7 @@ abstract class BaseViewGroup : ViewGroup, BorderDivider.Callback {
 
     }
 
-    protected fun computeVisibleBounds(scrollX: Int, scrollY: Int, scrollChanged: Boolean, apply: Boolean) {
+    private  fun computeVisibleBounds(scrollX: Int, scrollY: Int, scrollChanged: Boolean, apply: Boolean) {
         val beforeHash = visibleContentBounds.hashCode()
         var width = if (apply) width else 0
         var height = if (apply) height else 0
@@ -826,7 +823,7 @@ abstract class BaseViewGroup : ViewGroup, BorderDivider.Callback {
     protected fun getVirtualChildAt(virtualIndex: Int, withoutGone: Boolean): View? {
         var virtualCount = 0
         val count = childCount
-        for (i in 0..count - 1) {
+        for (i in 0 until count) {
             val child = getChildAt(i)
             if (skipVirtualChild(child, withoutGone)) continue
             if (virtualCount == virtualIndex) {
@@ -837,10 +834,10 @@ abstract class BaseViewGroup : ViewGroup, BorderDivider.Callback {
         return null
     }
 
-    protected fun getVirtualChildCount(withoutGone: Boolean): Int {
+    private fun getVirtualChildCount(withoutGone: Boolean): Int {
         var virtualCount = 0
         val count = childCount
-        for (i in 0..count - 1) {
+        for (i in 0 until count) {
             val child = getChildAt(i)
             if (skipVirtualChild(child, withoutGone)) continue
             virtualCount++
@@ -861,7 +858,7 @@ abstract class BaseViewGroup : ViewGroup, BorderDivider.Callback {
     fun getItemView(itemIndex: Int): View? {
         var result: View? = null
         val itemCount = itemViewCount
-        if (itemIndex >= 0 && itemIndex < itemCount) {
+        if (itemIndex in 0..(itemCount - 1)) {
             result = getVirtualChildAt(itemIndex, true)
         }
         return result
@@ -871,7 +868,7 @@ abstract class BaseViewGroup : ViewGroup, BorderDivider.Callback {
         if (view != null) {
             var virtualIndex = 0
             val count = childCount
-            for (i in 0..count - 1) {
+            for (i in 0 until count) {
                 val child = getChildAt(i)
                 if (skipVirtualChild(child, true)) continue
                 if (view === child) {
@@ -911,11 +908,11 @@ abstract class BaseViewGroup : ViewGroup, BorderDivider.Callback {
             return result
         }
 
-    protected fun getContentStartH(containerLeft: Int, containerRight: Int, contentWillSize: Int, gravity: Int): Int {
+    private   fun getContentStartH(containerLeft: Int, containerRight: Int, contentWillSize: Int, gravity: Int): Int {
         return getContentStartH(containerLeft, containerRight, contentWillSize, 0, 0, gravity)
     }
 
-    protected fun getContentStartV(containerTop: Int, containerBottom: Int, contentWillSize: Int, gravity: Int): Int {
+    private fun getContentStartV(containerTop: Int, containerBottom: Int, contentWillSize: Int, gravity: Int): Int {
         return getContentStartV(containerTop, containerBottom, contentWillSize, 0, 0, gravity)
     }
 

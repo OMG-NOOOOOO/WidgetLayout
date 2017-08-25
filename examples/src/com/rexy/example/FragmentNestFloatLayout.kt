@@ -19,7 +19,7 @@ import com.rexy.widgetlayout.example.R
  */
 class FragmentNestFloatLayout : BaseFragment() {
 
-    private val mListView by lazy { view!!.findViewById(R.id.listView) as RecyclerView }
+    private val listView by lazy { view!!.findViewById(R.id.listView) as RecyclerView }
 
     override fun onCreateView(inflater: LayoutInflater?, container: ViewGroup?, savedInstanceState: Bundle?): View? {
         return inflater!!.inflate(R.layout.fragment_nestfloatlayout, container, false)
@@ -27,19 +27,12 @@ class FragmentNestFloatLayout : BaseFragment() {
 
     override fun onActivityCreated(savedInstanceState: Bundle?) {
         super.onActivityCreated(savedInstanceState)
-        initRecyclerView(mListView, 50)
+        initRecyclerView(listView, 50)
     }
 
     private fun initRecyclerView(recyclerView: RecyclerView, initCount: Int) {
-        recyclerView.adapter = TestRecyclerAdapter(activity, createData("item", initCount))
+        recyclerView.adapter = TestRecyclerAdapter(activity, MutableList(initCount + 1) { "item " + (it + 1) })
         recyclerView.layoutManager = LinearLayoutManager(activity)
         recyclerView.addItemDecoration(DecorationOffsetLinear(false, 20))
-    }
-
-    private fun createData(prefix: String, count: Int): List<String> {
-        val list = MutableList(count + 1){
-            prefix + " " + (it + 1)
-        }
-        return list
     }
 }

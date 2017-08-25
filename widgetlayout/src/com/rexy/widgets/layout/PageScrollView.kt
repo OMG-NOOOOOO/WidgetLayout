@@ -206,7 +206,7 @@ open class PageScrollView : ScrollLayout {
                     val horizontal = isOrientationHorizontal
                     if (oldTransformer != null && mPageTransformer == null) {
                         val childCount = childCount
-                        for (i in 0..childCount - 1) {
+                        for (i in 0 until childCount) {
                             val child = getChildAt(i)
                             if (!skipVirtualChild(child, true)) {
                                 oldTransformer.recoverTransformPage(child, horizontal)
@@ -250,10 +250,10 @@ open class PageScrollView : ScrollLayout {
         mFloatViewStartIndex = -1
         mFloatViewEndIndex = -1
         if (virtualCount >= 2) {
-            if (mFloatViewStart >= 0 && mFloatViewStart < virtualCount) {
+            if (mFloatViewStart in 0..(virtualCount - 1)) {
                 computeFloatViewIndex(mFloatViewStart, horizontal, true)
             }
-            if (mFloatViewEnd >= 0 && mFloatViewEnd < virtualCount) {
+            if (mFloatViewEnd in 0..(virtualCount - 1)) {
                 computeFloatViewIndex(mFloatViewEnd, horizontal, false)
             }
         }
@@ -343,7 +343,7 @@ open class PageScrollView : ScrollLayout {
         var contentHeight = 0
         var childState = 0
         var itemPosition = 0
-        for (i in 0..childCount - 1) {
+        for (i in 0 until childCount) {
             val child = getChildAt(i)
             if (skipVirtualChild(child, true)) continue
             val params = child.layoutParams as BaseViewGroup.LayoutParams
@@ -434,7 +434,7 @@ open class PageScrollView : ScrollLayout {
         } else {
             destroyCacheMeasureSize()
         }
-        for (i in 0..childCount - 1) {
+        for (i in 0 until childCount) {
             val child = getChildAt(i)
             if (skipVirtualChild(child, true)) continue
             var pair: PointF? = sPairPools.acquire()
@@ -549,7 +549,7 @@ open class PageScrollView : ScrollLayout {
         val count = childCount
         val mMiddleMargin = mBorderDivider!!.contentMarginVertical
         childTop = baseTop
-        for (i in 0..count - 1) {
+        for (i in 0 until count) {
             val child = getChildAt(i)
             if (skipVirtualChild(child, true)) continue
             val params = child.layoutParams as BaseViewGroup.LayoutParams
@@ -592,7 +592,7 @@ open class PageScrollView : ScrollLayout {
         val count = childCount
         val mMiddleMargin = mBorderDivider!!.contentMarginHorizontal
         childLeft = baseLeft
-        for (i in 0..count - 1) {
+        for (i in 0 until count) {
             val child = getChildAt(i)
             if (skipVirtualChild(child, true)) continue
             val params = child.layoutParams as BaseViewGroup.LayoutParams
@@ -607,10 +607,10 @@ open class PageScrollView : ScrollLayout {
 
     override fun doBeforeDraw(canvas: Canvas, inset: Rect) {
         val swapIndexEnable = mFloatViewStartIndex >= 0 && mSwapViewIndex >= 0
-        if (swapIndexEnable && isChildrenDrawingOrderEnabled == false) {
+        if (swapIndexEnable && !isChildrenDrawingOrderEnabled) {
             isChildrenDrawingOrderEnabled = true
         } else {
-            if (swapIndexEnable == false) {
+            if (!swapIndexEnable) {
                 isChildrenDrawingOrderEnabled = false
             }
         }
@@ -733,7 +733,7 @@ open class PageScrollView : ScrollLayout {
     private fun enableLayers(enable: Boolean) {
         val childCount = childCount
         val layerType = if (enable) ViewCompat.LAYER_TYPE_HARDWARE else ViewCompat.LAYER_TYPE_NONE
-        for (i in 0..childCount - 1) {
+        for (i in 0 until childCount) {
             val child = getChildAt(i)
             if (child !== mPageHeaderView && child !== mPageFooterView) {
                 ViewCompat.setLayerType(child, layerType, null)
@@ -799,7 +799,7 @@ open class PageScrollView : ScrollLayout {
             val baseLine: Int
             val view = getChildAt(mFloatViewStartIndex)
             baseLine = (if (horizontal) view.right else view.bottom) + scrolled
-            for (i in mFloatViewStartIndex + 1..count - 1) {
+            for (i in mFloatViewStartIndex + 1 until count) {
                 val child = getChildAt(i)
                 if (skipVirtualChild(child, true))
                     continue
@@ -903,7 +903,7 @@ open class PageScrollView : ScrollLayout {
         var firstVisible = -1
         var lastVisible = -1
         var visible: Boolean
-        for (i in 0..childCount - 1) {
+        for (i in 0 until childCount) {
             val child = getChildAt(i)
             if (skipVirtualChild(child, true)) continue
             if (horizontal) {

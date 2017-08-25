@@ -22,16 +22,15 @@ open class BaseActivity : FragmentActivity() {
 
     companion object {
         val KEY_ATY_STYLE = "KEY_ATY_STYLE"
-        private var mVisibleSignal = 0
-        private val mActivities = Stack<Activity>()
+        private var visibleSignal = 0
 
-        fun getActivities(): Stack<Activity> = mActivities
+        val activities = Stack<Activity>()
 
-        fun hasActivityVisible(): Boolean = mVisibleSignal == 1
+        fun hasActivityVisible(): Boolean = visibleSignal == 1
 
         fun exitApp(kill: Boolean) {
-            while (!mActivities.isEmpty()) {
-                mActivities.pop().finish()
+            while (!activities.isEmpty()) {
+                activities.pop().finish()
             }
             if (kill) {
                 android.os.Process.killProcess(android.os.Process.myPid())
@@ -39,7 +38,9 @@ open class BaseActivity : FragmentActivity() {
         }
     }
 
-    var mNewIntent: Intent? = null
+    protected var newIntent: Intent? = null
+        private set
+        protected get
 
     override fun onCreate(savedInstanceState: Bundle?) {
         if (Build.VERSION.SDK_INT > 10) {
@@ -50,22 +51,22 @@ open class BaseActivity : FragmentActivity() {
             setTheme(atyTheme)
         }
         super.onCreate(savedInstanceState)
-        mActivities.push(this)
+        activities.push(this)
     }
 
     override fun onPostResume() {
         super.onPostResume()
-        mNewIntent?.let {
+        newIntent?.let {
             if (!handleNewIntent(it, it.extras)) {
                 //if nothing done , do something common here
             }
-            mNewIntent = null
+            newIntent = null
         }
     }
 
     override fun onNewIntent(intent: Intent) {
         super.onNewIntent(intent)
-        mNewIntent = intent
+        newIntent = intent
     }
 
     /**
@@ -75,23 +76,23 @@ open class BaseActivity : FragmentActivity() {
      * *
      * @return 返回true后将不会给父类处理。
      */
-    fun handleNewIntent(newIntent: Intent, extras: Bundle): Boolean {
+    protected open fun handleNewIntent(newIntent: Intent, extras: Bundle): Boolean {
         return false
     }
 
     override fun onStart() {
         super.onStart()
-        mVisibleSignal++
+        visibleSignal++
     }
 
     override fun onStop() {
         super.onStop()
-        mVisibleSignal--
+        visibleSignal--
     }
 
     override fun onDestroy() {
         super.onDestroy()
-        mActivities.remove(this)
+        activities.remove(this)
     }
 
     override fun onCreateOptionsMenu(menu: Menu?): Boolean {
@@ -108,9 +109,9 @@ open class BaseActivity : FragmentActivity() {
     }
 
     override fun onKeyDown(keyCode: Int, event: KeyEvent?): Boolean {
-        if(HierarchyLayout.isHierarchyInstalled(this)){
-            HierarchyLayout.hierarchy(this,false)
-            return true;
+        if (HierarchyLayout.isHierarchyInstalled(this)) {
+            HierarchyLayout.hierarchy(this, false)
+            return true
         }
         return super.onKeyDown(keyCode, event)
     }

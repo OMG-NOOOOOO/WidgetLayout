@@ -2,7 +2,6 @@ package com.rexy.widgets.layout
 
 import android.content.Context
 import android.content.res.ColorStateList
-import android.content.res.TypedArray
 import android.graphics.drawable.Drawable
 import android.os.Build
 import android.util.AttributeSet
@@ -10,11 +9,10 @@ import android.util.TypedValue
 import android.view.Gravity
 import android.view.View
 import android.view.ViewGroup
-
 import com.rexy.widgetlayout.R
 import com.rexy.widgets.adapter.ItemProvider
 import com.rexy.widgets.view.CheckText
-import java.util.LinkedList
+import java.util.*
 
 /**
  * TODO:功能说明
@@ -27,7 +25,7 @@ class LabelLayout : WrapLayout {
     private var mTextSize = 15
     var labelBackground: Drawable? = null
         set(labelBackground) {
-            if (this.labelBackground !== labelBackground) {
+            if (field !== labelBackground) {
                 field = labelBackground
             }
         }
@@ -44,7 +42,7 @@ class LabelLayout : WrapLayout {
             }
         }
 
-    var labelClickListener: OnLabelClickListener? = null
+    private var labelClickListener: OnLabelClickListener? = null
         private set
 
     private val mCachedView = LinkedList<View>()
@@ -120,7 +118,7 @@ class LabelLayout : WrapLayout {
     private fun buildLabels(provider: ItemProvider, itemCount: Int) {
         val viewProvider = provider as? ItemProvider.ViewProvider
         val viewType = viewProvider != null
-        for (i in 0..itemCount - 1) {
+        for (i in 0 until itemCount) {
             val view: View
             if (viewType) {
                 val itemType = viewProvider!!.getViewType(i)

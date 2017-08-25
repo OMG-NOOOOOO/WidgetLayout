@@ -24,9 +24,9 @@ open abstract class FragmentPageBase : BaseFragment(), CompoundButton.OnCheckedC
     private var mContentVertical: Boolean = false
     private var mPageTransformer = TestPageTransformer()
 
-    private var mToggleAnim: ToggleButton?=null
-    private var mToggleCenter: ToggleButton?=null
-    protected var mPageScrollView: PageScrollView? = null
+    private lateinit var mToggleAnim: ToggleButton
+    private lateinit var  mToggleCenter: ToggleButton
+    protected lateinit var  mPageScrollView: PageScrollView
 
     override fun onActivityCreated(savedInstanceState: Bundle?) {
         super.onActivityCreated(savedInstanceState)
@@ -61,8 +61,8 @@ open abstract class FragmentPageBase : BaseFragment(), CompoundButton.OnCheckedC
         mPageScrollView = root.findViewById(R.id.pageScrollView) as PageScrollView
         mToggleAnim = root.findViewById(R.id.toggleTransform) as ToggleButton
         mToggleCenter = root.findViewById(R.id.toggleChildCenter) as ToggleButton
-        mToggleAnim!!.setOnCheckedChangeListener(this)
-        mToggleCenter!!.setOnCheckedChangeListener(this)
+        mToggleAnim.setOnCheckedChangeListener(this)
+        mToggleCenter.setOnCheckedChangeListener(this)
     }
 
     protected open fun setContentOrientationInner(vertical: Boolean, init: Boolean): Boolean {
@@ -72,8 +72,8 @@ open abstract class FragmentPageBase : BaseFragment(), CompoundButton.OnCheckedC
                 it.orientation = if (vertical) BaseViewGroup.VERTICAL else BaseViewGroup.HORIZONTAL
             }
             if (init) {
-                adjustTransformAnimation(mToggleAnim!!.isChecked)
-                adjustChildLayoutCenter(mToggleCenter!!.isChecked)
+                adjustTransformAnimation(mToggleAnim.isChecked)
+                adjustChildLayoutCenter(mToggleCenter.isChecked)
             }
             return true
         }
@@ -85,12 +85,12 @@ open abstract class FragmentPageBase : BaseFragment(), CompoundButton.OnCheckedC
         mDensity = context!!.resources.displayMetrics.density
     }
 
-    fun adjustTransformAnimation(haveAnim: Boolean) {
-        mPageScrollView?.let { it.pageTransformer = if (haveAnim) mPageTransformer else null }
+    private fun adjustTransformAnimation(haveAnim: Boolean) {
+        mPageScrollView.let { it.pageTransformer = if (haveAnim) mPageTransformer else null }
     }
 
-    fun adjustChildLayoutCenter(layoutCenter: Boolean) {
-        mPageScrollView?.let { it.isChildCenter = layoutCenter }
+    private fun adjustChildLayoutCenter(layoutCenter: Boolean) {
+        mPageScrollView.let { it.isChildCenter = layoutCenter }
     }
 
     override fun onCheckedChanged(buttonView: CompoundButton, isChecked: Boolean) {

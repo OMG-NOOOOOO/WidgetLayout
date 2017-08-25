@@ -19,14 +19,14 @@ import com.rexy.widgetlayout.example.R
  */
 class FragmentPageScrollContainer : BaseFragment(), View.OnClickListener {
 
-    internal val mToggleViewPage by lazy { view!!.findViewById(R.id.toggleViewPager) as TextView }
-    internal val mToggleOrientation by lazy { view!!.findViewById(R.id.toggleOrientation) as TextView }
+    private val mToggleViewPage by lazy { view!!.findViewById(R.id.toggleViewPager) as TextView }
+    private val mToggleOrientation by lazy { view!!.findViewById(R.id.toggleOrientation) as TextView }
 
-    internal var mFragmentTags = arrayOf("ScrollView", "ViewPager")
+    private val mFragmentTags = arrayOf("ScrollView", "ViewPager")
 
-    internal var mVisibleFragmentIndex = 0
-    internal var mViewAsScrollView: Boolean = false
-    internal var mViewAsVertical: Boolean = false
+    private var mVisibleFragmentIndex = 0
+    private var mViewAsScrollView: Boolean = false
+    private var mViewAsVertical: Boolean = false
 
     override fun onCreateView(inflater: LayoutInflater?, container: ViewGroup?, savedInstanceState: Bundle?): View? {
         return inflater?.inflate(R.layout.fragment_pagescrollview_container, container, false)
@@ -39,7 +39,7 @@ class FragmentPageScrollContainer : BaseFragment(), View.OnClickListener {
         switchToFragment(mVisibleFragmentIndex, 1 - mVisibleFragmentIndex)
     }
 
-    fun getDefaultViewTypeOrientation(scrollView: Boolean)=scrollView
+    private fun getDefaultViewTypeOrientation(scrollView: Boolean)=scrollView
 
     override fun onClick(v: View) {
         if (v === mToggleOrientation) {
@@ -56,7 +56,7 @@ class FragmentPageScrollContainer : BaseFragment(), View.OnClickListener {
         setViewOrientationInner(vertical, false)
     }
 
-    fun setViewOrientationInner(vertical: Boolean, notify: Boolean) {
+    private fun setViewOrientationInner(vertical: Boolean, notify: Boolean) {
         if (mViewAsVertical != vertical) {
             mViewAsVertical = vertical
             mToggleOrientation.text = if (vertical) "VERTICAL" else "HORIZONTAL"

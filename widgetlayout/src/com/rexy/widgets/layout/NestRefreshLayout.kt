@@ -493,9 +493,9 @@ class NestRefreshLayout<INDICATOR : View> : BaseViewGroup, NestedScrollingParent
         return super.skipChild(child) || child!!.parent !== this
     }
 
-    private fun measureChild(child: View?, itemPosition: Int, parentSpecWidth: Int, parentSpecHeight: Int, heightUsed: Int) {
+    private fun measureChild(child: View, itemPosition: Int, parentSpecWidth: Int, parentSpecHeight: Int, heightUsed: Int) {
         Arrays.fill(mMeasureResult, 0)
-        val params = child!!.layoutParams as BaseViewGroup.LayoutParams
+        val params = child.layoutParams as BaseViewGroup.LayoutParams
         params.measure(child, itemPosition, parentSpecWidth, parentSpecHeight, 0, heightUsed)
         mMeasureResult[0] = params.width(child)
         mMeasureResult[1] = params.height(child)
@@ -515,7 +515,7 @@ class NestRefreshLayout<INDICATOR : View> : BaseViewGroup, NestedScrollingParent
         var itemPosition = 0
         val contentVisible = !skipChild(mContentView)
         if (!skipChild(mHeaderView)) {
-            measureChild(mHeaderView, itemPosition++, widthMeasureSpecContent, heightMeasureSpecContent, contentHeight)
+            measureChild(mHeaderView!!, itemPosition++, widthMeasureSpecContent, heightMeasureSpecContent, contentHeight)
             contentWidth = Math.max(contentWidth, mMeasureResult[0])
             childState = childState or mMeasureResult[2]
             if (isHeaderViewFloat) {
@@ -525,7 +525,7 @@ class NestRefreshLayout<INDICATOR : View> : BaseViewGroup, NestedScrollingParent
             }
         }
         if (!skipChild(mFooterView)) {
-            measureChild(mFooterView, itemPosition++, widthMeasureSpecContent, heightMeasureSpecContent, contentHeight)
+            measureChild(mFooterView!!, itemPosition++, widthMeasureSpecContent, heightMeasureSpecContent, contentHeight)
             contentWidth = Math.max(contentWidth, mMeasureResult[0])
             childState = childState or mMeasureResult[2]
             if (isFooterViewFloat) {
@@ -536,20 +536,20 @@ class NestRefreshLayout<INDICATOR : View> : BaseViewGroup, NestedScrollingParent
         }
         val usedHeight = contentHeight
         if (!skipChild(mRefreshHeader)) {
-            measureChild(mRefreshHeader, itemPosition++, widthMeasureSpecContent, heightMeasureSpecContent, usedHeight)
+            measureChild(mRefreshHeader!!, itemPosition++, widthMeasureSpecContent, heightMeasureSpecContent, usedHeight)
             contentWidth = Math.max(contentWidth, mMeasureResult[0])
             childState = childState or mMeasureResult[2]
             refreshHeight = Math.max(refreshHeight, mMeasureResult[1])
         }
         if (contentVisible && !skipChild(mRefreshFooter)) {
-            measureChild(mRefreshFooter, itemPosition++, widthMeasureSpecContent, heightMeasureSpecContent, usedHeight)
+            measureChild(mRefreshFooter!!, itemPosition++, widthMeasureSpecContent, heightMeasureSpecContent, usedHeight)
             contentWidth = Math.max(contentWidth, mMeasureResult[0])
             childState = childState or mMeasureResult[2]
             refreshHeight = Math.max(refreshHeight, mMeasureResult[1])
         }
 
         if (contentVisible) {
-            measureChild(mContentView, itemPosition++, widthMeasureSpecContent, heightMeasureSpecContent, usedHeight)
+            measureChild(mContentView!!, itemPosition++, widthMeasureSpecContent, heightMeasureSpecContent, usedHeight)
             contentWidth = Math.max(contentWidth, mMeasureResult[0])
             childState = childState or mMeasureResult[2]
             contentHeight += mMeasureResult[1]
@@ -882,8 +882,8 @@ class NestRefreshLayout<INDICATOR : View> : BaseViewGroup, NestedScrollingParent
         return true
     }
 
-    private fun animateRefresh(from: Int, to: Int, duration: Int) {
-        var from = from
+    private fun animateRefresh(newfrom: Int, to: Int, duration: Int) {
+        var from = newfrom
         if (mRefreshAnimation != null) {
             if (!mRefreshAnimation!!.hasEnded()) {
                 from = if (mRefreshAnimation!!.hasStarted()) mRefreshAnimation!!.value else from

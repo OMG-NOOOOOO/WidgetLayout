@@ -32,12 +32,12 @@ import java.lang.ref.WeakReference
  * @date: 2017-05-27 17:36
  */
 class NestFloatLayout : ScrollLayout, NestedScrollingParent {
-    internal var mNestChild: WeakReference<View>? = null
-    internal var mFloatView: WeakReference<View>? = null
-    internal var mFloatViewId: Int = 0
-    internal var mFloatViewIndex = -1
-    internal var mNestChildId: Int = 0
-    internal var mNestChildIndex = -1
+    private var mNestChild: WeakReference<View>? = null
+    private var mFloatView: WeakReference<View>? = null
+    private var mFloatViewId: Int = 0
+    private var mFloatViewIndex = -1
+    private var mNestChildId: Int = 0
+    private var mNestChildIndex = -1
 
     constructor(context: Context) : super(context) {
         init(context, null)

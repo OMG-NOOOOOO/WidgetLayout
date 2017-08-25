@@ -46,12 +46,12 @@ open class CheckText : TextView, Checkable {
     /**
      * text to display when it's checked
      */
-    internal var mTextOn: CharSequence?=null
+    private var mTextOn: CharSequence?=null
 
     /**
      * text to display when it is unchecked
      */
-    internal var mTextOff: CharSequence?=null
+    private var mTextOff: CharSequence?=null
 
 
     constructor(context: Context) : super(context) {}

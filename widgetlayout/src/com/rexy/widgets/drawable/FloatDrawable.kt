@@ -18,13 +18,13 @@ class FloatDrawable : Drawable, Runnable, Animatable {
     /**
      * current color alpha in range [0...255]
      */
-    internal var mCurrentAlpha = 0
-    internal var mAnimStartTime: Long = 0
-    internal var mDevDebug = true
-    internal var mRunning = false
-    internal var mAnimating = false
-    internal var mRectRound = RectF()
-    internal var mPaint = Paint()
+    private var mCurrentAlpha = 0
+    private var mAnimStartTime: Long = 0
+    private var mDevDebug = true
+    private var mRunning = false
+    private var mAnimating = false
+    private var mRectRound = RectF()
+    private var mPaint = Paint()
 
 
     /**
@@ -251,8 +251,8 @@ class FloatDrawable : Drawable, Runnable, Animatable {
         }
     }
 
-    private fun setFrame(frame: Int, unschedule: Boolean, animate: Boolean) {
-        var frame = frame
+    private fun setFrame(newFrame: Int, unschedule: Boolean, animate: Boolean) {
+        var frame=newFrame
         if (animate) {
             if (frame < mMinAlpha) {
                 frame = mMinAlpha
@@ -277,7 +277,7 @@ class FloatDrawable : Drawable, Runnable, Animatable {
     }
 
     override fun draw(canvas: Canvas) {
-        if (mCurrentAlpha > 0 && mCurrentAlpha <= 255) {
+        if (mCurrentAlpha in 1..255) {
             if (mRoundRadius <= 0) {
                 canvas.drawRect(bounds, mPaint)
             } else {

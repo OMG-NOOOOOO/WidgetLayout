@@ -30,25 +30,25 @@ import com.rexy.widgetlayout.R
  */
 open class WrapLayout : BaseViewGroup {
     //每行内容水平居中
-    protected var mEachLineCenterHorizontal = false
+    private var mEachLineCenterHorizontal = false
     //每行内容垂直居中
-    protected var mEachLineCenterVertical = false
+    private var mEachLineCenterVertical = false
 
     //每一行最少的Item 个数
-    protected var mEachLineMinItemCount = 0
+    private var mEachLineMinItemCount = 0
     //每一行最多的Item 个数
-    protected var mEachLineMaxItemCount = 0
+    private var mEachLineMaxItemCount = 0
 
     //是否支持weight 属性。
-    protected var mSupportWeight = false
+    private var mSupportWeight = false
 
-    protected var mWeightSum = 0
-    protected var mContentMaxWidthAccess = 0
-    protected var mWeightView: SparseArray<View> = SparseArray(2)
-    protected var mLineHeight = SparseIntArray(2)
-    protected var mLineWidth = SparseIntArray(2)
-    protected var mLineItemCount = SparseIntArray(2)
-    protected var mLineEndIndex = SparseIntArray(2)
+    private var mWeightSum = 0
+    private var mContentMaxWidthAccess = 0
+    private var mWeightView: SparseArray<View> = SparseArray(2)
+    private var mLineHeight = SparseIntArray(2)
+    private var mLineWidth = SparseIntArray(2)
+    private var mLineItemCount = SparseIntArray(2)
+    private var mLineEndIndex = SparseIntArray(2)
 
     constructor(context: Context) : super(context) {
         init(context, null)
