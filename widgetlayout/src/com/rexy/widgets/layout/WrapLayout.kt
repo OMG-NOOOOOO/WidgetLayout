@@ -1,7 +1,6 @@
 package com.rexy.widgets.layout
 
 import android.content.Context
-import android.content.res.TypedArray
 import android.graphics.Canvas
 import android.graphics.Rect
 import android.util.AttributeSet
@@ -11,7 +10,6 @@ import android.view.Gravity
 import android.view.View
 import android.view.ViewGroup
 import android.widget.LinearLayout
-
 import com.rexy.widgetlayout.R
 
 /**
@@ -97,7 +95,7 @@ open class WrapLayout : BaseViewGroup {
     private fun adjustMeasureWithWeight(measureSpec: Int, remain: Int, r: IntArray, vertical: Boolean) {
         val size = mWeightView.size()
         val itemMargin = if (vertical) mBorderDivider!!.contentMarginVertical else mBorderDivider!!.contentMarginHorizontal
-        for (i in 0..size - 1) {
+        for (i in 0 until size) {
             val childIndex = mWeightView.keyAt(i)
             val child = mWeightView.get(childIndex)
             val params = child.layoutParams as LayoutParams
@@ -167,6 +165,7 @@ open class WrapLayout : BaseViewGroup {
         mWeightView.clear()
         mWeightSum = 0
         mContentMaxWidthAccess = View.MeasureSpec.getSize(widthMeasureSpecContent)
+        val contentMaxHeightAccess = View.MeasureSpec.getSize(heightMeasureSpecContent)
         var lastMeasureIndex = 0
         var currentLineIndex = 0
         var currentLineMaxWidth = 0
@@ -181,7 +180,7 @@ open class WrapLayout : BaseViewGroup {
         val middleMarginVertical = mBorderDivider!!.contentMarginVertical
 
         val supportWeight = mSupportWeight && (mEachLineMaxItemCount == 1 || mEachLineMinItemCount >= childCount || mEachLineMinItemCount <= 0)
-        for (childIndex in 0..childCount - 1) {
+        for (childIndex in 0 until childCount) {
             val child = getChildAt(childIndex)
             if (skipChild(child)) continue
             val params = child.layoutParams as LayoutParams
@@ -197,10 +196,15 @@ open class WrapLayout : BaseViewGroup {
             }
             lastMeasureIndex = childIndex
             params.measure(child, itemPosition++, widthMeasureSpecContent, heightMeasureSpecContent, 0, contentHeight)
-            val childWidthSpace = params.width(child)
-            val childHeightSpace = params.height(child)
+            var childWidthSpace = params.width(child)
+            var childHeightSpace = params.height(child)
             childState = childState or child.measuredState
             if (ifNeedNewLine(child, childWidthSpace + currentLineMaxWidth + middleMarginHorizontal, currentLineItemCount)) {
+                if (contentMaxHeightAccess < (contentHeight + childHeightSpace + currentLineMaxHeight)) {
+                    params.measure(child, itemPosition++, widthMeasureSpecContent, heightMeasureSpecContent, 0, contentHeight + currentLineMaxHeight)
+                    childWidthSpace = params.width(child)
+                    childHeightSpace = params.height(child)
+                }
                 if (ignoreBeyondWidth || currentLineMaxWidth <= mContentMaxWidthAccess) {
                     contentWidth = Math.max(contentWidth, currentLineMaxWidth)
                 }
@@ -220,7 +224,7 @@ open class WrapLayout : BaseViewGroup {
                 if (currentLineItemCount > 0 && middleMarginHorizontal > 0) {
                     currentLineMaxWidth += middleMarginHorizontal
                 }
-                currentLineItemCount = currentLineItemCount + 1
+                currentLineItemCount += 1
                 currentLineMaxWidth += childWidthSpace
                 if (!ignoreBeyondWidth && currentLineMaxWidth <= mContentMaxWidthAccess) {
                     contentWidth = Math.max(contentWidth, currentLineMaxWidth)
@@ -287,7 +291,7 @@ open class WrapLayout : BaseViewGroup {
         var childTop: Int
         var childRight: Int
         var childBottom: Int
-        for (lineIndex in 0..lineCount - 1) {
+        for (lineIndex in 0 until lineCount) {
             lineEndIndex = mLineEndIndex.get(lineIndex)
             lineMaxHeight = mLineHeight.get(lineIndex)
             childLeft = contentLeft
@@ -435,7 +439,7 @@ open class WrapLayout : BaseViewGroup {
     }
 
     class LayoutParams : BaseViewGroup.LayoutParams {
-        var weight = 0f
+        @JvmField var weight = 0f
 
         constructor(c: Context, attrs: AttributeSet?) : super(c, attrs!!) {
             val a = if (attrs == null) null else c.obtainStyledAttributes(attrs, intArrayOf(android.R.attr.layout_weight))
@@ -444,11 +448,11 @@ open class WrapLayout : BaseViewGroup {
             }
         }
 
-        constructor(width: Int, height: Int) : super(width, height) {}
+        constructor(width: Int, height: Int) : super(width, height)
 
-        constructor(width: Int, height: Int, gravity: Int) : super(width, height, gravity) {}
+        constructor(width: Int, height: Int, gravity: Int) : super(width, height, gravity)
 
-        constructor(source: ViewGroup.LayoutParams) : super(source) {}
+        constructor(source: ViewGroup.LayoutParams) : super(source)
 
         constructor(source: ViewGroup.MarginLayoutParams) : super(source) {
             if (source is LayoutParams) {

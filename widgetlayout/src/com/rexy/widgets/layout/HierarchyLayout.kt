@@ -975,29 +975,29 @@ class HierarchyLayout : WrapLayout {
     }
 
     companion object {
-        private val TRACKING_UNKNOWN = 0
-        private val TRACKING_VERTICALLY = 1
-        private val TRACKING_HORIZONTALLY = -1
-        private val ROTATION_MAX = 55
-        private val ROTATION_MIN = -ROTATION_MAX
-        private val ROTATION_DEFAULT_X = 6
-        private val ROTATION_DEFAULT_Y = -12
-        private val ZOOM_DEFAULT = 0.75f
-        private val ZOOM_MIN = 0.5f
-        private val ZOOM_MAX = 1.5f
-        private val SPACING_DEFAULT = 25
-        private val SPACING_MIN = 10
-        private val SPACING_MAX = 100
+        @JvmField   val TRACKING_UNKNOWN = 0
+        @JvmField   val TRACKING_VERTICALLY = 1
+        @JvmField  val TRACKING_HORIZONTALLY = -1
+        @JvmField  val ROTATION_MAX = 55
+        @JvmField  val ROTATION_MIN = -ROTATION_MAX
+        @JvmField  val ROTATION_DEFAULT_X = 6
+        @JvmField  val ROTATION_DEFAULT_Y = -12
+        @JvmField  val ZOOM_DEFAULT = 0.75f
+        @JvmField  val ZOOM_MIN = 0.5f
+        @JvmField  val ZOOM_MAX = 1.5f
+        @JvmField  val SPACING_DEFAULT = 25
+        @JvmField  val SPACING_MIN = 10
+        @JvmField  val SPACING_MAX = 100
 
 
-        fun isHierarchyInstalled(activity: Activity): Boolean {
+        @JvmStatic fun isHierarchyInstalled(activity: Activity): Boolean {
             val window = activity.window
             val decorView = window.decorView as ViewGroup
             val parent = decorView.findViewById(android.R.id.content) as ViewGroup
             return parent is HierarchyLayout
         }
 
-        fun hierarchy(activity: Activity, install: Boolean) {
+        @JvmStatic fun hierarchy(activity: Activity, install: Boolean) {
             val window = activity.window
             val decorView = window.decorView as ViewGroup
             val parent = decorView.findViewById(android.R.id.content) as ViewGroup

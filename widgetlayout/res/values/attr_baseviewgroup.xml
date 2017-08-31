@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <declare-styleable name="BaseViewGroup">
+
         <!--hover drawable ignore touch out side to give up hover -->
         <attr name="ignoreForegroundStateWhenTouchOut" format="boolean"/>
         <!--hover drawable color-->

@@ -451,15 +451,15 @@ open class PageScrollView : ScrollLayout {
         return mPairList!!
     }
 
-    private fun adjustMatchMeasureSize(matchSize: Int, space: Float) {
-        var space = space
+    private fun adjustMatchMeasureSize(matchSize: Int,  space: Float) {
+        var space=space
         Collections.sort(mPairList!!, mComparator)
         var startIndex = 0
         while (space > 1) {
             var diffIndex = -1
             var start = mPairList!![startIndex]
             var current: PointF? = null
-            for (i in startIndex + 1..matchSize - 1) {
+            for (i in startIndex + 1 until matchSize) {
                 current = mPairList!![i]
                 if (current.y > start.y) {
                     diffIndex = i
@@ -478,7 +478,7 @@ open class PageScrollView : ScrollLayout {
                     start = mPairList!![i]
                     start.y = start.y + addedSize
                 }
-                space = space - addedSize * diffIndex
+                space -= addedSize * diffIndex
                 startIndex = diffIndex
             }
         }

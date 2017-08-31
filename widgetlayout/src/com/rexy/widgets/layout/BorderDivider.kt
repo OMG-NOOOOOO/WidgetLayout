@@ -687,7 +687,7 @@ class BorderDivider private constructor(density: Float) {
     }
 
     fun setCallback(callback: Callback) {
-        mCallback = callback;
+        mCallback = callback
     }
 
     interface Callback {
@@ -698,7 +698,7 @@ class BorderDivider private constructor(density: Float) {
 
     companion object {
 
-        fun from(context: Context, attr: TypedArray?): BorderDivider {
+        @JvmStatic fun from(context: Context, attr: TypedArray?): BorderDivider {
             val dm = BorderDivider(context.resources.displayMetrics.density)
             if (attr != null) {
                 if (attr.hasValue(R.styleable.BaseViewGroup_borderLeft)) {

@@ -1,7 +1,6 @@
 package com.rexy.widgets.layout
 
 import android.content.Context
-import android.content.res.TypedArray
 import android.graphics.Canvas
 import android.graphics.Rect
 import android.graphics.drawable.Drawable
@@ -224,32 +223,35 @@ abstract class BaseViewGroup : ViewGroup, BorderDivider.Callback {
 
     private fun init(context: Context, attrs: AttributeSet?) {
         mTouchSlop = ViewConfiguration.get(context).scaledTouchSlop
-        var a: TypedArray? = if (attrs == null) null else context.obtainStyledAttributes(attrs, R.styleable.BaseViewGroup)
-        mBorderDivider = BorderDivider.from(context, a)
-        if (a != null) {
-            mEdgeEffectEnable = a.getBoolean(R.styleable.BaseViewGroup_edgeEffectEnable, mEdgeEffectEnable)
-            val floatColor = a.getColor(R.styleable.BaseViewGroup_foregroundColor, 0)
-            if (floatColor != 0) {
-                val floatRadius = a.getDimensionPixelSize(R.styleable.BaseViewGroup_foregroundRadius, 0)
-                val floatDuration = a.getInt(R.styleable.BaseViewGroup_foregroundDuration, 120)
-                val floatMinAlpha = a.getInt(R.styleable.BaseViewGroup_foregroundAlphaMin, 0)
-                val floatMaxAlpha = a.getInt(R.styleable.BaseViewGroup_foregroundAlphaMax, 50)
-                val floatDrawable = FloatDrawable(floatColor, floatMinAlpha, floatMaxAlpha).duration(floatDuration).radius(floatRadius)
-                foregroundDrawable = floatDrawable
-                isClickable = true
+        attrs?.let {
+            val a = context.obtainStyledAttributes(attrs, R.styleable.BaseViewGroup)
+            mBorderDivider = BorderDivider.from(context, a)
+            if (a != null) {
+                mEdgeEffectEnable = a.getBoolean(R.styleable.BaseViewGroup_edgeEffectEnable, mEdgeEffectEnable)
+                val floatColor = a.getColor(R.styleable.BaseViewGroup_foregroundColor, 0)
+                if (floatColor != 0) {
+                    val floatRadius = a.getDimensionPixelSize(R.styleable.BaseViewGroup_foregroundRadius, 0)
+                    val floatDuration = a.getInt(R.styleable.BaseViewGroup_foregroundDuration, 120)
+                    val floatMinAlpha = a.getInt(R.styleable.BaseViewGroup_foregroundAlphaMin, 0)
+                    val floatMaxAlpha = a.getInt(R.styleable.BaseViewGroup_foregroundAlphaMax, 50)
+                    val floatDrawable = FloatDrawable(floatColor, floatMinAlpha, floatMaxAlpha).duration(floatDuration).radius(floatRadius)
+                    foregroundDrawable = floatDrawable
+                    isClickable = true
+                }
+                a.recycle()
             }
-            a.recycle()
-        }
-        a = if (attrs == null) null else context.obtainStyledAttributes(attrs, ATTRS_PROPERTIES)
-        if (a != null) {
-            mGravity = a.getInt(0, mGravity)
-            mMaxWidth = a.getDimensionPixelSize(1, mMaxWidth)
-            mMaxHeight = a.getDimensionPixelSize(2, mMaxHeight)
-            mOrientation = a.getInt(3, mOrientation - 1) + 1
-            mClipToPadding = a.getBoolean(4, true)
-            mWidthPercent = a.getFraction(5, 1, 1, mWidthPercent)
-            mHeightPercent = a.getFraction(6, 1, 1, mHeightPercent)
-            a.recycle()
+
+            val b = context.obtainStyledAttributes(attrs, ATTRS_PROPERTIES)
+            if (b != null) {
+                mGravity = b.getInt(0, mGravity)
+                mMaxWidth = b.getDimensionPixelSize(1, mMaxWidth)
+                mMaxHeight = b.getDimensionPixelSize(2, mMaxHeight)
+                mOrientation = b.getInt(3, mOrientation - 1) + 1
+                mClipToPadding = b.getBoolean(4, true)
+                mWidthPercent = b.getFraction(5, 1, 1, mWidthPercent)
+                mHeightPercent = b.getFraction(6, 1, 1, mHeightPercent)
+                b.recycle()
+            }
         }
     }
 
@@ -783,7 +785,7 @@ abstract class BaseViewGroup : ViewGroup, BorderDivider.Callback {
 
     }
 
-    private  fun computeVisibleBounds(scrollX: Int, scrollY: Int, scrollChanged: Boolean, apply: Boolean) {
+    private fun computeVisibleBounds(scrollX: Int, scrollY: Int, scrollChanged: Boolean, apply: Boolean) {
         val beforeHash = visibleContentBounds.hashCode()
         var width = if (apply) width else 0
         var height = if (apply) height else 0
@@ -908,7 +910,7 @@ abstract class BaseViewGroup : ViewGroup, BorderDivider.Callback {
             return result
         }
 
-    private   fun getContentStartH(containerLeft: Int, containerRight: Int, contentWillSize: Int, gravity: Int): Int {
+    private fun getContentStartH(containerLeft: Int, containerRight: Int, contentWillSize: Int, gravity: Int): Int {
         return getContentStartH(containerLeft, containerRight, contentWillSize, 0, 0, gravity)
     }
 
@@ -1264,15 +1266,29 @@ abstract class BaseViewGroup : ViewGroup, BorderDivider.Callback {
          *
          * @see .setOrientation
          */
-        val HORIZONTAL = 1
+        @JvmField val HORIZONTAL = 1
         /**
          * Vertical layout or gesture direction
          *
          * @see .setOrientation
          */
-        val VERTICAL = 2
+        @JvmField val VERTICAL = 2
 
-        private val ATTRS_PROPERTIES = intArrayOf(android.R.attr.gravity, android.R.attr.maxWidth, android.R.attr.maxHeight, android.R.attr.orientation, android.R.attr.clipToPadding, R.attr.widthPercent, R.attr.heightPercent)
-        private val ATTRS_PARAMS = intArrayOf(android.R.attr.layout_gravity, android.R.attr.maxWidth, android.R.attr.maxHeight, R.attr.widthPercent, R.attr.heightPercent)
+        @JvmField val ATTRS_PROPERTIES = intArrayOf(
+                android.R.attr.gravity,
+                android.R.attr.maxWidth,
+                android.R.attr.maxHeight,
+                android.R.attr.orientation,
+                android.R.attr.clipToPadding,
+                R.attr.widthPercent,
+                R.attr.heightPercent
+        )
+        @JvmField val ATTRS_PARAMS = intArrayOf(
+                android.R.attr.layout_gravity,
+                android.R.attr.maxWidth,
+                android.R.attr.maxHeight,
+                R.attr.widthPercent,
+                R.attr.heightPercent
+        )
     }
 }
