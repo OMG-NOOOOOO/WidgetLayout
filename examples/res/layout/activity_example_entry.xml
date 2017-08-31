@@ -4,10 +4,11 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:gravity="center_horizontal"
     android:layout_gravity="center"
-    android:orientation="horizontal"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="#7700"
+    android:clipToPadding="false"
+    app:layoutDirection="vertical"
     app:widthPercent="95%"
     app:heightPercent="98%"
     app:floatViewStartIndex="0">

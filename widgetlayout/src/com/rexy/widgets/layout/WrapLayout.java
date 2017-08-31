@@ -117,8 +117,8 @@ public class WrapLayout extends BaseViewGroup {
                 params.width = -1;
             }
             params.measure(child, params.position(), childWidthMeasureSpec, childHeightMeasureSpec, 0, 0);
-            params.width=oldParamsWidth;
-            params.height=oldParamsHeight;
+            params.width = oldParamsWidth;
+            params.height = oldParamsHeight;
             insertMeasureInfo(params.width(child), params.height(child), childIndex, r, vertical);
         }
     }
@@ -170,6 +170,7 @@ public class WrapLayout extends BaseViewGroup {
         mWeightView.clear();
         mWeightSum = 0;
         mContentMaxWidthAccess = MeasureSpec.getSize(widthMeasureSpecContent);
+        int contentMaxHeightAccess = MeasureSpec.getSize(heightMeasureSpecContent);
         int lastMeasureIndex = 0;
         int currentLineIndex = 0;
         int currentLineMaxWidth = 0;
@@ -201,6 +202,11 @@ public class WrapLayout extends BaseViewGroup {
             int childHeightSpace = params.height(child);
             childState |= child.getMeasuredState();
             if (ifNeedNewLine(child, childWidthSpace + currentLineMaxWidth + middleMarginHorizontal, currentLineItemCount)) {
+                if (contentMaxHeightAccess < (contentHeight + childHeightSpace + currentLineMaxHeight)) {
+                    params.measure(child, itemPosition, widthMeasureSpecContent, heightMeasureSpecContent, 0, contentHeight+currentLineMaxHeight);
+                    childWidthSpace = params.width(child);
+                    childHeightSpace = params.height(child);
+                }
                 if (ignoreBeyondWidth || currentLineMaxWidth <= mContentMaxWidthAccess) {
                     contentWidth = Math.max(contentWidth, currentLineMaxWidth);
                 }

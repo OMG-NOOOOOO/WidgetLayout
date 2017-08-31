@@ -1,6 +1,12 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <declare-styleable name="BaseViewGroup">
+
+        <attr name="layoutDirection">
+            <enum name="horizontal" value="1" />
+            <enum name="vertical" value="2" />
+        </attr>
+
         <!--hover drawable ignore touch out side to give up hover -->
         <attr name="ignoreForegroundStateWhenTouchOut" format="boolean"/>
         <!--hover drawable color-->

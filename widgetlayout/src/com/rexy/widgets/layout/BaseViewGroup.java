@@ -130,7 +130,7 @@ public abstract class BaseViewGroup extends ViewGroup implements BorderDivider.C
             android.R.attr.gravity,
             android.R.attr.maxWidth,
             android.R.attr.maxHeight,
-            android.R.attr.orientation,
+            R.attr.layoutDirection,
             android.R.attr.clipToPadding,
             R.attr.widthPercent,
             R.attr.heightPercent,
@@ -248,7 +248,7 @@ public abstract class BaseViewGroup extends ViewGroup implements BorderDivider.C
             mGravity = a.getInt(0, mGravity);
             mMaxWidth = a.getDimensionPixelSize(1, mMaxWidth);
             mMaxHeight = a.getDimensionPixelSize(2, mMaxHeight);
-            mOrientation = a.getInt(3, mOrientation - 1) + 1;
+            mOrientation = a.getInt(3, mOrientation);
             mClipToPadding = a.getBoolean(4, true);
             mWidthPercent = a.getFraction(5, 1, 1, mWidthPercent);
             mHeightPercent = a.getFraction(6, 1, 1, mHeightPercent);
@@ -433,9 +433,9 @@ public abstract class BaseViewGroup extends ViewGroup implements BorderDivider.C
     /**
      * set content size after measure,so we can decide the final measure dimension
      *
-     * @param contentWidth just content width without margin and padding
+     * @param contentWidth  just content width without margin and padding
      * @param contentHeight just content height without margin and padding
-     * @param measureState measure state {@link View#getMeasuredState()}
+     * @param measureState  measure state {@link View#getMeasuredState()}
      * @see #dispatchMeasure(int, int)
      */
     protected void setContentSize(int contentWidth, int contentHeight, int measureState) {
@@ -702,16 +702,16 @@ public abstract class BaseViewGroup extends ViewGroup implements BorderDivider.C
      * tips:do your measure no need to take content margin into account since we have handled.
      * after all child measure must call {@link #setContentSize(int, int, int)};
      *
-     * @param widthMeasureSpecContent widthMeasureSpec with out padding and content margin
+     * @param widthMeasureSpecContent  widthMeasureSpec with out padding and content margin
      * @param heightMeasureSpecContent heightMeasureSpec with out padding and content margin.
      */
     protected abstract void dispatchMeasure(int widthMeasureSpecContent, int heightMeasureSpecContent);
 
     /**
-     * @param measuredWidth self measure width
+     * @param measuredWidth  self measure width
      * @param measuredHeight self measure height
-     * @param contentWidth real content width and content margin horizontal sum
-     * @param contentHeight real content height and content margin vertical sum
+     * @param contentWidth   real content width and content margin horizontal sum
+     * @param contentHeight  real content height and content margin vertical sum
      */
     protected void doAfterMeasure(int measuredWidth, int measuredHeight, int contentWidth, int contentHeight) {
     }
@@ -738,7 +738,7 @@ public abstract class BaseViewGroup extends ViewGroup implements BorderDivider.C
      * tips:should take content margin into account when layout child.
      *
      * @param baseLeft format content's left no need to consider margin and padding of content.
-     * @param baseTop format content's top no need to consider margin and padding of content.
+     * @param baseTop  format content's top no need to consider margin and padding of content.
      */
     protected abstract void dispatchLayout(int baseLeft, int baseTop);
 
@@ -1036,7 +1036,7 @@ public abstract class BaseViewGroup extends ViewGroup implements BorderDivider.C
      *
      * @param child
      * @param centreInVisibleBounds if true ,refer to parent view centre to get the offset .
-     * @param marginInclude take margin into view space.
+     * @param marginInclude         take margin into view space.
      */
     protected int offsetX(View child, boolean centreInVisibleBounds, boolean marginInclude) {
         int current;
@@ -1061,7 +1061,7 @@ public abstract class BaseViewGroup extends ViewGroup implements BorderDivider.C
      *
      * @param child
      * @param centreInVisibleBounds if true ,refer to parent view centre to get the offset .
-     * @param marginInclude take margin into view space.
+     * @param marginInclude         take margin into view space.
      */
     protected int offsetY(View child, boolean centreInVisibleBounds, boolean marginInclude) {
         int current;
@@ -1281,13 +1281,13 @@ public abstract class BaseViewGroup extends ViewGroup implements BorderDivider.C
          * subclass of BaseViewGroup should aways use this measure function to apply extra property such as maxWidth,maxHeight,layout_gravity
          */
         public void measure(View view, int itemPosition, int parentWidthMeasureSpec, int parentHeightMeasureSpec, int widthUsed, int heightUsed) {
-            int widthDimension=width,heightDimension=height;
+            int widthDimension = width, heightDimension = height;
             if (!(view instanceof BaseViewGroup)) {
                 if (mWidthPercent > 0) {
-                    widthDimension= (int) (MeasureSpec.getSize(parentWidthMeasureSpec) * mWidthPercent);
+                    widthDimension = (int) (MeasureSpec.getSize(parentWidthMeasureSpec) * mWidthPercent);
                 }
                 if (mHeightPercent > 0) {
-                    heightDimension=(int) (MeasureSpec.getSize(parentHeightMeasureSpec) * mHeightPercent);
+                    heightDimension = (int) (MeasureSpec.getSize(parentHeightMeasureSpec) * mHeightPercent);
                 }
             }
             measure(view, itemPosition
