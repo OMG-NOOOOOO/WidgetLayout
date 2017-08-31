@@ -223,7 +223,9 @@ abstract class BaseViewGroup : ViewGroup, BorderDivider.Callback {
 
     private fun init(context: Context, attrs: AttributeSet?) {
         mTouchSlop = ViewConfiguration.get(context).scaledTouchSlop
-        attrs?.let {
+        if(attrs==null){
+            mBorderDivider = BorderDivider.from(context, null)
+        }else{
             val a = context.obtainStyledAttributes(attrs, R.styleable.BaseViewGroup)
             mBorderDivider = BorderDivider.from(context, a)
             if (a != null) {

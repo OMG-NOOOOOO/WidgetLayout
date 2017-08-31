@@ -4,7 +4,6 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import com.rexy.example.extend.ViewUtils
 import com.rexy.widgetlayout.example.R
 import com.rexy.widgets.layout.ColumnLayout
 

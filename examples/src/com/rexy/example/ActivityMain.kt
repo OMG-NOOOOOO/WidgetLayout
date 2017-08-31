@@ -20,21 +20,10 @@ class ActivityMain : BaseActivity(), View.OnClickListener {
         findViewById(R.id.buttonNestFloat)?.setOnClickListener(this)
         findViewById(R.id.buttonRefresh)?.setOnClickListener(this)
         findViewById(R.id.buttonHierarchy)?.setOnClickListener(this)
-
-/*      val kentity = KEntity1()
-        kentity.sayHellow(this)
-        KEntity1.sayHellow1(this)
-        KEntity1.sayHellow2(this)
-        TestUtils.toast(this, "test utils")
-        pop("pop")
-        say1(this, "say1")
-        say2(this,"say2")
-        say3(this,"say3")
-        sayTest(this,"sayTest")*/
     }
 
     override fun onClick(v: View) {
-        val cls=when (v.id) {
+        val cls = when (v.id) {
             R.id.buttonColumn -> FragmentColumnLayout::class.java
             R.id.buttonPageScroll -> FragmentPageScrollContainer::class.java
             R.id.buttonWrapLabel -> FragmentWrapLabelLayout::class.java
@@ -43,6 +32,19 @@ class ActivityMain : BaseActivity(), View.OnClickListener {
             R.id.buttonHierarchy -> FragmentHierarchyLayout::class.java
             else -> null
         }
-        cls?.let {  ActivityCommon.launch(this, it) }
+        cls?.let { ActivityCommon.launch(this, it) }
+    }
+
+    private fun testKotlin() {
+        val kentity = KEntity1()
+        kentity.sayHellow(this)
+        KEntity1.sayHellow1(this)
+        KEntity1.sayHellow2(this)
+        TestUtils.toast(this, "test utils")
+        pop("pop")
+        say1(this, "say1")
+        say2(this, "say2")
+        say3(this, "say3")
+        sayTest(this, "sayTest")
     }
 }
