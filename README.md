@@ -234,7 +234,7 @@ a. 支持的xml 属性，对应都有java 相应的set 和 get;
 
 ```xml
   <!--布局方向，也决定了手势方向，仅支持水平和垂直之一。-->
-  <attr name="android:orientation"/>
+  <attr name="layoutDirection"/>
   <!--滑动交互 ViewPager 方式-->
   <attr name="viewPagerStyle" format="boolean"/>
   <!--所有的child居中-->

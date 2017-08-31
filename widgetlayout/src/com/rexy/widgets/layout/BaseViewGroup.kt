@@ -246,7 +246,7 @@ abstract class BaseViewGroup : ViewGroup, BorderDivider.Callback {
                 mGravity = b.getInt(0, mGravity)
                 mMaxWidth = b.getDimensionPixelSize(1, mMaxWidth)
                 mMaxHeight = b.getDimensionPixelSize(2, mMaxHeight)
-                mOrientation = b.getInt(3, mOrientation - 1) + 1
+                mOrientation = b.getInt(3, mOrientation)
                 mClipToPadding = b.getBoolean(4, true)
                 mWidthPercent = b.getFraction(5, 1, 1, mWidthPercent)
                 mHeightPercent = b.getFraction(6, 1, 1, mHeightPercent)
@@ -1278,7 +1278,7 @@ abstract class BaseViewGroup : ViewGroup, BorderDivider.Callback {
                 android.R.attr.gravity,
                 android.R.attr.maxWidth,
                 android.R.attr.maxHeight,
-                android.R.attr.orientation,
+                R.attr.layoutDirection,
                 android.R.attr.clipToPadding,
                 R.attr.widthPercent,
                 R.attr.heightPercent
