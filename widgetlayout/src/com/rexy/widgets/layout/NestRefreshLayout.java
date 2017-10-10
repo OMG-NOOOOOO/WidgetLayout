@@ -1,7 +1,10 @@
 package com.rexy.widgets.layout;
 
 import android.content.Context;
+import android.graphics.Canvas;
 import android.graphics.PointF;
+import android.graphics.Rect;
+import android.graphics.drawable.Drawable;
 import android.os.Build;
 import android.support.v4.util.Pair;
 import android.support.v4.view.MotionEventCompat;
@@ -80,6 +83,17 @@ public class NestRefreshLayout<INDICATOR extends View & NestRefreshLayout.OnRefr
     int mDurationMin = 0, mDurationMax = 0;
     Interpolator mInterpolator;
     private RefreshAnimation mRefreshAnimation;
+
+    private Drawable mRefreshDrawable = null;
+    private Rect mRefreshBounds = new Rect();
+
+    public void setRefreshDrawable(Drawable drawable) {
+        if (mRefreshDrawable != drawable) {
+            mRefreshDrawable = drawable;
+            invalidate();
+        }
+    }
+
 
     public NestRefreshLayout(Context context) {
         super(context);
@@ -707,6 +721,19 @@ public class NestRefreshLayout<INDICATOR extends View & NestRefreshLayout.OnRefr
         }
     }
 
+    @Override
+    protected void doBeforeDraw(Canvas canvas, Rect inset) {
+        super.doBeforeDraw(canvas, inset);
+        if (!skipChild(mRefreshHeader) && mRefreshDrawable != null) {
+            int refreshBottom = (int) (mRefreshHeader.getBottom() + mRefreshHeader.getTranslationY());
+            /* if (mRefreshHeader instanceof ArcProgressIndicator) {
+                refreshBottom += ((ArcProgressIndicator) mRefreshHeader).getRefreshOffsetContentY();
+            }*/
+            mRefreshDrawable.setBounds(0, 0, getWidth(), refreshBottom);
+            mRefreshDrawable.draw(canvas);
+        }
+    }
+
     private boolean ifNeedInterceptTouch(MotionEvent event) {
         if (event.getAction() == MotionEvent.ACTION_DOWN) {
             mCancelDragged = mContentView == null || mContentView.getParent() != this || mRefreshState != OnRefreshListener.STATE_IDLE;
@@ -1004,6 +1031,10 @@ public class NestRefreshLayout<INDICATOR extends View & NestRefreshLayout.OnRefr
     private void updateRefreshDistance(int refreshAbsDistance, boolean fromUserTouch) {
         int oldState = mRefreshState, newState = OnRefreshListener.STATE_IDLE;
         int viewHeight, criticalDistance, finalPosition = refreshAbsDistance;
+        if (isOptHeader && mRefreshDrawable != null && mRefreshState >= OnRefreshListener.STATE_IDLE && mRefreshHeader != null) {
+            mRefreshBounds.set(0, 0, getWidth(), (int) (mContentView.getTop() + mContentView.getTranslationY() + 20));
+            invalidate(mRefreshBounds);
+        }
         if (refreshAbsDistance > 0) {
             if (isOptHeader) {
                 finalPosition = Math.min(finalPosition, getMaxPullDistance());
