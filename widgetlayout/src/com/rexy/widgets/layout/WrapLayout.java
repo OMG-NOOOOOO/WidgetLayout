@@ -109,12 +109,10 @@ public class WrapLayout extends BaseViewGroup {
             int childWidthMeasureSpec = measureSpec, childHeightMeasureSpec = measureSpec;
             if (vertical) {
                 r[1] += itemMargin;
-                childHeightMeasureSpec = MeasureSpec.makeMeasureSpec((int) ((remain * params.weight) / mWeightSum), MeasureSpec.EXACTLY);
-                params.height = -1;
+                childHeightMeasureSpec = MeasureSpec.makeMeasureSpec((int) ((remain * params.weight) / mWeightSum), params.height==-2?MeasureSpec.AT_MOST:MeasureSpec.EXACTLY);
             } else {
                 r[0] += itemMargin;
-                childWidthMeasureSpec = MeasureSpec.makeMeasureSpec((int) ((remain * params.weight) / mWeightSum), MeasureSpec.EXACTLY);
-                params.width = -1;
+                childWidthMeasureSpec = MeasureSpec.makeMeasureSpec((int) ((remain * params.weight) / mWeightSum), params.width==-2?MeasureSpec.AT_MOST:MeasureSpec.EXACTLY);
             }
             params.measure(child, params.position(), childWidthMeasureSpec, childHeightMeasureSpec, 0, 0);
             params.width = oldParamsWidth;
