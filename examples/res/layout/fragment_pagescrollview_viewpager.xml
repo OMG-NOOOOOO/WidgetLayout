@@ -77,8 +77,8 @@
         android:orientation="horizontal"
         app:viewPagerStyle="true"
         app:childCenter="true"
-        app:contentMarginHorizontal="10dp"
-        app:contentMarginVertical="10dp"
+        app:itemMarginHorizontal="10dp"
+        app:itemMarginVertical="10dp"
         app:floatViewEndIndex="-1"
         app:floatViewStartIndex="-1"
         app:sizeFixedPercent="0">

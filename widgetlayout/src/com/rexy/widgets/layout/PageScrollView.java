@@ -113,7 +113,6 @@ public class PageScrollView extends ScrollLayout {
             mFloatViewEndIndex = -1;
             mFloatViewEndMode = 0;
         }
-        setTouchScrollEnable(isTouchScrollEnable(false));
         if (!isAttachLayoutFinished()) {
             scrollToItem(mCurrItem, 0, 0, isViewPagerStyle);
         }
@@ -133,7 +132,7 @@ public class PageScrollView extends ScrollLayout {
             mSwapViewIndex = -1;
             mFloatViewStartIndex = -1;
             mFloatViewStartMode = 0;
-            requestLayout();
+            requestLayoutIfNeed();
         }
     }
 
@@ -150,7 +149,7 @@ public class PageScrollView extends ScrollLayout {
             }
             mFloatViewEndIndex = -1;
             mFloatViewEndMode = 0;
-            requestLayout();
+            requestLayoutIfNeed();
         }
     }
 
@@ -161,7 +160,7 @@ public class PageScrollView extends ScrollLayout {
     public void setSizeFixedPercent(float percent) {
         if (mSizeFixedPercent != percent && percent >= 0 && percent <= 0) {
             mSizeFixedPercent = percent;
-            requestLayout();
+            requestLayoutIfNeed();
         }
     }
 
@@ -183,7 +182,7 @@ public class PageScrollView extends ScrollLayout {
         if (this.isChildCenter != centerChild) {
             this.isChildCenter = centerChild;
             if (isAttachLayoutFinished()) {
-                requestLayout();
+                requestLayoutIfNeed();
             }
         }
     }
@@ -196,7 +195,7 @@ public class PageScrollView extends ScrollLayout {
         if (isChildFillParent != childFillParent) {
             this.isChildFillParent = childFillParent;
             if (isAttachLayoutFinished()) {
-                requestLayout();
+                requestLayoutIfNeed();
             }
         }
     }
@@ -215,7 +214,7 @@ public class PageScrollView extends ScrollLayout {
                 addView(mPageHeaderView);
                 mNeedResolveFloatOffset = true;
             }
-            requestLayout();
+            requestLayoutIfNeed();
         }
     }
 
@@ -233,7 +232,8 @@ public class PageScrollView extends ScrollLayout {
                 addView(mPageFooterView);
                 mNeedResolveFloatOffset = true;
             }
-            requestLayout();
+            requestLayoutIfNeed();
+
         }
     }
 
@@ -304,6 +304,8 @@ public class PageScrollView extends ScrollLayout {
     protected void computeFloatViewIndexIfNeed(int virtualCount, boolean horizontal) {
         mFloatViewStartIndex = -1;
         mFloatViewEndIndex = -1;
+        mFloatViewStartMode=0;
+        mFloatViewEndMode=0;
         if (virtualCount >= 2) {
             if (mFloatViewStart >= 0 && mFloatViewStart < virtualCount) {
                 computeFloatViewIndex(mFloatViewStart, horizontal, true);
@@ -370,8 +372,7 @@ public class PageScrollView extends ScrollLayout {
     }
 
     protected void measureHeaderFooter(View view, int widthMeasureSpec, int heightMeasureSpec, int widthUsed, int heightUsed, boolean horizontal) {
-        LayoutParams params = (LayoutParams) view.getLayoutParams();
-        params.measure(view, -1, widthMeasureSpec, heightMeasureSpec, widthUsed, heightUsed);
+        LayoutParams params = measure(view, -1, widthMeasureSpec, heightMeasureSpec, widthUsed, heightUsed);
         mMeasureTemp[0] = params.width(view);
         mMeasureTemp[1] = params.height(view);
         mMeasureTemp[2] = view.getMeasuredState();
@@ -381,7 +382,7 @@ public class PageScrollView extends ScrollLayout {
         int itemWidthMeasureSpec, itemHeightMeasureSpec;
         int accessWidth = MeasureSpec.getSize(widthMeasureSpec) - widthUsed;
         int accessHeight = MeasureSpec.getSize(heightMeasureSpec) - heightUsed;
-        int itemMargin = horizontal ? this.mBorderDivider.getContentMarginHorizontal() : this.mBorderDivider.getContentMarginVertical();
+        int itemMargin = horizontal ? this.mBorderDivider.getItemMarginHorizontal() : this.mBorderDivider.getItemMarginVertical();
         boolean fixedOrientationSize = mSizeFixedPercent > 0 && mSizeFixedPercent <= 1;
         if (fixedOrientationSize) {
             if (horizontal) {
@@ -406,7 +407,7 @@ public class PageScrollView extends ScrollLayout {
                     params.height = -1;
                 }
             }
-            params.measure(child, itemPosition++, itemWidthMeasureSpec, itemHeightMeasureSpec, 0, 0);
+            measure(child, itemPosition++, itemWidthMeasureSpec, itemHeightMeasureSpec, 0, 0);
             params.width = oldParamsWidth;
             params.height = oldParamsHeight;
             int itemWidth = params.width(child), itemHeight = params.height(child);
@@ -454,8 +455,8 @@ public class PageScrollView extends ScrollLayout {
     }
 
     @Override
-    protected void doAfterLayout(boolean firstAttachLayout) {
-        super.doAfterLayout(firstAttachLayout);
+    protected void doAfterLayout(int baseLeft, int baseTop, int contentWidth, int contentHeight, boolean firstAttachLayout) {
+        super.doAfterLayout(baseLeft, baseTop, contentWidth, contentHeight, firstAttachLayout);
         if (mNeedResolveFloatOffset && !firstAttachLayout) {
             mNeedResolveFloatOffset = false;
             boolean horizontal = isOrientationHorizontal();
@@ -566,9 +567,9 @@ public class PageScrollView extends ScrollLayout {
     }
 
     @Override
-    protected void dispatchLayout(int contentLeft, int contentTop) {
-        int contentRight = contentLeft + getContentPureWidth();
-        int contentBottom = contentTop + getContentPureHeight();
+    protected void dispatchLayout(int contentLeft, int contentTop, int contentWidth, int contentHeight) {
+        int contentRight = contentLeft + contentWidth;
+        int contentBottom = contentTop + contentHeight;
         if (isOrientationHorizontal()) {
             onLayoutHorizontal(contentLeft, contentTop, contentRight, contentBottom);
         } else {
@@ -578,9 +579,10 @@ public class PageScrollView extends ScrollLayout {
 
     protected void onLayoutVertical(int baseLeft, int baseTop, int baseRight, int baseBottom) {
         int childLeft, childTop, childRight, childBottom;
+        Rect inset = mContentInset;
         if (hasPageHeaderView()) {
             LayoutParams params = (LayoutParams) mPageHeaderView.getLayoutParams();
-            childTop = getContentStartV(Math.max(baseTop, getPaddingTopWithInset()), Math.min(baseBottom, getHeight() - getPaddingBottomWithInset())
+            childTop = getContentStartV(Math.max(baseTop, getPaddingTop() + inset.top), Math.min(baseBottom, getHeight() - (getPaddingBottom() + inset.bottom))
                     , mPageHeaderView.getMeasuredHeight(), params.topMargin(), params.bottomMargin(), params.gravity);
             childBottom = childTop + mPageHeaderView.getMeasuredHeight();
             childLeft = baseLeft + params.leftMargin();
@@ -591,7 +593,7 @@ public class PageScrollView extends ScrollLayout {
 
         if (hasPageFooterView()) {
             LayoutParams params = (LayoutParams) mPageFooterView.getLayoutParams();
-            childTop = getContentStartV(Math.max(baseTop, getPaddingTopWithInset()), Math.min(baseBottom, getHeight() - getPaddingBottomWithInset())
+            childTop = getContentStartV(Math.max(baseTop, getPaddingTop() + inset.top), Math.min(baseBottom, getHeight() - (getPaddingBottom() + inset.bottom))
                     , mPageFooterView.getMeasuredHeight(), params.topMargin(), params.bottomMargin(), params.gravity);
             childBottom = childTop + mPageFooterView.getMeasuredHeight();
             childRight = baseRight - params.rightMargin();
@@ -600,7 +602,7 @@ public class PageScrollView extends ScrollLayout {
             mPageFooterView.layout(childLeft, childTop, childRight, childBottom);
         }
 
-        final int count = getChildCount(), mMiddleMargin = mBorderDivider.getContentMarginVertical();
+        final int count = getChildCount(), mMiddleMargin = mBorderDivider.getItemMarginVertical();
         childTop = baseTop;
         for (int i = 0; i < count; i++) {
             final View child = getChildAt(i);
@@ -617,9 +619,10 @@ public class PageScrollView extends ScrollLayout {
 
     protected void onLayoutHorizontal(int baseLeft, int baseTop, int baseRight, int baseBottom) {
         int childLeft, childTop, childRight, childBottom;
+        Rect inset = mContentInset;
         if (hasPageHeaderView()) {
             LayoutParams params = (LayoutParams) mPageHeaderView.getLayoutParams();
-            childLeft = getContentStartH(Math.max(baseLeft, getPaddingLeftWithInset()), Math.min(baseRight, getWidth() - getPaddingRightWithInset())
+            childLeft = getContentStartH(Math.max(baseLeft, getPaddingLeft() + inset.left), Math.min(baseRight, getWidth() - (getPaddingRight() + inset.right))
                     , mPageHeaderView.getMeasuredWidth(), params.leftMargin(), params.rightMargin(), params.gravity);
             childRight = childLeft + mPageHeaderView.getMeasuredWidth();
             childTop = baseTop + params.topMargin();
@@ -630,7 +633,7 @@ public class PageScrollView extends ScrollLayout {
 
         if (hasPageFooterView()) {
             LayoutParams params = (LayoutParams) mPageFooterView.getLayoutParams();
-            childLeft = getContentStartH(Math.max(baseLeft, getPaddingLeftWithInset()), Math.min(baseRight, getWidth() - getPaddingRightWithInset())
+            childLeft = getContentStartH(Math.max(baseLeft, getPaddingLeft() + inset.left), Math.min(baseRight, getWidth() - (getPaddingRight() + inset.right))
                     , mPageFooterView.getMeasuredWidth(), params.leftMargin(), params.rightMargin(), params.gravity);
             childRight = childLeft + mPageFooterView.getMeasuredWidth();
             childBottom = baseBottom - params.bottomMargin();
@@ -639,7 +642,7 @@ public class PageScrollView extends ScrollLayout {
             mPageFooterView.layout(childLeft, childTop, childRight, childBottom);
         }
 
-        final int count = getChildCount(), mMiddleMargin = mBorderDivider.getContentMarginHorizontal();
+        final int count = getChildCount(), mMiddleMargin = mBorderDivider.getItemMarginHorizontal();
         childLeft = baseLeft;
         for (int i = 0; i < count; i++) {
             final View child = getChildAt(i);
@@ -655,7 +658,7 @@ public class PageScrollView extends ScrollLayout {
     }
 
     @Override
-    protected void doBeforeDraw(Canvas canvas, Rect inset) {
+    protected void doBeforeDraw(Canvas canvas, int contentLeft, int contentTop, int contentWidth, int contentHeight) {
         boolean swapIndexEnable = mFloatViewStartIndex >= 0 && mSwapViewIndex >= 0;
         if (swapIndexEnable && isChildrenDrawingOrderEnabled() == false) {
             setChildrenDrawingOrderEnabled(true);
@@ -1025,7 +1028,7 @@ public class PageScrollView extends ScrollLayout {
 
     private void dispatchTransformPosition(int scrolled, int itemCount, boolean horizontal) {
         int childCount = getChildCount(), pageItemIndex = 0;
-        int mMiddleMargin = horizontal ? mBorderDivider.getContentMarginHorizontal() : mBorderDivider.getContentMarginVertical();
+        int mMiddleMargin = horizontal ? mBorderDivider.getItemMarginHorizontal() : mBorderDivider.getItemMarginVertical();
         int pageItemStart = Math.max(0, mFirstVisiblePosition - 1);
         int pageItemEnd = Math.min(itemCount - 1, mLastVisiblePosition + 1);
         for (int i = 0; i < childCount && pageItemIndex <= pageItemEnd; i++) {

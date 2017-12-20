@@ -1,16 +1,16 @@
 <?xml version="1.0" encoding="utf-8"?>
-<com.rexy.widgets.layout.PageScrollView
+<com.rexy.widgets.layout.ScrollLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    android:gravity="center_horizontal"
-    android:layout_gravity="center"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="#7700"
-    android:clipToPadding="false"
-    app:layoutDirection="vertical"
+    android:background="#A00"
+    android:clipToPadding="true"
+    android:gravity="center_horizontal"
+    android:layout_gravity="center_horizontal"
+    android:orientation="vertical"
+    android:layout_marginTop="30dp"
     app:widthPercent="95%"
-    app:heightPercent="98%"
     app:floatViewStartIndex="0">
     <com.rexy.widgets.layout.ColumnLayout
         android:layout_width="match_parent"
@@ -18,7 +18,9 @@
         android:layout_margin="15dp"
         android:background="@color/contentBackground"
         android:layout_gravity="center_horizontal"
-        app:widthPercent="95%"
+        app:widthPercent="90%"
+        android:layout_weight="2"
+        android:maxHeight="500dp"
         app:columnNumber="1"
         app:columnCenterVertical="true"
         app:stretchColumns="*"
@@ -34,7 +36,7 @@
         app:contentMarginLeft="15dp"
         app:contentMarginRight="15dp"
         app:contentMarginTop="10dp"
-        app:contentMarginHorizontal="6dp"
+        app:itemMarginHorizontal="6dp"
         app:dividerColorHorizontal="#619FC6"
         app:dividerPaddingHorizontal="15dp"
         app:foregroundAlphaMax="60"
@@ -124,7 +126,6 @@
             android:textStyle="bold" />
     </com.rexy.widgets.layout.ColumnLayout>
     <ImageView
-        app:heightPercent="50%"
         android:id="@+id/imageView"
         android:layout_marginLeft="15dp"
         android:layout_marginRight="15dp"
@@ -134,4 +135,4 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:src="@drawable/image" />
-</com.rexy.widgets.layout.PageScrollView>
+</com.rexy.widgets.layout.ScrollLayout>

@@ -313,8 +313,7 @@ public class HierarchyLayout extends WrapLayout {
     }
 
     @Override
-    protected void doAfterLayout(boolean firstAttachLayout) {
-        super.doAfterLayout(firstAttachLayout);
+    protected void doAfterLayout(int contentLeft, int contentTop, int contentWidth, int contentHeight, boolean firstAttachLayout) {
         if (mTree != null) {
             mTree.destroy();
         }
@@ -327,8 +326,7 @@ public class HierarchyLayout extends WrapLayout {
     }
 
     @Override
-    protected void doAfterDraw(Canvas canvas, Rect inset) {
-        super.doAfterDraw(canvas, inset);
+    protected void doAfterDraw(Canvas canvas, int contentLeft, int contentTop, int contentWidth, int contentHeight) {
         if (mTree != null && mLeafSize > 0) {
             if ((mHierarchyNodeEnable || mHierarchyViewEnable)) {
                 if (mHierarchyColor != 0) {
@@ -1007,11 +1005,11 @@ public class HierarchyLayout extends WrapLayout {
     }
 
 
-    public static boolean isHierarchyInstalled(Activity activity){
+    public static boolean isHierarchyInstalled(Activity activity) {
         Window window = activity.getWindow();
         ViewGroup decorView = (ViewGroup) window.getDecorView();
         ViewGroup parent = (ViewGroup) decorView.findViewById(android.R.id.content);
-        return  parent instanceof HierarchyLayout;
+        return parent instanceof HierarchyLayout;
     }
 
     public static void hierarchy(Activity activity, boolean install) {

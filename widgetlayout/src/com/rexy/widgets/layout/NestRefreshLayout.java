@@ -94,7 +94,6 @@ public class NestRefreshLayout<INDICATOR extends View & NestRefreshLayout.OnRefr
         }
     }
 
-
     public NestRefreshLayout(Context context) {
         super(context);
         init(context, null);
@@ -119,13 +118,6 @@ public class NestRefreshLayout<INDICATOR extends View & NestRefreshLayout.OnRefr
         final ViewConfiguration configuration = ViewConfiguration.get(context);
         mTouchSlop = configuration.getScaledTouchSlop();
         setTouchScrollEnable(true);
-    }
-
-    @Override
-    public void setTouchScrollEnable(boolean touchScrollEnable) {
-        super.setTouchScrollEnable(touchScrollEnable);
-        setTouchScrollHorizontalEnable(false);
-        setTouchScrollVerticalEnable(touchScrollEnable);
     }
 
     @Override
@@ -559,15 +551,14 @@ public class NestRefreshLayout<INDICATOR extends View & NestRefreshLayout.OnRefr
 
     private void measureChild(View child, int itemPosition, int parentSpecWidth, int parentSpecHeight, int heightUsed) {
         Arrays.fill(mMeasureResult, 0);
-        LayoutParams params = (LayoutParams) child.getLayoutParams();
-        params.measure(child, itemPosition, parentSpecWidth, parentSpecHeight, 0, heightUsed);
+        LayoutParams params = measure(child, itemPosition, parentSpecWidth, parentSpecHeight, 0, heightUsed);
         mMeasureResult[0] = params.width(child);
         mMeasureResult[1] = params.height(child);
         mMeasureResult[2] = child.getMeasuredState();
     }
 
     @Override
-    protected void dispatchMeasure(int widthMeasureSpecContent, int heightMeasureSpecContent) {
+    protected void dispatchMeasure(int widthExcludeUnusedSpec, int heightExcludeUnusedSpec) {
         if (mNeedCheckAddInLayout) {
             makeSureBuildInViewAdded();
             mNeedCheckAddInLayout = false;
@@ -576,7 +567,7 @@ public class NestRefreshLayout<INDICATOR extends View & NestRefreshLayout.OnRefr
         int floatHeight = 0, refreshHeight = 0, itemPosition = 0;
         boolean contentVisible = !skipChild(mContentView);
         if (!skipChild(mHeaderView)) {
-            measureChild(mHeaderView, itemPosition++, widthMeasureSpecContent, heightMeasureSpecContent, contentHeight);
+            measureChild(mHeaderView, itemPosition++, widthExcludeUnusedSpec, heightExcludeUnusedSpec, contentHeight);
             contentWidth = Math.max(contentWidth, mMeasureResult[0]);
             childState |= mMeasureResult[2];
             if (isHeaderViewFloat) {
@@ -586,7 +577,7 @@ public class NestRefreshLayout<INDICATOR extends View & NestRefreshLayout.OnRefr
             }
         }
         if (!skipChild(mFooterView)) {
-            measureChild(mFooterView, itemPosition++, widthMeasureSpecContent, heightMeasureSpecContent, contentHeight);
+            measureChild(mFooterView, itemPosition++, widthExcludeUnusedSpec, heightExcludeUnusedSpec, contentHeight);
             contentWidth = Math.max(contentWidth, mMeasureResult[0]);
             childState |= mMeasureResult[2];
             if (isFooterViewFloat) {
@@ -597,20 +588,20 @@ public class NestRefreshLayout<INDICATOR extends View & NestRefreshLayout.OnRefr
         }
         int usedHeight = contentHeight;
         if (!skipChild(mRefreshHeader)) {
-            measureChild(mRefreshHeader, itemPosition++, widthMeasureSpecContent, heightMeasureSpecContent, usedHeight);
+            measureChild(mRefreshHeader, itemPosition++, widthExcludeUnusedSpec, heightExcludeUnusedSpec, usedHeight);
             contentWidth = Math.max(contentWidth, mMeasureResult[0]);
             childState |= mMeasureResult[2];
             refreshHeight = Math.max(refreshHeight, mMeasureResult[1]);
         }
         if (contentVisible && !skipChild(mRefreshFooter)) {
-            measureChild(mRefreshFooter, itemPosition++, widthMeasureSpecContent, heightMeasureSpecContent, usedHeight);
+            measureChild(mRefreshFooter, itemPosition++, widthExcludeUnusedSpec, heightExcludeUnusedSpec, usedHeight);
             contentWidth = Math.max(contentWidth, mMeasureResult[0]);
             childState |= mMeasureResult[2];
             refreshHeight = Math.max(refreshHeight, mMeasureResult[1]);
         }
 
         if (contentVisible) {
-            measureChild(mContentView, itemPosition++, widthMeasureSpecContent, heightMeasureSpecContent, usedHeight);
+            measureChild(mContentView, itemPosition++, widthExcludeUnusedSpec, heightExcludeUnusedSpec, usedHeight);
             contentWidth = Math.max(contentWidth, mMeasureResult[0]);
             childState |= mMeasureResult[2];
             contentHeight += mMeasureResult[1];
@@ -622,11 +613,11 @@ public class NestRefreshLayout<INDICATOR extends View & NestRefreshLayout.OnRefr
                 LayoutParams cp = (LayoutParams) mContentView.getLayoutParams();
                 int cWidth = cp.width(mContentView);
                 int cHeight = cp.height(mContentView);
-                int widthMode = MeasureSpec.getMode(widthMeasureSpecContent);
-                int heightMode = MeasureSpec.getMode(heightMeasureSpecContent);
-                params.measure(mMaskView, itemPosition++, MeasureSpec.makeMeasureSpec(cWidth, widthMode), MeasureSpec.makeMeasureSpec(cHeight, heightMode), 0, 0);
+                int widthMode = MeasureSpec.getMode(widthExcludeUnusedSpec);
+                int heightMode = MeasureSpec.getMode(heightExcludeUnusedSpec);
+                measure(mMaskView, itemPosition++, MeasureSpec.makeMeasureSpec(cWidth, widthMode), MeasureSpec.makeMeasureSpec(cHeight, heightMode), 0, 0);
             } else {
-                params.measure(mMaskView, itemPosition++, widthMeasureSpecContent, heightMeasureSpecContent, 0, 0);
+                measure(mMaskView, itemPosition++, widthExcludeUnusedSpec, heightExcludeUnusedSpec, 0, 0);
             }
             maxContentHeight = Math.max(maxContentHeight, params.height(mMaskView));
         }
@@ -634,7 +625,7 @@ public class NestRefreshLayout<INDICATOR extends View & NestRefreshLayout.OnRefr
     }
 
     @Override
-    protected void dispatchLayout(int contentLeft, int contentTop) {
+    protected void dispatchLayout(int contentLeft, int contentTop, int contentWidth, int contentHeight) {
         int contentRight = contentLeft + getContentWidth();
         int childLeft, childTop = contentTop, childRight, childBottom;
         boolean contentVisible = !skipChild(mContentView);
@@ -722,8 +713,7 @@ public class NestRefreshLayout<INDICATOR extends View & NestRefreshLayout.OnRefr
     }
 
     @Override
-    protected void doBeforeDraw(Canvas canvas, Rect inset) {
-        super.doBeforeDraw(canvas, inset);
+    protected void doBeforeDraw(Canvas canvas, int contentLeft, int contentTop, int contentWidth, int contentHeight) {
         if (!skipChild(mRefreshHeader) && mRefreshDrawable != null) {
             int refreshBottom = (int) (mRefreshHeader.getBottom() + mRefreshHeader.getTranslationY());
             /* if (mRefreshHeader instanceof ArcProgressIndicator) {

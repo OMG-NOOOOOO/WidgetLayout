@@ -155,7 +155,6 @@ public class NestFloatLayout extends ScrollLayout implements NestedScrollingPare
 
     @Override
     protected void dispatchMeasure(int widthMeasureSpecContent, int heightMeasureSpecContent) {
-        heightMeasureSpecContent = MeasureSpec.makeMeasureSpec(MeasureSpec.getSize(heightMeasureSpecContent), MeasureSpec.UNSPECIFIED);
         final int childCount = getChildCount();
         int contentWidth = 0, contentHeight = 0, childState = 0;
         int virtualHeight = 0, itemPosition = 0;
@@ -169,9 +168,9 @@ public class NestFloatLayout extends ScrollLayout implements NestedScrollingPare
             LayoutParams params = (LayoutParams) child.getLayoutParams();
             if (nestView == child && virtualHeight > 0) {
                 parentHeightMeasure = MeasureSpec.makeMeasureSpec(MeasureSpec.getSize(heightMeasureSpecContent), MeasureSpec.AT_MOST);
-                params.measure(child, itemPosition++, parentWidthMeasure, parentHeightMeasure, 0, virtualHeight);
+                measure(child, itemPosition++, parentWidthMeasure, parentHeightMeasure, 0, virtualHeight);
             } else {
-                params.measure(child, itemPosition++, parentWidthMeasure, parentHeightMeasure, 0, contentHeight);
+                measure(child, itemPosition++, parentWidthMeasure, parentHeightMeasure, 0, contentHeight);
             }
             int itemWidth = params.width(child);
             int itemHeight = params.height(child);
@@ -189,25 +188,6 @@ public class NestFloatLayout extends ScrollLayout implements NestedScrollingPare
             childState |= child.getMeasuredState();
         }
         setContentSize(contentWidth, contentHeight, childState);
-    }
-
-    @Override
-    protected void dispatchLayout(int contentLeft, int contentTop) {
-        int childLeft, childTop, childRight, childBottom;
-        final int contentRight = contentLeft + getContentWidth();
-        childTop = contentTop;
-        final int count = getChildCount();
-        for (int i = 0; i < count; i++) {
-            final View child = getChildAt(i);
-            if (skipChild(child)) continue;
-            LayoutParams params = (LayoutParams) child.getLayoutParams();
-            childTop += params.topMargin();
-            childBottom = childTop + child.getMeasuredHeight();
-            childLeft = getContentStartH(contentLeft, contentRight, child.getMeasuredWidth(), params.leftMargin(), params.rightMargin(), params.gravity);
-            childRight = childLeft + child.getMeasuredWidth();
-            child.layout(childLeft, childTop, childRight, childBottom);
-            childTop = childBottom + params.bottomMargin();
-        }
     }
 
     @Override
@@ -308,7 +288,7 @@ public class NestFloatLayout extends ScrollLayout implements NestedScrollingPare
         if (isLogAccess()) {
             print("nest", "getNestedScrollAxes");
         }
-        return isTouchScrollVerticalEnable(true) ? ViewCompat.SCROLL_AXIS_VERTICAL : 0;
+        return isTouchScrollEnable() ? ViewCompat.SCROLL_AXIS_VERTICAL : 0;
     }
     //end:NestedScrollingParent
 }

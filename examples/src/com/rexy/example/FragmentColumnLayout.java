@@ -21,7 +21,7 @@ public class FragmentColumnLayout extends FragmentViewPicker {
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View root=inflater.inflate(R.layout.fragment_columnlayout,container,false);
         mColumnLayout= ViewUtils.view(root,R.id.columnLayout);
-        buildRandomView(10, false);
+        buildRandomView(1, false);
         return root;
     }
 
@@ -33,7 +33,7 @@ public class FragmentColumnLayout extends FragmentViewPicker {
     @Override
     protected void onAddOrRemoveView(View addView) {
         if(addView==null){
-            int minRemainCount=3;
+            int minRemainCount=0;
             if(mColumnLayout.getChildCount()>minRemainCount){
                 mColumnLayout.removeViewAt(mColumnLayout.getChildCount()-1);
             }
