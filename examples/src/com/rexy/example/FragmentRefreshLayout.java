@@ -41,6 +41,7 @@ public class FragmentRefreshLayout extends BaseFragment implements NestRefreshLa
         refreshLayout.setRefreshPullIndicator(new RefreshIndicator(inflater.getContext()));
         refreshLayout.setRefreshPushIndicator(new RefreshIndicator(inflater.getContext()));
         refreshLayout.setRefreshPushEnable(true);
+        refreshLayout.setRefreshPullEnable(true);
     }
 
     private void initScrollView(ScrollLayout scrollView, boolean init) {

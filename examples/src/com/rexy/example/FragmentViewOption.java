@@ -16,7 +16,7 @@ import android.widget.EditText;
 import android.widget.ToggleButton;
 
 import com.rexy.example.extend.BaseFragment;
-import com.rexy.widgets.layout.BaseViewGroup;
+import com.rexy.widgets.layout.WidgetLayout;
 import com.rexy.widgets.layout.WrapLayout;
 import com.rexy.example.extend.ViewUtils;
 import com.rexy.widgetlayout.example.R;
@@ -181,9 +181,9 @@ public class FragmentViewOption extends BaseFragment {
         mMaxWidth = checkLimitSize(mEditMaxWidth);
         mMinHeight = checkLimitSize(mEditMinHeight);
         mMaxHeight = checkLimitSize(mEditMaxHeight);
-        BaseViewGroup.LayoutParams blp = null;
-        if (mExampleView.getLayoutParams() instanceof BaseViewGroup.LayoutParams) {
-            blp = (BaseViewGroup.LayoutParams) mExampleView.getLayoutParams();
+        WidgetLayout.LayoutParams blp = null;
+        if (mExampleView.getLayoutParams() instanceof WidgetLayout.LayoutParams) {
+            blp = (WidgetLayout.LayoutParams) mExampleView.getLayoutParams();
         }
         if (blp != null) {
             blp.maxWidth = mMaxWidth;

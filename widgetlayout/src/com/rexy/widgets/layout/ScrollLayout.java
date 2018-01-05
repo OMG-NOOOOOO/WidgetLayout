@@ -3,9 +3,11 @@ package com.rexy.widgets.layout;
 import android.content.Context;
 import android.graphics.Canvas;
 import android.graphics.Rect;
+import android.os.Build;
 import android.support.v4.view.MotionEventCompat;
 import android.support.v4.view.NestedScrollingChild;
 import android.support.v4.view.NestedScrollingChildHelper;
+import android.support.v4.view.NestedScrollingParent;
 import android.support.v4.view.ScrollingView;
 import android.support.v4.view.VelocityTrackerCompat;
 import android.support.v4.view.ViewCompat;
@@ -32,12 +34,9 @@ import android.view.animation.Interpolator;
  * @author: rexy
  * @date: 2017-04-25 09:32
  */
-public class ScrollLayout extends BaseViewGroup implements ScrollingView, NestedScrollingChild {
+public class ScrollLayout extends WidgetLayout implements ScrollingView, NestedScrollingChild, NestedScrollingParent {
     private static final int INVALID_POINTER = -1;
     private static final int MAX_SCROLL_DURATION = 2000;
-    public static final int SCROLL_STATE_IDLE = 0;
-    public static final int SCROLL_STATE_DRAGGING = 1;
-    public static final int SCROLL_STATE_SETTLING = 2;
 
     private static final Interpolator DefaultInterpolator = new Interpolator() {
         @Override
@@ -49,7 +48,7 @@ public class ScrollLayout extends BaseViewGroup implements ScrollingView, Nested
 
     OnScrollChangeListener mScrollListener;
 
-    private int mScrollState = SCROLL_STATE_IDLE;
+    private int mScrollState = OnScrollChangeListener.SCROLL_STATE_IDLE;
     protected int mMinFlingVelocity;
     protected int mMaxFlingVelocity;
     private VelocityTracker mVelocityTracker;
@@ -98,6 +97,19 @@ public class ScrollLayout extends BaseViewGroup implements ScrollingView, Nested
         setTouchScrollEnable(true);
     }
 
+
+    public void setOnScrollChangeListener(OnScrollChangeListener l) {
+        mScrollListener = l;
+    }
+
+    public boolean isTouchScrollEnable() {
+        return mTouchScrollEnable;
+    }
+
+    public void setTouchScrollEnable(boolean touchScrollEnable) {
+        mTouchScrollEnable = touchScrollEnable;
+    }
+
     public boolean isEdgeEffectEnable() {
         return mEdgeEffectEnable;
     }
@@ -114,7 +126,7 @@ public class ScrollLayout extends BaseViewGroup implements ScrollingView, Nested
 
     @Override
     public void setClipToPadding(boolean clipToPadding) {
-        if (clipToPadding != getClipToPadding()) {
+        if (Build.VERSION.SDK_INT >= 21 && clipToPadding != getClipToPadding()) {
             invalidateGlows();
         }
         super.setClipToPadding(clipToPadding);
@@ -138,10 +150,6 @@ public class ScrollLayout extends BaseViewGroup implements ScrollingView, Nested
         return mScrollState;
     }
 
-    public void setOnScrollChangeListener(OnScrollChangeListener l) {
-        mScrollListener = l;
-    }
-
     @Override
     protected void onDetachedFromWindow() {
         super.onDetachedFromWindow();
@@ -160,78 +168,6 @@ public class ScrollLayout extends BaseViewGroup implements ScrollingView, Nested
 
     //start:measure&layout&draw
     @Override
-    protected void dispatchMeasure(int widthExcludeUnusedSpec, int heightExcludeUnusedSpec) {
-        final int childCount = getChildCount();
-        int contentWidth = 0, contentHeight = 0, childState = 0;
-        int itemPosition = 0, itemMargin;
-        if (isOrientationHorizontal()) {
-            itemMargin = mBorderDivider.getItemMarginHorizontal();
-            for (int i = 0; i < childCount; i++) {
-                final View child = getChildAt(i);
-                if (skipChild(child)) continue;
-                if (itemPosition != 0) contentWidth += itemMargin;
-                BaseViewGroup.LayoutParams params = measure(child, itemPosition++, widthExcludeUnusedSpec, heightExcludeUnusedSpec, 0, 0);
-                contentWidth += params.width(child);
-                int itemHeight = params.height(child);
-                if (contentHeight < itemHeight) {
-                    contentHeight = itemHeight;
-                }
-                childState |= child.getMeasuredState();
-            }
-        } else {
-            itemMargin = mBorderDivider.getItemMarginVertical();
-            for (int i = 0; i < childCount; i++) {
-                final View child = getChildAt(i);
-                if (skipChild(child)) continue;
-                if (itemPosition != 0) contentWidth += itemMargin;
-                BaseViewGroup.LayoutParams params = measure(child, itemPosition++, widthExcludeUnusedSpec, heightExcludeUnusedSpec, 0, 0);
-                contentHeight += params.height(child);
-                int itemWidth = params.width(child);
-                if (contentWidth < itemWidth) {
-                    contentWidth = itemWidth;
-                }
-                childState |= child.getMeasuredState();
-            }
-        }
-        setContentSize(contentWidth, contentHeight, childState);
-    }
-
-    @Override
-    protected void dispatchLayout(int contentLeft, int contentTop, int contentWidth, int contentHeight) {
-        final int count = getChildCount();
-        int childLeft = contentLeft, childTop = contentTop, childRight, childBottom, itemMargin;
-        if (isOrientationHorizontal()) {
-            itemMargin = mBorderDivider.getItemMarginHorizontal();
-            final int baseTop = contentTop, baseBottom = contentTop + contentHeight;
-            for (int i = 0; i < count; i++) {
-                final View child = getChildAt(i);
-                if (skipChild(child)) continue;
-                BaseViewGroup.LayoutParams params = (BaseViewGroup.LayoutParams) child.getLayoutParams();
-                childTop = getContentStartH(baseTop, baseBottom, child.getMeasuredHeight(), params.topMargin(), params.bottomMargin(), params.gravity);
-                childBottom = childTop + child.getMeasuredHeight();
-                childLeft += params.leftMargin();
-                childRight = childLeft + child.getMeasuredWidth();
-                child.layout(childLeft, childTop, childRight, childBottom);
-                childLeft = childRight + params.rightMargin + itemMargin;
-            }
-        } else {
-            itemMargin = mBorderDivider.getItemMarginVertical();
-            final int baseLeft = contentLeft, baseRight = contentLeft + contentWidth;
-            for (int i = 0; i < count; i++) {
-                final View child = getChildAt(i);
-                if (skipChild(child)) continue;
-                BaseViewGroup.LayoutParams params = (BaseViewGroup.LayoutParams) child.getLayoutParams();
-                childTop += params.topMargin();
-                childBottom = childTop + child.getMeasuredHeight();
-                childLeft = getContentStartH(baseLeft, baseRight, child.getMeasuredWidth(), params.leftMargin(), params.rightMargin(), params.gravity);
-                childRight = childLeft + child.getMeasuredWidth();
-                child.layout(childLeft, childTop, childRight, childBottom);
-                childTop = childBottom + params.bottomMargin() + itemMargin;
-            }
-        }
-    }
-
-    @Override
     protected void doAfterLayout(int baseLeft, int baseTop, int contentWidth, int contentHeight, boolean firstAttachLayout) {
         if (0x80000000 == (0x80000000 & mScrollInfo.left)) {
             scrollToItem(mScrollInfo, true);
@@ -240,10 +176,11 @@ public class ScrollLayout extends BaseViewGroup implements ScrollingView, Nested
 
     @Override
     protected void doAfterDraw(Canvas c, int baseLeft, int baseTop, int contentWidth, int contentHeight) {
+        super.doAfterDraw(c, baseLeft, baseTop, contentWidth, contentHeight);
         if (mEdgeEffectEnable) {
             // TODO If padding is not 0 and clipChildrenToPadding is false, to draw glows properly, we
             // need find children closest to edges. Not sure if it is worth the effort.
-            boolean clipToPadding = getClipToPadding();
+            boolean clipToPadding = Build.VERSION.SDK_INT >= 21 &&getClipToPadding();
             boolean needsInvalidate = false;
             if (mLeftGlow != null && !mLeftGlow.isFinished()) {
                 final int restore = c.save();
@@ -286,9 +223,7 @@ public class ScrollLayout extends BaseViewGroup implements ScrollingView, Nested
             }
         }
     }
-    //end:measure&layout&draw
 
-    //start: touch gesture
 
     protected boolean ignoreSelfTouch(boolean fromIntercept, MotionEvent e) {
         return !isTouchScrollEnable();
@@ -315,14 +250,14 @@ public class ScrollLayout extends BaseViewGroup implements ScrollingView, Nested
     }
 
     @Override
-    public boolean onInterceptTouchEvent(MotionEvent e) {
-        if (dispatchOnItemTouchIntercept(e)) {
+    protected boolean dispatchInterceptTouchEvent(MotionEvent e, boolean consumed) {
+        if (consumed) {
             cancelTouch(true);
             return true;
         }
         if (ignoreSelfTouch(true, e)) {
             cancelTouch(true);
-            return super.onInterceptTouchEvent(e);
+            return false;
         }
         if (mVelocityTracker == null) {
             mVelocityTracker = VelocityTracker.obtain();
@@ -337,10 +272,10 @@ public class ScrollLayout extends BaseViewGroup implements ScrollingView, Nested
                 mScrollPointerId = e.getPointerId(0);
                 mInitialTouchX = mLastTouchX = (int) (e.getX() + 0.5f);
                 mInitialTouchY = mLastTouchY = (int) (e.getY() + 0.5f);
-                if (mScrollState == SCROLL_STATE_SETTLING) {
+                if (mScrollState == OnScrollChangeListener.SCROLL_STATE_SETTLING) {
                     mFlingScroller.stop();
                     getParent().requestDisallowInterceptTouchEvent(true);
-                    setScrollState(SCROLL_STATE_DRAGGING);
+                    setScrollState(OnScrollChangeListener.SCROLL_STATE_DRAGGING);
                 }
                 mNestedOffsets[0] = mNestedOffsets[1] = 0;
                 int nestedScrollAxis = ViewCompat.SCROLL_AXIS_NONE;
@@ -367,7 +302,7 @@ public class ScrollLayout extends BaseViewGroup implements ScrollingView, Nested
                 }
                 final int x = (int) (e.getX(index) + 0.5f);
                 final int y = (int) (e.getY(index) + 0.5f);
-                if (mScrollState != SCROLL_STATE_DRAGGING) {
+                if (mScrollState != OnScrollChangeListener.SCROLL_STATE_DRAGGING) {
                     final int dx = x - mInitialTouchX;
                     final int dy = y - mInitialTouchY;
                     boolean startScroll = false;
@@ -381,7 +316,7 @@ public class ScrollLayout extends BaseViewGroup implements ScrollingView, Nested
                     }
                     if (startScroll) {
                         getParent().requestDisallowInterceptTouchEvent(true);
-                        setScrollState(SCROLL_STATE_DRAGGING);
+                        setScrollState(OnScrollChangeListener.SCROLL_STATE_DRAGGING);
                     }
                 }
             }
@@ -399,18 +334,18 @@ public class ScrollLayout extends BaseViewGroup implements ScrollingView, Nested
                 cancelTouch(true);
             }
         }
-        return mScrollState == SCROLL_STATE_DRAGGING;
+        return mScrollState == OnScrollChangeListener.SCROLL_STATE_DRAGGING;
     }
 
     @Override
-    public boolean onTouchEvent(MotionEvent e) {
-        if (dispatchOnItemTouch(e)) {
+    protected boolean dispatchTouchEvent(MotionEvent e, boolean consumed) {
+        if (consumed) {
             cancelTouch(true);
             return true;
         }
         if (ignoreSelfTouch(false, e)) {
             cancelTouch(true);
-            return super.onTouchEvent(e);
+            return false;
         }
         if (mVelocityTracker == null) {
             mVelocityTracker = VelocityTracker.obtain();
@@ -462,7 +397,7 @@ public class ScrollLayout extends BaseViewGroup implements ScrollingView, Nested
                     mNestedOffsets[0] += mScrollOffset[0];
                     mNestedOffsets[1] += mScrollOffset[1];
                 }
-                if (mScrollState != SCROLL_STATE_DRAGGING) {
+                if (mScrollState != OnScrollChangeListener.SCROLL_STATE_DRAGGING) {
                     boolean startScroll = false;
                     if (willDragging(dx, mCanTouchScroll[0], true)) {
                         if (dx > 0) {
@@ -482,10 +417,10 @@ public class ScrollLayout extends BaseViewGroup implements ScrollingView, Nested
                     }
                     if (startScroll) {
                         getParent().requestDisallowInterceptTouchEvent(true);
-                        setScrollState(SCROLL_STATE_DRAGGING);
+                        setScrollState(OnScrollChangeListener.SCROLL_STATE_DRAGGING);
                     }
                 }
-                if (mScrollState == SCROLL_STATE_DRAGGING) {
+                if (mScrollState == OnScrollChangeListener.SCROLL_STATE_DRAGGING) {
                     mLastTouchX = x - mScrollOffset[0];
                     mLastTouchY = y - mScrollOffset[1];
                     if (scrollByInternal(
@@ -510,7 +445,7 @@ public class ScrollLayout extends BaseViewGroup implements ScrollingView, Nested
                 final float yvel = mCanTouchScroll[1] ?
                         -VelocityTrackerCompat.getYVelocity(mVelocityTracker, mScrollPointerId) : 0;
                 if (!fling(mLastTouchX - mInitialTouchX, mLastTouchY - mInitialTouchY, (int) xvel, (int) yvel)) {
-                    setScrollState(SCROLL_STATE_IDLE);
+                    setScrollState(OnScrollChangeListener.SCROLL_STATE_IDLE);
                 }
                 resetTouch();
             }
@@ -541,7 +476,7 @@ public class ScrollLayout extends BaseViewGroup implements ScrollingView, Nested
     protected void cancelTouch(boolean resetToIdle) {
         resetTouch();
         if (resetToIdle) {
-            setScrollState(SCROLL_STATE_IDLE);
+            setScrollState(OnScrollChangeListener.SCROLL_STATE_IDLE);
         }
     }
 
@@ -734,13 +669,92 @@ public class ScrollLayout extends BaseViewGroup implements ScrollingView, Nested
         }
         mScrollInfo.left = 0 << 31;
     }
+
+    /**
+     * get offset from first left item
+     *
+     * @param child
+     * @param centreInVisibleBounds if true ,refer to parent view centre to get the offset .
+     * @param marginInclude         take margin into view space.
+     */
+    public int offsetX(View child, boolean centreInVisibleBounds, boolean marginInclude) {
+        LayoutParams marginLp = marginInclude ? (LayoutParams) child.getLayoutParams() : null;
+        if (centreInVisibleBounds) {
+            int current = (child.getLeft() + child.getRight()) >> 1;
+            if (marginLp != null) {
+                current += marginLp.horizontalMargin() / 2;
+            }
+            return current - getPaddingLeft() + mVisibleContentBounds.left - mVisibleContentBounds.centerX();
+        } else {
+            int current = child.getLeft();
+            if (marginLp != null) {
+                current += marginLp.leftMargin();
+            }
+            return current - getPaddingLeft();
+        }
+    }
+
+    /**
+     * get offset from first top item
+     *
+     * @param child
+     * @param centreInVisibleBounds if true ,refer to parent view centre to get the offset .
+     * @param marginInclude         take margin into view space.
+     */
+    public int offsetY(View child, boolean centreInVisibleBounds, boolean marginInclude) {
+        LayoutParams marginLp = marginInclude ? (LayoutParams) child.getLayoutParams() : null;
+        if (centreInVisibleBounds) {
+            int current = (child.getTop() + child.getBottom()) >> 1;
+            if (marginLp != null) {
+                current += marginLp.verticalMargin() / 2;
+            }
+            return current - getPaddingTop() + mVisibleContentBounds.top - mVisibleContentBounds.centerY();
+        } else {
+            int current = child.getTop();
+            if (marginLp != null) {
+                current += marginLp.topMargin();
+            }
+            return current - getPaddingTop();
+        }
+    }
+
+    @Override
+    public int computeVerticalScrollRange() {
+        return Math.max(mVisibleContentBounds.height(), getContentHeight());
+    }
+
+    @Override
+    public int computeVerticalScrollOffset() {
+        return Math.max(0, super.computeVerticalScrollOffset());
+    }
+
+    @Override
+    public int computeVerticalScrollExtent() {
+        return mVisibleContentBounds.height();
+    }
+
+    @Override
+    public int computeHorizontalScrollRange() {
+        return Math.max(mVisibleContentBounds.width(), getContentWidth());
+    }
+
+    @Override
+    public int computeHorizontalScrollOffset() {
+        return Math.max(0, super.computeHorizontalScrollOffset());
+    }
+
+    @Override
+    public int computeHorizontalScrollExtent() {
+        return mVisibleContentBounds.width();
+    }
+
     //end:compute scroll information.
 
     //start:EdgeEffect
     private void ensureLeftGlow() {
         if (mLeftGlow == null) {
             mLeftGlow = new EdgeEffectCompat(getContext());
-            if (getClipToPadding()) {
+            if (Build.VERSION.SDK_INT >= 21 && getClipToPadding()) {
                 mLeftGlow.setSize(getHeight(), getWidth());
             } else {
                 mLeftGlow.setSize(getMeasuredHeight(), getMeasuredWidth());
@@ -751,7 +765,7 @@ public class ScrollLayout extends BaseViewGroup implements ScrollingView, Nested
     private void ensureRightGlow() {
         if (mRightGlow == null) {
             mRightGlow = new EdgeEffectCompat(getContext());
-            if (getClipToPadding()) {
+            if (Build.VERSION.SDK_INT >= 21 && getClipToPadding()) {
                 mRightGlow.setSize(getHeight(), getWidth());
             } else {
                 mRightGlow.setSize(getMeasuredHeight(), getMeasuredWidth());
@@ -762,7 +776,7 @@ public class ScrollLayout extends BaseViewGroup implements ScrollingView, Nested
     private void ensureTopGlow() {
         if (mTopGlow == null) {
             mTopGlow = new EdgeEffectCompat(getContext());
-            if (getClipToPadding()) {
+            if (Build.VERSION.SDK_INT >= 21 && getClipToPadding()) {
                 mTopGlow.setSize(getWidth(), getHeight());
             } else {
                 mTopGlow.setSize(getMeasuredWidth(), getMeasuredHeight());
@@ -773,7 +787,7 @@ public class ScrollLayout extends BaseViewGroup implements ScrollingView, Nested
     private void ensureBottomGlow() {
         if (mBottomGlow == null) {
             mBottomGlow = new EdgeEffectCompat(getContext());
-            if (getClipToPadding()) {
+            if (Build.VERSION.SDK_INT >= 21 && getClipToPadding()) {
                 mBottomGlow.setSize(getWidth(), getHeight());
             } else {
                 mBottomGlow.setSize(getMeasuredWidth(), getMeasuredHeight());
@@ -929,35 +943,47 @@ public class ScrollLayout extends BaseViewGroup implements ScrollingView, Nested
     }
     //end:NestedScrollingChild
 
-    protected final static int clamp(int n, int my, int child) {
-        if (my >= child || n < 0) {
-            /* my >= child is this case:
-             *                    |--------------- me ---------------|
-             *     |------ child ------|
-             * or
-             *     |--------------- me ---------------|
-             *            |------ child ------|
-             * or
-             *     |--------------- me ---------------|
-             *                                  |------ child ------|
-             *
-             * n < 0 is this case:
-             *     |------ me ------|
-             *                    |-------- child --------|
-             *     |-- mScrollX --|
-             */
-            return 0;
-        }
-        if ((my + n) > child) {
-            /* this case:
-             *                    |------ me ------|
-             *     |------ child ------|
-             *     |-- mScrollX --|
-             */
-            return child - my;
-        }
-        return n;
+    //start:NestedScrollingParent
+    @Override
+    public int getNestedScrollAxes() {
+        return super.getNestedScrollAxes();
     }
+
+    @Override
+    public boolean onStartNestedScroll(View child, View target, int nestedScrollAxes) {
+        return super.onStartNestedScroll(child, target, nestedScrollAxes);
+    }
+
+    @Override
+    public void onNestedScrollAccepted(View child, View target, int axes) {
+        super.onNestedScrollAccepted(child, target, axes);
+    }
+
+    @Override
+    public void onStopNestedScroll(View child) {
+        super.onStopNestedScroll(child);
+    }
+
+    @Override
+    public void onNestedPreScroll(View target, int dx, int dy, int[] consumed) {
+        super.onNestedPreScroll(target, dx, dy, consumed);
+    }
+
+    @Override
+    public void onNestedScroll(View target, int dxConsumed, int dyConsumed, int dxUnconsumed, int dyUnconsumed) {
+        super.onNestedScroll(target, dxConsumed, dyConsumed, dxUnconsumed, dyUnconsumed);
+    }
+
+    @Override
+    public boolean onNestedPreFling(View target, float velocityX, float velocityY) {
+        return super.onNestedPreFling(target, velocityX, velocityY);
+    }
+
+    @Override
+    public boolean onNestedFling(View target, float velocityX, float velocityY, boolean consumed) {
+        return super.onNestedFling(target, velocityX, velocityY, consumed);
+    }
+    //end:NestScrollingParent
 
     class FlingScroller implements Runnable {
         private int mLastFlingX;
@@ -1040,7 +1066,7 @@ public class ScrollLayout extends BaseViewGroup implements ScrollingView, Nested
                     if (isDevLogAccess()) {
                         printDev("fling", "scroller finished or full consumed");
                     }
-                    setScrollState(SCROLL_STATE_IDLE); // setting state to idle will stop this.
+                    setScrollState(OnScrollChangeListener.SCROLL_STATE_IDLE); // setting state to idle will stop this.
                 } else {
                     postOnAnimation();
                 }
@@ -1070,7 +1096,7 @@ public class ScrollLayout extends BaseViewGroup implements ScrollingView, Nested
         }
 
         public void fling(int velocityX, int velocityY) {
-            setScrollState(SCROLL_STATE_SETTLING);
+            setScrollState(OnScrollChangeListener.SCROLL_STATE_SETTLING);
             mLastFlingX = mLastFlingY = 0;
             mScroller.fling(0, 0, velocityX, velocityY,
                     Integer.MIN_VALUE, Integer.MAX_VALUE, Integer.MIN_VALUE, Integer.MAX_VALUE);
@@ -1134,7 +1160,7 @@ public class ScrollLayout extends BaseViewGroup implements ScrollingView, Nested
                 mInterpolator = interpolator;
                 mScroller = ScrollerCompat.create(getContext(), interpolator);
             }
-            setScrollState(SCROLL_STATE_SETTLING);
+            setScrollState(OnScrollChangeListener.SCROLL_STATE_SETTLING);
             mLastFlingX = mLastFlingY = 0;
             mScroller.startScroll(0, 0, dx, dy, duration);
             postOnAnimation();
@@ -1147,6 +1173,11 @@ public class ScrollLayout extends BaseViewGroup implements ScrollingView, Nested
     }
 
     public interface OnScrollChangeListener {
+
+        int SCROLL_STATE_IDLE = 0;
+        int SCROLL_STATE_DRAGGING = 1;
+        int SCROLL_STATE_SETTLING = 2;
+
         void onScrollChanged(int scrollX, int scrollY, int oldScrollX, int oldScrollY);
 
         void onScrollStateChanged(int state, int oldState);

@@ -10,6 +10,8 @@ import android.view.Gravity;
 import android.view.View;
 
 import com.rexy.widgetlayout.R;
+import com.rexy.widgets.ViewHelper;
+import com.rexy.widgets.divider.BorderDivider;
 
 import java.util.regex.Pattern;
 
@@ -44,7 +46,7 @@ import java.util.regex.Pattern;
  * @author: rexy
  * @date: 2015-11-27 17:43
  */
-public class ColumnLayout extends BaseViewGroup {
+public class ColumnLayout extends WidgetLayout {
     //列个数-
     int mColumnNumber = 1;
     //列内内容全展开的索引 * 或 1,3,5 类似列索引0 开始
@@ -175,14 +177,14 @@ public class ColumnLayout extends BaseViewGroup {
             final View child = getChildAt(endIndex);
             if (skipChild(child)) continue;
             if (isColumnStretch(columnIndex)) {
-                BaseViewGroup.LayoutParams params = (BaseViewGroup.LayoutParams) child.getLayoutParams();
+                WidgetLayout.LayoutParams params = (WidgetLayout.LayoutParams) child.getLayoutParams();
                 int childHeightWithMargin = params.height(child);
                 if (childHeightWithMargin != columnHeight) {
                     int oldLpW = params.width;
                     int oldLpH = params.height;
                     params.width = -1;
                     params.height = -1;
-                    measure(child, params.position(), MeasureSpec.makeMeasureSpec(params.width(child), MeasureSpec.EXACTLY), MeasureSpec.makeMeasureSpec(columnHeight, MeasureSpec.EXACTLY), 0, 0);
+                    measure(child, params.position(), View.MeasureSpec.makeMeasureSpec(params.width(child), View.MeasureSpec.EXACTLY), View.MeasureSpec.makeMeasureSpec(columnHeight, View.MeasureSpec.EXACTLY), 0, 0);
                     params.width = oldLpW;
                     params.height = oldLpH;
                 }
@@ -195,12 +197,13 @@ public class ColumnLayout extends BaseViewGroup {
     protected void dispatchMeasure(int widthExcludeUnusedSpec, int heightExcludeUnusedSpec) {
         final int childCount = getChildCount();
         final int columnCount = Math.max(1, mColumnNumber);
-        final int middleMarginHorizontal = mBorderDivider.getItemMarginHorizontal();
-        final int middleMarginVertical = mBorderDivider.getItemMarginVertical();
+        final BorderDivider borderDivider = getBorderDivider();
+        final int middleMarginHorizontal = borderDivider.getItemMarginHorizontal();
+        final int middleMarginVertical = borderDivider.getItemMarginVertical();
         mLineHeight.clear();
-        mColumnWidth = computeColumnWidth(MeasureSpec.getSize(widthExcludeUnusedSpec), middleMarginHorizontal, columnCount);
+        mColumnWidth = computeColumnWidth(View.MeasureSpec.getSize(widthExcludeUnusedSpec), middleMarginHorizontal, columnCount);
         int heightMeasureSpec = heightExcludeUnusedSpec;
-        int widthMeasureSpec = MeasureSpec.makeMeasureSpec(mColumnWidth, MeasureSpec.getMode(widthExcludeUnusedSpec));
+        int widthMeasureSpec = View.MeasureSpec.makeMeasureSpec(mColumnWidth, View.MeasureSpec.getMode(widthExcludeUnusedSpec));
         int currentLineMaxHeight = 0;
         int contentHeight = 0, childState = 0, measuredCount = 0;
         int lineIndex, preLineIndex = 0, columnIndex = 0, itemPosition = 0;
@@ -220,7 +223,7 @@ public class ColumnLayout extends BaseViewGroup {
                 }
             }
             boolean stretchMeasure = isColumnStretch(columnIndex);
-            BaseViewGroup.LayoutParams params = (LayoutParams) child.getLayoutParams();
+            WidgetLayout.LayoutParams params = (WidgetLayout.LayoutParams) child.getLayoutParams();
             int oldParamsWidth = params.width, tempParamsWidth = stretchMeasure ? -1 : params.width;
             params.width = tempParamsWidth;
             measure(child, itemPosition++, widthMeasureSpec, heightMeasureSpec, 0, contentHeight);
@@ -255,8 +258,9 @@ public class ColumnLayout extends BaseViewGroup {
     protected void dispatchLayout(int contentLeft, int contentTop, int contentWidth, int contentHeight) {
         final int lineCount = mLineHeight.size();
         final int columnWidth = mColumnWidth;
-        final int middleMarginHorizontal = mBorderDivider.getItemMarginHorizontal();
-        final int middleMarginVertical = mBorderDivider.getItemMarginVertical();
+        final BorderDivider borderDivider = getBorderDivider();
+        final int middleMarginHorizontal = borderDivider.getItemMarginHorizontal();
+        final int middleMarginVertical = borderDivider.getItemMarginVertical();
         int childIndex = 0, childLastIndex, columnIndex;
         int columnLeft, columnTop = contentTop, columnRight, columnBottom;
         for (int lineIndex = 0; lineIndex < lineCount; lineIndex++) {
@@ -267,14 +271,14 @@ public class ColumnLayout extends BaseViewGroup {
             for (; childIndex <= childLastIndex; childIndex++) {
                 final View child = getChildAt(childIndex);
                 if (skipChild(child)) continue;
-                ColumnLayout.LayoutParams params = (LayoutParams) child.getLayoutParams();
+                WidgetLayout.LayoutParams params = (WidgetLayout.LayoutParams) child.getLayoutParams();
                 columnRight = columnLeft + columnWidth;
                 int gravityHorizontal = getAlignHorizontalGravity(columnIndex, params.gravity);
                 int gravityVertical = mColumnCenterVertical ? Gravity.CENTER_VERTICAL : params.gravity;
                 int childWidth = child.getMeasuredWidth();
                 int childHeight = child.getMeasuredHeight();
-                int childLeft = getContentStartH(columnLeft, columnRight, childWidth, params.leftMargin(), params.rightMargin(), gravityHorizontal);
-                int childTop = getContentStartV(columnTop, columnBottom, childHeight, params.topMargin(), params.bottomMargin(), gravityVertical);
+                int childLeft = ViewHelper.getContentStartH(columnLeft, columnRight, childWidth, params.leftMargin(), params.rightMargin(), gravityHorizontal);
+                int childTop = ViewHelper.getContentStartV(columnTop, columnBottom, childHeight, params.topMargin(), params.bottomMargin(), gravityVertical);
                 child.layout(childLeft, childTop, childLeft + childWidth, childTop + childHeight);
                 columnLeft = columnRight;
                 if (middleMarginHorizontal > 0) {
@@ -293,22 +297,25 @@ public class ColumnLayout extends BaseViewGroup {
     @Override
     protected void doAfterDraw(Canvas canvas, int contentLeft, int contentTop, int contentWidth, int contentHeight) {
         final int lineCount = mLineHeight.size();
-        boolean dividerHorizontal = mBorderDivider.isVisibleDividerHorizontal() && lineCount > 0;
-        boolean dividerVertical = mBorderDivider.isVisibleDividerVertical() && mColumnNumber > 1;
+        final BorderDivider borderDivider = getBorderDivider();
+        boolean dividerHorizontal = borderDivider.isVisibleDividerHorizontal() && lineCount > 0;
+        boolean dividerVertical = borderDivider.isVisibleDividerVertical() && mColumnNumber > 1;
         if (dividerHorizontal || dividerVertical) {
             final int columnWidth = mColumnWidth;
-            final int parentLeft = getPaddingLeft(), parentRight = getWidth() - getPaddingRight(), parentBottom = getHeight() - getPaddingBottom();
+            final int parentLeft = getPaddingLeft();
+            final int parentRight = getWidth() - getPaddingRight();
+            final int parentBottom = getHeight() - getPaddingBottom();
             int maxColumnIndex = Math.max(mColumnNumber - 1, 0), columnIndex;
             int childIndex = 0, childLastIndex;
             int columnLeft, lineTop = contentTop, columnRight, lineBottom;
-            int halfMiddleVertical = mBorderDivider.getItemMarginVertical() / 2;
-            int halfMiddleHorizontal = mBorderDivider.getItemMarginHorizontal() / 2;
+            int halfMiddleVertical = borderDivider.getItemMarginVertical() / 2;
+            int halfMiddleHorizontal = borderDivider.getItemMarginHorizontal() / 2;
             int contentBottomMargin = mContentInset.bottom;
             for (int lineIndex = 0; lineIndex < lineCount; lineIndex++) {
                 childLastIndex = mLineLastIndex.get(lineIndex);
                 lineBottom = lineTop + mLineHeight.get(lineIndex) + halfMiddleVertical;
                 if (dividerHorizontal && (lineBottom + contentBottomMargin < parentBottom)) {
-                    mBorderDivider.drawDivider(canvas, parentLeft, parentRight, lineBottom, true);
+                    borderDivider.drawDivider(canvas, parentLeft, parentRight, lineBottom, true);
                 }
                 if (dividerVertical) {
                     columnIndex = 0;
@@ -319,7 +326,7 @@ public class ColumnLayout extends BaseViewGroup {
                         final View child = getChildAt(lineIndex);
                         if (columnIndex == maxColumnIndex || skipChild(child)) continue;
                         columnRight = columnLeft + columnWidth + halfMiddleHorizontal;
-                        mBorderDivider.drawDivider(canvas, dividerTop, dividerBottom, columnRight, false);
+                        borderDivider.drawDivider(canvas, dividerTop, dividerBottom, columnRight, false);
                         columnLeft = columnRight + halfMiddleHorizontal;
                         columnIndex++;
                     }

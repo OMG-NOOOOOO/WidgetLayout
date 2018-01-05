@@ -436,8 +436,7 @@ public class HierarchyLayout extends WrapLayout {
     private void drawTreeSummaryInfo(Canvas canvas, RectF treeBounds, boolean horizontal) {
         mStringBuilder.delete(0, mStringBuilder.length());
         mStringBuilder.append("层级(").append(mTree.getHierarchyCount()).append(',').append(String.format("%.1f", mTree.getArgHierarchyCount())).append(")").append(',');
-        mStringBuilder.append("结点(").append(mTree.getCountOfNode()).append(',').append(mTree.getCountOfViewGroup()).append(',').append(mTree.getCountOfView()).append(")").append(',');
-        mStringBuilder.append("测绘(").append(mLastMeasureCost).append(',').append(mLastLayoutCost).append(',').append(mLastDrawCost).append(")");
+        mStringBuilder.append("结点(").append(mTree.getCountOfNode()).append(',').append(mTree.getCountOfViewGroup()).append(',').append(mTree.getCountOfView()).append(")");
         float textHeight = mTreePaint.descent() - mTreePaint.ascent();
         float d = mTreePaint.descent();
         float a = mTreePaint.ascent();

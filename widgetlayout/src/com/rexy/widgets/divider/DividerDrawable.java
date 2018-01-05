@@ -1,4 +1,4 @@
-package com.rexy.widgets.layout;
+package com.rexy.widgets.divider;
 
 import android.content.res.TypedArray;
 import android.graphics.Canvas;
@@ -17,7 +17,7 @@ public class DividerDrawable {
     int mDividerMarginEnd;
 
     private DividerDrawable(int defaultWidth) {
-        mDividerWidth=defaultWidth;
+        mDividerWidth = defaultWidth;
     }
 
     public void setDivider(Drawable divider) {
@@ -75,31 +75,31 @@ public class DividerDrawable {
         boolean validated = mDividerWidth != 0 && (mDivider != null || mDividerColor != 0);
         if (validated && initPaintIfNeed && (mPaint == null && mDivider == null)) {
             mPaint = new Paint();
-            mPaint.setStyle(Paint.Style.FILL);
+            mPaint.setStyle(Paint.Style.FILL_AND_STROKE);
             mPaint.setColor(mDividerColor);
             mPaint.setStrokeWidth(mDividerWidth);
         }
         return validated;
     }
 
-    public void draw(Canvas canvas, int from, int to, int start, boolean horizontal) {
+    public void draw(Canvas canvas, int from, int to, int middle, boolean horizontal) {
         from += mDividerMarginStart;
         to -= mDividerMarginEnd;
         if (to > from && mDividerWidth > 0 && (mDivider != null || mPaint != null)) {
             if (horizontal) {
                 if (mDivider == null) {
-                    float adjustPos = start+((mDividerWidth + 0.5f) / 2);
-                    canvas.drawLine(from, adjustPos, to, adjustPos, mPaint);
+                    canvas.drawLine(from, middle, to, middle, mPaint);
                 } else {
-                    mDivider.setBounds(from,start, to, start + mDividerWidth);
+                    int halfWidth = (int) (0.45f + mDividerWidth / 2f);
+                    mDivider.setBounds(from, middle - halfWidth, to, middle + halfWidth);
                     mDivider.draw(canvas);
                 }
             } else {
                 if (mDivider == null) {
-                    float adjustPos = start+((mDividerWidth + 0.5f) / 2);
-                    canvas.drawLine(adjustPos, from, adjustPos, to, mPaint);
+                    canvas.drawLine(middle, from, middle, to, mPaint);
                 } else {
-                    mDivider.setBounds(start, from,  start + mDividerWidth, to);
+                    int halfWidth = (int) (0.45f + mDividerWidth / 2f);
+                    mDivider.setBounds(middle - halfWidth, from, middle + halfWidth, to);
                     mDivider.draw(canvas);
                 }
             }
@@ -115,7 +115,7 @@ public class DividerDrawable {
         return result + (mDivider == null ? 0 : mDivider.hashCode());
     }
 
-    public static DividerDrawable from(TypedArray attr,int defaultWidth, int attrDivider, int attrDividerColor, int attrDividerWidth, int attrDividerMargin, int attrDividerMarginStart, int attrDividerMarginEnd) {
+    public static DividerDrawable from(TypedArray attr, int defaultWidth, int attrDivider, int attrDividerColor, int attrDividerWidth, int attrDividerMargin, int attrDividerMarginStart, int attrDividerMarginEnd) {
         DividerDrawable dm = new DividerDrawable(defaultWidth);
         if (attr != null) {
             if (attr.hasValue(attrDivider)) {

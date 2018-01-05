@@ -68,16 +68,6 @@ public class PageScrollTab extends PageScrollView {
     private int mTextColorResId = 0;
 
     private Paint mRectPaint;
-    private Paint mDividerPaint;
-
-    /**
-     * item 之间垂直分割线。
-     */
-    private int mDividerWidth = 1;
-    private int mDividerPadding = 6;
-    private int mDividerColor = 0x1A000000;
-
-
     /**
      * 选中item 底部指示线。
      */
@@ -85,18 +75,6 @@ public class PageScrollTab extends PageScrollView {
     private int mIndicatorOffset = 0;
     private int mIndicatorColor = 0xffff9500;
     private float mIndicatorWidthPercent = 1;
-
-    /**
-     * 顶部水平分界线。
-     */
-    private int mTopLineHeight = 0;
-    private int mTopLineColor = 0xffd8e2e9;
-
-    /**
-     * 底部水平分界线
-     */
-    private int mBottomLineHeight = 0;
-    private int mBottomLineColor = 0x1A000000;
 
     private Locale mLocalInfo;
     private boolean mAutoCheckState = true;
@@ -145,23 +123,14 @@ public class PageScrollTab extends PageScrollView {
 
     public PageScrollTab(Context context, AttributeSet attrs, int defStyle) {
         super(context, attrs, defStyle);
-        setWillNotDraw(false);
         setOrientation(HORIZONTAL);
         setChildFillParent(true);
         DisplayMetrics dm = getResources().getDisplayMetrics();
         mIndicatorHeight = (int) TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP,
                 mIndicatorHeight, dm);
-        mTopLineHeight = (int) TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP,
-                mTopLineHeight, dm);
-        mBottomLineHeight = (int) TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP,
-                mBottomLineHeight, dm);
-        mDividerPadding = (int) TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP,
-                mDividerPadding, dm);
         mItemMinPaddingHorizontal = (int) TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, mItemMinPaddingHorizontal, dm);
         mItemMinPaddingTop = (int) TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, mItemMinPaddingTop, dm);
         mItemMinPaddingBottom = (int) TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, mItemMinPaddingBottom, dm);
-        mDividerWidth = (int) TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, mDividerWidth,
-                dm);
         mTextSize = (int) TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_SP, mTextSize, dm);
         // get system attrs (android:textSize and android:textColor)
         TypedArray a = context.obtainStyledAttributes(attrs, ATTRS);
@@ -192,24 +161,6 @@ public class PageScrollTab extends PageScrollView {
                 R.styleable.PageScrollTab_tabIndicatorOffset, mIndicatorOffset);
         float atrIndicatorWidthPercent = a.getFloat(R.styleable.PageScrollTab_tabIndicatorWidthPercent, mIndicatorWidthPercent);
 
-
-        mTopLineColor = a.getColor(R.styleable.PageScrollTab_tabTopLineColor,
-                mTopLineColor);
-        mTopLineHeight = a.getDimensionPixelSize(
-                R.styleable.PageScrollTab_tabTopLineHeight, mTopLineHeight);
-
-        mBottomLineColor = a.getColor(R.styleable.PageScrollTab_tabBottomLineColor,
-                mBottomLineColor);
-        mBottomLineHeight = a.getDimensionPixelSize(
-                R.styleable.PageScrollTab_tabBottomLineHeight, mBottomLineHeight);
-
-
-        mDividerColor = a.getColor(R.styleable.PageScrollTab_tabItemDividerColor, mDividerColor);
-        mDividerWidth = a.getDimensionPixelSize(R.styleable.PageScrollTab_tabItemDividerWidth, mDividerWidth);
-        mDividerPadding = a.getDimensionPixelSize(
-                R.styleable.PageScrollTab_tabItemDividerPadding, mDividerPadding);
-
-
         mItemMinPaddingHorizontal = a.getDimensionPixelSize(
                 R.styleable.PageScrollTab_tabItemMinPaddingHorizontal, mItemMinPaddingHorizontal);
         mItemMinPaddingTop = a.getDimensionPixelSize(
@@ -225,10 +176,6 @@ public class PageScrollTab extends PageScrollView {
         mRectPaint = new Paint();
         mRectPaint.setAntiAlias(true);
         mRectPaint.setStyle(Style.FILL);
-
-        mDividerPaint = new Paint();
-        mDividerPaint.setAntiAlias(true);
-        mDividerPaint.setStrokeWidth(mDividerWidth);
 
         if (mLocalInfo == null) {
             mLocalInfo = getResources().getConfiguration().locale;
@@ -413,34 +360,13 @@ public class PageScrollTab extends PageScrollView {
     }
 
     @Override
-    protected void onDraw(Canvas canvas) {
-        super.onDraw(canvas);
+    protected void doAfterDraw(Canvas canvas, int baseLeft, int baseTop, int contentWidth, int contentHeight) {
+        super.doAfterDraw(canvas, baseLeft, baseTop, contentWidth, contentHeight);
         int itemCount = getTabItemCount();
         if (isInEditMode() || itemCount == 0) {
             return;
         }
         int width = getWidth(), height = getHeight(), scrollX = getScrollX();
-
-        // draw divider
-        if (mDividerWidth > 0) {
-            mDividerPaint.setColor(mDividerColor);
-            float dividerXOffset = mDividerPaint.getStrokeWidth() / 2;
-            for (int i = 0; i < itemCount - 1; i++) {
-                View tab = getVirtualChildAt(i, true);
-                float startX = tab.getRight() + dividerXOffset;
-                canvas.drawLine(startX, mDividerPadding, startX, height - mDividerPadding, mDividerPaint);
-            }
-        }
-
-        // draw top or bottom line.
-        if (mBottomLineHeight > 0) {
-            mRectPaint.setColor(mBottomLineColor);
-            canvas.drawRect(scrollX, height - mBottomLineHeight, width + scrollX, height, mRectPaint);
-        }
-        if (mTopLineHeight > 0) {
-            mRectPaint.setColor(mTopLineColor);
-            canvas.drawRect(scrollX, 0, width + scrollX, mTopLineHeight, mRectPaint);
-        }
 
         // draw indicator line
         if (mIndicatorHeight > 0 && mIndicatorWidthPercent > 0) {
@@ -621,56 +547,6 @@ public class PageScrollTab extends PageScrollView {
 
     public void setIndicatorColorId(int resId) {
         this.mIndicatorColor = getResources().getColor(resId);
-        invalidate();
-    }
-
-    public void setDividerWidth(int dividerWidth) {
-        this.mDividerWidth = dividerWidth;
-        invalidate();
-    }
-
-    public void setDividerPadding(int dividerPaddingPx) {
-        this.mDividerPadding = dividerPaddingPx;
-        invalidate();
-    }
-
-    public void setDividerColor(int dividerColor) {
-        this.mDividerColor = dividerColor;
-        invalidate();
-    }
-
-    public void setDividerColorId(int resId) {
-        this.mDividerColor = getResources().getColor(resId);
-        invalidate();
-    }
-
-    public void setTopLineHeight(int topLineHeightPx) {
-        this.mTopLineHeight = topLineHeightPx;
-        invalidate();
-    }
-
-    public void setTopLineColor(int color) {
-        this.mTopLineColor = color;
-        invalidate();
-    }
-
-    public void setTopLineColorId(int resId) {
-        this.mTopLineColor = getResources().getColor(resId);
-        invalidate();
-    }
-
-    public void setBottomLineHeight(int underlineHeightPx) {
-        this.mBottomLineHeight = underlineHeightPx;
-        invalidate();
-    }
-
-    public void setBottomLineColor(int bottomLineColor) {
-        this.mBottomLineColor = bottomLineColor;
-        invalidate();
-    }
-
-    public void setBottomLineColorId(int resId) {
-        this.mBottomLineColor = getResources().getColor(resId);
         invalidate();
     }
 

@@ -21,7 +21,7 @@ public class FragmentColumnLayout extends FragmentViewPicker {
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View root=inflater.inflate(R.layout.fragment_columnlayout,container,false);
         mColumnLayout= ViewUtils.view(root,R.id.columnLayout);
-        buildRandomView(1, false);
+        buildRandomView(8, false);
         return root;
     }
 

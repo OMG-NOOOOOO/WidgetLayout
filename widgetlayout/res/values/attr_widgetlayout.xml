@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <declare-styleable name="BaseViewGroup">
+    <declare-styleable name="WidgetLayout">
         <!--hover drawable ignore touch out side to give up hover -->
         <attr name="ignoreForegroundStateWhenTouchOut" format="boolean" />
         <!--hover drawable color-->
@@ -14,11 +14,20 @@
         <!--hover drawable max alpha to support -->
         <attr name="foregroundAlphaMax" format="integer" />
 
-        <!--edge effect when touch move to the end-->
-        <attr name="defaultBorderDividerWidth" format="dimension" />
+        <!--shade edge effect-->
         <attr name="edgeEffectEnable" format="boolean" />
 
-        <!--left border color,width and padding-->
+        <!-- layout orientation and gesture direction-->
+        <attr name="android:orientation" />
+
+        <!--width and height support percent of parent-->
+        <attr name="widthPercent" format="fraction" />
+        <attr name="heightPercent" format="fraction" />
+
+        <!--edge effect when touch move to the end-->
+        <attr name="defaultBorderDividerWidth" format="dimension" />
+
+        <!--left border drawable color,width and padding-->
         <attr name="borderLeft" format="reference" />
         <attr name="borderLeftColor" format="color" />
         <attr name="borderLeftWidth" format="dimension" />
@@ -26,7 +35,7 @@
         <attr name="borderLeftMarginStart" format="dimension" />
         <attr name="borderLeftMarginEnd" format="dimension" />
 
-        <!--top border color,width and padding-->
+        <!--top border drawable color,width and padding-->
         <attr name="borderTop" format="reference" />
         <attr name="borderTopColor" format="color" />
         <attr name="borderTopWidth" format="dimension" />
@@ -34,7 +43,7 @@
         <attr name="borderTopMarginStart" format="dimension" />
         <attr name="borderTopMarginEnd" format="dimension" />
 
-        <!--right border color,width and padding-->
+        <!--right border drawable color,width and padding-->
         <attr name="borderRight" format="reference" />
         <attr name="borderRightColor" format="color" />
         <attr name="borderRightWidth" format="dimension" />
@@ -42,7 +51,7 @@
         <attr name="borderRightMarginStart" format="dimension" />
         <attr name="borderRightMarginEnd" format="dimension" />
 
-        <!--bottom border color,width and padding-->
+        <!--bottom border drawable color,width and padding-->
         <attr name="borderBottom" format="reference" />
         <attr name="borderBottomColor" format="color" />
         <attr name="borderBottomWidth" format="dimension" />
@@ -50,7 +59,7 @@
         <attr name="borderBottomMarginStart" format="dimension" />
         <attr name="borderBottomMarginEnd" format="dimension" />
 
-        <!--内容四边的间距，不同于padding -->
+        <!--content margin different from padding -->
         <attr name="contentMarginHorizontal" format="dimension" />
         <attr name="contentMarginVertical" format="dimension" />
         <attr name="contentMargin" format="dimension" />
@@ -64,29 +73,21 @@
         <attr name="itemMarginHorizontal" format="dimension" />
         <attr name="itemMarginVertical" format="dimension" />
 
-        <!--horizontal divider color-->
+        <!--horizontal divider drawable color width padding-->
         <attr name="dividerHorizontal" format="reference" />
         <attr name="dividerColorHorizontal" format="color" />
-        <!--horizontal divider width-->
         <attr name="dividerWidthHorizontal" format="dimension" />
-        <!--horizontal divider padding-->
         <attr name="dividerPaddingHorizontal" format="dimension" />
         <attr name="dividerPaddingHorizontalStart" format="dimension" />
         <attr name="dividerPaddingHorizontalEnd" format="dimension" />
 
-        <!--vertical divider color-->
+        <!--vertical divider drawable color width padding-->
         <attr name="dividerVertical" format="reference" />
         <attr name="dividerColorVertical" format="color" />
-        <!--vertical divider width-->
         <attr name="dividerWidthVertical" format="dimension" />
-        <!--vertical divider padding-->
         <attr name="dividerPaddingVertical" format="dimension" />
         <attr name="dividerPaddingVerticalStart" format="dimension" />
         <attr name="dividerPaddingVerticalEnd" format="dimension" />
-
-        <attr name="android:orientation" />
-        <attr name="widthPercent" format="fraction" />
-        <attr name="heightPercent" format="fraction" />
 
     </declare-styleable>
 </resources>

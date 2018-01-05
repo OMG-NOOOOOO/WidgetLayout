@@ -1,4 +1,4 @@
-package com.rexy.widgets.layout;
+package com.rexy.widgets.divider;
 
 import android.content.res.TypedArray;
 import android.graphics.Canvas;
@@ -7,7 +7,7 @@ import android.graphics.Rect;
 import com.rexy.widgetlayout.R;
 
 /**
- * 描述 Divider 和 margin 的信息类,可独立画divider。目前只支持纯色divider。
+ * 描述 Divider 和 margin 的信息类,可独立画divider。支持纯色divider或是 Drawable。
  * 具体属性见
  * <!--左边线的颜色，宽度，和边线padding-->
  * <attr name="borderLeft" format="reference"/>
@@ -93,69 +93,70 @@ public class BorderDivider {
     DividerDrawable mDividerVertical;
 
     private BorderDivider(TypedArray attr, int dividerWidthDefault) {
-        int widthDefault = attr == null ? dividerWidthDefault : attr.getDimensionPixelSize(R.styleable.BaseViewGroup_defaultBorderDividerWidth, dividerWidthDefault);
+        int widthDefault = attr == null ? dividerWidthDefault : attr.getDimensionPixelSize(R.styleable.WidgetLayout_defaultBorderDividerWidth, dividerWidthDefault);
         mBorderLeft = DividerDrawable.from(attr, widthDefault,
-                R.styleable.BaseViewGroup_borderLeft,
-                R.styleable.BaseViewGroup_borderLeftColor,
-                R.styleable.BaseViewGroup_borderLeftWidth,
-                R.styleable.BaseViewGroup_borderLeftMargin,
-                R.styleable.BaseViewGroup_borderLeftMarginStart,
-                R.styleable.BaseViewGroup_borderLeftMarginEnd
+                R.styleable.WidgetLayout_borderLeft,
+                R.styleable.WidgetLayout_borderLeftColor,
+                R.styleable.WidgetLayout_borderLeftWidth,
+                R.styleable.WidgetLayout_borderLeftMargin,
+                R.styleable.WidgetLayout_borderLeftMarginStart,
+                R.styleable.WidgetLayout_borderLeftMarginEnd
         );
         mBorderTop = DividerDrawable.from(attr, widthDefault,
-                R.styleable.BaseViewGroup_borderTop,
-                R.styleable.BaseViewGroup_borderTopColor,
-                R.styleable.BaseViewGroup_borderTopWidth,
-                R.styleable.BaseViewGroup_borderTopMargin,
-                R.styleable.BaseViewGroup_borderTopMarginStart,
-                R.styleable.BaseViewGroup_borderTopMarginEnd
+                R.styleable.WidgetLayout_borderTop,
+                R.styleable.WidgetLayout_borderTopColor,
+                R.styleable.WidgetLayout_borderTopWidth,
+                R.styleable.WidgetLayout_borderTopMargin,
+                R.styleable.WidgetLayout_borderTopMarginStart,
+                R.styleable.WidgetLayout_borderTopMarginEnd
         );
         mBorderRight = DividerDrawable.from(attr, widthDefault,
-                R.styleable.BaseViewGroup_borderRight,
-                R.styleable.BaseViewGroup_borderRightColor,
-                R.styleable.BaseViewGroup_borderRightWidth,
-                R.styleable.BaseViewGroup_borderRightMargin,
-                R.styleable.BaseViewGroup_borderRightMarginStart,
-                R.styleable.BaseViewGroup_borderRightMarginEnd
+                R.styleable.WidgetLayout_borderRight,
+                R.styleable.WidgetLayout_borderRightColor,
+                R.styleable.WidgetLayout_borderRightWidth,
+                R.styleable.WidgetLayout_borderRightMargin,
+                R.styleable.WidgetLayout_borderRightMarginStart,
+                R.styleable.WidgetLayout_borderRightMarginEnd
         );
         mBorderBottom = DividerDrawable.from(attr, widthDefault,
-                R.styleable.BaseViewGroup_borderBottom,
-                R.styleable.BaseViewGroup_borderBottomColor,
-                R.styleable.BaseViewGroup_borderBottomWidth,
-                R.styleable.BaseViewGroup_borderBottomMargin,
-                R.styleable.BaseViewGroup_borderBottomMarginStart,
-                R.styleable.BaseViewGroup_borderBottomMarginEnd
+                R.styleable.WidgetLayout_borderBottom,
+                R.styleable.WidgetLayout_borderBottomColor,
+                R.styleable.WidgetLayout_borderBottomWidth,
+                R.styleable.WidgetLayout_borderBottomMargin,
+                R.styleable.WidgetLayout_borderBottomMarginStart,
+                R.styleable.WidgetLayout_borderBottomMarginEnd
         );
         mDividerHorizontal = DividerDrawable.from(attr, widthDefault,
-                R.styleable.BaseViewGroup_dividerHorizontal,
-                R.styleable.BaseViewGroup_dividerColorHorizontal,
-                R.styleable.BaseViewGroup_dividerWidthHorizontal,
-                R.styleable.BaseViewGroup_dividerPaddingHorizontal,
-                R.styleable.BaseViewGroup_dividerPaddingHorizontalStart,
-                R.styleable.BaseViewGroup_dividerPaddingHorizontalEnd
+                R.styleable.WidgetLayout_dividerHorizontal,
+                R.styleable.WidgetLayout_dividerColorHorizontal,
+                R.styleable.WidgetLayout_dividerWidthHorizontal,
+                R.styleable.WidgetLayout_dividerPaddingHorizontal,
+                R.styleable.WidgetLayout_dividerPaddingHorizontalStart,
+                R.styleable.WidgetLayout_dividerPaddingHorizontalEnd
         );
         mDividerVertical = DividerDrawable.from(attr, widthDefault,
-                R.styleable.BaseViewGroup_dividerVertical,
-                R.styleable.BaseViewGroup_dividerColorVertical,
-                R.styleable.BaseViewGroup_dividerWidthVertical,
-                R.styleable.BaseViewGroup_dividerPaddingVertical,
-                R.styleable.BaseViewGroup_dividerPaddingVerticalStart,
-                R.styleable.BaseViewGroup_dividerPaddingVerticalEnd
+                R.styleable.WidgetLayout_dividerVertical,
+                R.styleable.WidgetLayout_dividerColorVertical,
+                R.styleable.WidgetLayout_dividerWidthVertical,
+                R.styleable.WidgetLayout_dividerPaddingVertical,
+                R.styleable.WidgetLayout_dividerPaddingVerticalStart,
+                R.styleable.WidgetLayout_dividerPaddingVerticalEnd
         );
         if (attr != null) {
-            boolean hasMarginH = attr.hasValue(R.styleable.BaseViewGroup_contentMarginHorizontal);
-            boolean hasMarginV = attr.hasValue(R.styleable.BaseViewGroup_contentMarginVertical);
-            boolean hasItemMargin = attr.hasValue(R.styleable.BaseViewGroup_itemMargin);
-            int itemMargin = attr.getDimensionPixelSize(R.styleable.BaseViewGroup_itemMargin, 0);
-            int margin = attr.getDimensionPixelSize(R.styleable.BaseViewGroup_contentMargin, 0);
-            int marginH = attr.getDimensionPixelSize(R.styleable.BaseViewGroup_contentMarginHorizontal, margin);
-            int marginV = attr.getDimensionPixelSize(R.styleable.BaseViewGroup_contentMarginVertical, margin);
-            mContentMargin.left = attr.getDimensionPixelSize(R.styleable.BaseViewGroup_contentMarginLeft, hasMarginH ? marginH : mContentMargin.left);
-            mContentMargin.top = attr.getDimensionPixelSize(R.styleable.BaseViewGroup_contentMarginTop, hasMarginV ? marginV : mContentMargin.top);
-            mContentMargin.right = attr.getDimensionPixelSize(R.styleable.BaseViewGroup_contentMarginRight, hasMarginH ? marginH : mContentMargin.right);
-            mContentMargin.bottom = attr.getDimensionPixelSize(R.styleable.BaseViewGroup_contentMarginBottom, hasMarginV ? marginV : mContentMargin.bottom);
-            mItemMarginHorizontal = attr.getDimensionPixelSize(R.styleable.BaseViewGroup_itemMarginHorizontal, hasItemMargin ? itemMargin : mItemMarginHorizontal);
-            mItemMarginVertical = attr.getDimensionPixelSize(R.styleable.BaseViewGroup_itemMarginVertical, hasItemMargin ? itemMargin : mItemMarginVertical);
+            int itemMargin = attr.getDimensionPixelSize(R.styleable.WidgetLayout_itemMargin, 0);
+            int margin = attr.getDimensionPixelSize(R.styleable.WidgetLayout_contentMargin, 0);
+            int marginH = attr.getDimensionPixelSize(R.styleable.WidgetLayout_contentMarginHorizontal, margin);
+            int marginV = attr.getDimensionPixelSize(R.styleable.WidgetLayout_contentMarginVertical, margin);
+            boolean hasItemMargin = attr.hasValue(R.styleable.WidgetLayout_itemMargin);
+            boolean hasMargin = attr.hasValue(R.styleable.WidgetLayout_contentMargin);
+            boolean hasMarginH = hasMargin || attr.hasValue(R.styleable.WidgetLayout_contentMarginHorizontal);
+            boolean hasMarginV = hasMargin || attr.hasValue(R.styleable.WidgetLayout_contentMarginVertical);
+            mContentMargin.left = attr.getDimensionPixelSize(R.styleable.WidgetLayout_contentMarginLeft, hasMarginH ? marginH : mContentMargin.left);
+            mContentMargin.top = attr.getDimensionPixelSize(R.styleable.WidgetLayout_contentMarginTop, hasMarginV ? marginV : mContentMargin.top);
+            mContentMargin.right = attr.getDimensionPixelSize(R.styleable.WidgetLayout_contentMarginRight, hasMarginH ? marginH : mContentMargin.right);
+            mContentMargin.bottom = attr.getDimensionPixelSize(R.styleable.WidgetLayout_contentMarginBottom, hasMarginV ? marginV : mContentMargin.bottom);
+            mItemMarginHorizontal = attr.getDimensionPixelSize(R.styleable.WidgetLayout_itemMarginHorizontal, hasItemMargin ? itemMargin : mItemMarginHorizontal);
+            mItemMarginVertical = attr.getDimensionPixelSize(R.styleable.WidgetLayout_itemMarginVertical, hasItemMargin ? itemMargin : mItemMarginVertical);
         }
     }
 
@@ -191,18 +192,18 @@ public class BorderDivider {
                 mBorderBottom.isValidated(false);
     }
 
-    public void drawBorder(Canvas canvas, int viewWidth, int viewHeight) {
+    public void drawBorder(Canvas canvas, int viewWidth, int viewHeight, int offsetX, int offsetY) {
         if (mBorderLeft.isValidated(true)) {
-            mBorderLeft.draw(canvas, 0, viewHeight, 0, false);
+            mBorderLeft.draw(canvas, offsetY, viewHeight + offsetY, (int) (offsetX + 0.45f + mBorderLeft.mDividerWidth / 2f), false);
         }
         if (mBorderRight.isValidated(true)) {
-            mBorderRight.draw(canvas, 0, viewHeight, viewWidth - mBorderRight.getDividerWidth(), false);
+            mBorderRight.draw(canvas, offsetY, viewHeight + offsetY, (int) (offsetX + viewWidth - 0.45f - mBorderRight.mDividerWidth / 2f), false);
         }
         if (mBorderTop.isValidated(true)) {
-            mBorderTop.draw(canvas, 0, viewWidth, 0, true);
+            mBorderTop.draw(canvas, offsetX, offsetX + viewWidth, (int) (offsetY + 0.45f + mBorderTop.mDividerWidth / 2f), true);
         }
         if (mBorderBottom.isValidated(true)) {
-            mBorderBottom.draw(canvas, 0, viewWidth, viewHeight - mBorderBottom.getDividerWidth(), true);
+            mBorderBottom.draw(canvas, offsetX, offsetX + viewWidth, (int) (offsetY + viewHeight - 0.45f - mBorderBottom.mDividerWidth / 2f), true);
         }
     }
 

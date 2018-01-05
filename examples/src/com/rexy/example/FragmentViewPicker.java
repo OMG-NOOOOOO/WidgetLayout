@@ -13,7 +13,7 @@ import android.widget.TextView;
 
 import com.rexy.example.extend.BaseFragment;
 import com.rexy.widgetlayout.example.R;
-import com.rexy.widgets.layout.BaseViewGroup;
+import com.rexy.widgets.layout.WidgetLayout;
 import com.rexy.example.extend.ViewUtils;
 import com.rexy.example.extend.FadeTextButton;
 
@@ -114,7 +114,7 @@ public class FragmentViewPicker extends BaseFragment {
     }
 
     protected View buildView(int minWidth, int maxWidth, int minHeight, int maxHeight, int gravity, int color, boolean random) {
-        BaseViewGroup.LayoutParams lp = new BaseViewGroup.LayoutParams(-2, -2, gravity);
+        WidgetLayout.LayoutParams lp = new WidgetLayout.LayoutParams(-2, -2, gravity);
         lp.maxWidth = maxWidth;
         lp.maxHeight = maxHeight;
         FadeTextButton view = new FadeTextButton(getActivity());
