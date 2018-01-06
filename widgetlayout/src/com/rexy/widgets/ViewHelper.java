@@ -1,6 +1,9 @@
 package com.rexy.widgets;
 
 import android.view.Gravity;
+import android.view.ViewGroup;
+
+import com.rexy.widgets.view.ViewHierarchyTree;
 
 /**
  * Created by rexy on 18/1/5.
@@ -8,34 +11,8 @@ import android.view.Gravity;
 
 public class ViewHelper {
 
-    public final static int clamp(int n, int my, int child) {
-        if (my >= child || n < 0) {
-            /* my >= child is this case:
-             *                    |--------------- me ---------------|
-             *     |------ child ------|
-             * or
-             *     |--------------- me ---------------|
-             *            |------ child ------|
-             * or
-             *     |--------------- me ---------------|
-             *                                  |------ child ------|
-             *
-             * n < 0 is this case:
-             *     |------ me ------|
-             *                    |-------- child --------|
-             *     |-- mScrollX --|
-             */
-            return 0;
-        }
-        if ((my + n) > child) {
-            /* this case:
-             *                    |------ me ------|
-             *     |------ child ------|
-             *     |-- mScrollX --|
-             */
-            return child - my;
-        }
-        return n;
+    public static ViewHierarchyTree getViewHierarchyOf(ViewGroup root){
+        return ViewHierarchyTree.create(root);
     }
 
     public static int getContentStartH(int containerLeft, int containerRight, int contentWillSize, int contentMarginLeft, int contentMarginRight, int gravity) {

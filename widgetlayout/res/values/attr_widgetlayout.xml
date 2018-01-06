@@ -60,9 +60,9 @@
         <attr name="borderBottomMarginEnd" format="dimension" />
 
         <!--content margin different from padding -->
+        <attr name="contentMargin" format="dimension" />
         <attr name="contentMarginHorizontal" format="dimension" />
         <attr name="contentMarginVertical" format="dimension" />
-        <attr name="contentMargin" format="dimension" />
         <attr name="contentMarginLeft" format="dimension" />
         <attr name="contentMarginTop" format="dimension" />
         <attr name="contentMarginRight" format="dimension" />
@@ -90,4 +90,5 @@
         <attr name="dividerPaddingVerticalEnd" format="dimension" />
 
     </declare-styleable>
+    <item name="widgetLayoutViewIndexType" type="id" />
 </resources>

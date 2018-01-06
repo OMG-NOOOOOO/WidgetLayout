@@ -1,14 +1,15 @@
 # WidgetLayout 介绍
-**WidgetLayout**是一组继承于`ViewGroup`的自定义容器集合，均支持按百分比测绘,限定最大最小宽高，和gravity 属性，自身描边，大部分支持内容分割线，权重等，目前实现了以下实用容器(`kotlin` 实现见[kotlin_master分支][kotlin-widgetlayout]):
+**WidgetLayout**是一组高效自定义容器集合，支持限定最大最小宽高、按百分比、权重测绘，整体内容支持按gravity属性展示，可控制边界描边绘制和子 View 间水平和垂直分割线等，目前实现了以下容器(`kotlin` 实现见[kotlin_master分支][kotlin-widgetlayout]):
 
 1. `ColumnLayout` 以等分列方式布局，每列可设置内容居左，中，右，及铺满，可设置最小最大列宽高限定。
-2. `NestRefreshLayout` 一个精简强大的支持任意类型`View`的下拉刷新，上拉加载更多,可添加头部和尾部且可设置悬停模式。
-3. `NestFloatLayout` 支持列表的嵌套滑动和指定子 `View` 悬停顶部，类似`NestScrollView` 。
-4. `PageScrollView` 可水平垂直方向布局和滑动吸顶等，无需嵌套，支持`ScrollView`和`ViewPager`的交互和接口。
-5. `PageScrollTab` 在`PageScrollView`上扩展支持`Tab`场景交互和各种UI定制。
-6. `WrapLayout` 支持水平布局，并自适应换行，单行或列时支持`weight`属性，可限定每行最少和最多Item数，行内容可水平和垂直居中。
-7. `LabelLayout` 继承自 `WrapLayout`,以`ItemProvider` 方式提供内容，有简单的回收复用机制，有Item点击监听。
-8. `HierarchyLayout` 一个展示 `View`树层级关系和工具容器，可画出结束依赖图和3D层级图，计算出平均层级和最近一次`measure,layout,draw`的时间。
+2. `WrapLayout`  自适应换行容器，可限定每行最少和最多Item数，行内容可水平和垂直居中，在单行或列时支持`weight`权重属性，。
+3. `ScrollLayout` 滑动容器，可安全取代水平和垂直的`ScrollView`实现了`NestedScrollingChild` 接口。
+4. `PageScrollView` 扩展于`ScrollLayout`可水平垂直方向布局和滑动吸顶等，支持`ScrollView`和`ViewPager`的交互方式和接口。
+5. `NestRefreshLayout` 具有可定制性的下拉刷新和加载更多容器，支持任意类型可滚动`View`,可添加头部和尾部且可设置悬停模式。
+6. `NestFloatLayout` 支持列表的嵌套滑动和指定子 `View` 悬停顶部，类似`NestScrollView` 。
+7. `PageScrollTab` 扩展于`PageScrollView`支持`Tab`场景交互和各种UI定制。
+8. `LabelLayout` 扩展于 `WrapLayout`,以`ItemProvider` 方式提供内容，有简单的回收复用机制，有Item点击监听。
+9. `HierarchyLayout` 调试容器可展示 `View`树层级关系和3D层级图。
 
 以下是各容器实现的结构类图， **[直接看示例请点击](#demo演示效果)[`演示效果`](#demo演示效果)**
 
@@ -69,7 +70,7 @@ Demo 入口 和 `NestFloatLayout`的演示效果。
 
 ###集成需要提供support-v4包，然后再gradle 脚本中添加依赖如下。 
 ```
- compile 'com.rexy.android:widgetlayout:1.0.0'
+ compile 'com.rexy.android:widgetlayout:1.0.1'
 ```
 
 ### 通用属性说明和介绍
@@ -84,7 +85,7 @@ Demo 入口 和 `NestFloatLayout`的演示效果。
  java 代码可通过 `BaseViewGroup.LayoutParams lp=(BaseViewGroup.LayoutParams)child.getLayoutParams(); lp.gravity=Gravity.CENTER;lp.maxWidth=100;lp.maxHeight=200`
 
 
-**2. 部分容器`FloatDrawable`和`DividerMargin`的应用，仅限于继承于`PressViewGroup`的容器**
+**2. 部分容器`FloatDrawable`和`BorderDivider`的应用，仅限于继承于`PressViewGroup`的容器**
 
   a. xml 中使用支持`FloatDrawable`属性和解释如下,java 都有对应的set 和get 方法:
 
@@ -103,31 +104,35 @@ Demo 入口 和 `NestFloatLayout`的演示效果。
   <attr name="foregroundAlphaMax" format="integer"/>
 ```
 
-   b. xml 中使用支持`DividerMargin`属性和解释如下,java 都有对应的set 和get 方法:
+   b. xml 中使用支持`BorderDivider`属性和解释如下,java 都有对应的set 和get 方法:
 
 ```xml
-  <!--左边线的颜色，宽度，和边线padding-->
+  <!--左边线的drawable,颜色，宽度，和边线padding-->
+  <attr name="borderLeft" format="reference"/>
   <attr name="borderLeftColor" format="color"/>
   <attr name="borderLeftWidth" format="dimension"/>
   <attr name="borderLeftMargin" format="dimension"/>
   <attr name="borderLeftMarginStart" format="dimension"/>
   <attr name="borderLeftMarginEnd" format="dimension"/>
 
-  <!--上边线的颜色，宽度，和边线padding-->
+  <!--上边线的drawable,颜色，宽度，和边线padding-->
+  <attr name="borderTop" format="reference"/>
   <attr name="borderTopColor" format="color"/>
   <attr name="borderTopWidth" format="dimension"/>
   <attr name="borderTopMargin" format="dimension"/>
   <attr name="borderTopMarginStart" format="dimension"/>
   <attr name="borderTopMarginEnd" format="dimension"/>
 
-  <!--右边线的颜色，宽度，和边线padding-->
+  <!--右边线drawable,颜色，宽度，和边线padding-->
+  <attr name="borderRight" format="reference"/>
   <attr name="borderRightColor" format="color"/>
   <attr name="borderRightWidth" format="dimension"/>
   <attr name="borderRightMargin" format="dimension"/>
   <attr name="borderRightMarginStart" format="dimension"/>
   <attr name="borderRightMarginEnd" format="dimension"/>
 
-  <!--下边线的颜色，宽度，和边线padding-->
+  <!--下边线的drawable,颜色，宽度，和边线padding-->
+  <attr name="borderBottom" format="reference"/>
   <attr name="borderBottomColor" format="color"/>
   <attr name="borderBottomWidth" format="dimension"/>
   <attr name="borderBottomMargin" format="dimension"/>
@@ -135,15 +140,21 @@ Demo 入口 和 `NestFloatLayout`的演示效果。
   <attr name="borderBottomMarginEnd" format="dimension"/>
 
   <!--内容四边的间距，不同于padding -->
+  <attr name="contentMargin" format="dimension" />
+  <attr name="contentMarginHorizontal" format="dimension" />
+  <attr name="contentMarginVertical" format="dimension" />
   <attr name="contentMarginLeft" format="dimension"/>
   <attr name="contentMarginTop" format="dimension"/>
   <attr name="contentMarginRight" format="dimension"/>
   <attr name="contentMarginBottom" format="dimension"/>
+  
   <!--水平方向和垂直方向Item 的间距-->
-  <attr name="contentMarginHorizontal" format="dimension"/>
-  <attr name="contentMarginVertical" format="dimension"/>
+  <attr name="itemMargin" format="dimension"/>
+  <attr name="itemMarginHorizontal" format="dimension"/>
+  <attr name="itemMarginVertical" format="dimension"/>
 
-
+  <!--水平分割线drawable-->
+  <attr name="dividerHorizontal" format="reference" />
   <!--水平分割线颜色-->
   <attr name="dividerColorHorizontal" format="color"/>
   <!--水平分割线宽-->
@@ -153,6 +164,9 @@ Demo 入口 和 `NestFloatLayout`的演示效果。
   <attr name="dividerPaddingHorizontalStart" format="dimension"/>
   <attr name="dividerPaddingHorizontalEnd" format="dimension"/>
 
+
+  <!--垂直分割线drawable-->
+  <attr name="dividerVertical" format="reference" />
   <!--垂直分割线颜色-->
   <attr name="dividerColorVertical" format="color"/>
   <!--垂直分割线宽-->

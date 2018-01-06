@@ -40,7 +40,7 @@ dependencies {
     provided(name: 'support-v4-23.4.0', ext: 'aar')
 }
 
-File deployConfig = rootProject.file('IGNORE/config/deploy.gradle')
+File deployConfig = rootProject.file('ignore/config/deploy.gradle')
 if (deployConfig.exists()) {
-    apply from: rootProject.file('IGNORE/config/deploy.gradle')
+    apply from: rootProject.file('ignore/config/deploy.gradle')
 }

@@ -108,7 +108,7 @@ public class RefreshIndicator extends WrapLayout implements NestRefreshLayout.On
         mTextView = new TextView(context);
         mProgressBar = new ProgressBar(context);
         mImageView = new ImageView(context);
-        mImageView.setImageResource(R.drawable.widget_layout_icon_refresh_down);
+        mImageView.setImageResource(R.drawable.widget_layout_ic_arrow_down);
         mTextView.setTextSize(16);
         mTextView.setTypeface(Typeface.DEFAULT,Typeface.BOLD);
         LayoutParams lpLeft = new LayoutParams(-2, -2);
