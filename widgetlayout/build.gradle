@@ -1,5 +1,5 @@
 apply plugin: 'com.android.library'
-apply from: "$rootProject.rootDir/base.gradle"
+apply from: "$rootProject.rootDir/gradle/base.gradle"
 
 //http://www.2cto.com/kf/201608/532583.html
 ext {
@@ -37,7 +37,7 @@ android {
 
 dependencies {
     compile fileTree(dir: 'libs', include: ['*.jar'])
-    provided(name: 'support-v4-23.4.0', ext: 'aar')
+    provided(name: 'support-v4-24.1.1', ext: 'aar')
 }
 
 File deployConfig = rootProject.file('ignore/config/deploy.gradle')

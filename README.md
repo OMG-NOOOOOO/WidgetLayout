@@ -1,4 +1,4 @@
-# WidgetLayout 介绍
+# WidgetLayout 介绍(文档没有代码变更而更新)
 **WidgetLayout**是一组高效自定义容器集合，支持限定最大最小宽高、按百分比、权重测绘，整体内容支持按gravity属性展示，可控制边界描边绘制和子 View 间水平和垂直分割线等，目前实现了以下容器(`kotlin` 实现见[kotlin_master分支][kotlin-widgetlayout]):
 
 1. `ColumnLayout` 以等分列方式布局，每列可设置内容居左，中，右，及铺满，可设置最小最大列宽高限定。
