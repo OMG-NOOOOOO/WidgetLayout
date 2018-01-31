@@ -23,7 +23,7 @@ public class ViewHelper {
             final int maskEnd = Gravity.RIGHT;
             final int okGravity = gravity & mask;
             if (maskCenter == okGravity) {//center
-                start = (int) (containerLeft +0.45f+ (containerRight - containerLeft - (contentWillSize + contentMarginRight - contentMarginLeft)) / 2f);
+                start = (int) (containerLeft +0.5f+ (containerRight - containerLeft - (contentWillSize + contentMarginRight - contentMarginLeft)) / 2f);
             } else if (maskEnd == okGravity) {//end
                 start = containerRight - contentWillSize - contentMarginRight;
             } else {//start
@@ -42,7 +42,7 @@ public class ViewHelper {
             final int maskEnd = Gravity.BOTTOM;
             final int okGravity = gravity & mask;
             if (maskCenter == okGravity) {//center
-                start = (int) (containerTop +0.45f+ (containerBottom - containerTop - (contentWillSize + contentMarginBottom - contentMarginTop)) / 2f);
+                start = (int) (containerTop +0.5f+ (containerBottom - containerTop - (contentWillSize + contentMarginBottom - contentMarginTop)) / 2f);
             } else if (maskEnd == okGravity) {//end
                 start = containerBottom - contentWillSize - contentMarginBottom;
             } else {//start

@@ -90,7 +90,7 @@ public class DividerDrawable {
                 if (mDivider == null) {
                     canvas.drawLine(from, middle, to, middle, mPaint);
                 } else {
-                    int halfWidth = (int) (0.45f + mDividerWidth / 2f);
+                    int halfWidth = (int) (0.5f + mDividerWidth / 2f);
                     mDivider.setBounds(from, middle - halfWidth, to, middle + halfWidth);
                     mDivider.draw(canvas);
                 }
@@ -98,7 +98,7 @@ public class DividerDrawable {
                 if (mDivider == null) {
                     canvas.drawLine(middle, from, middle, to, mPaint);
                 } else {
-                    int halfWidth = (int) (0.45f + mDividerWidth / 2f);
+                    int halfWidth = (int) (0.5f + mDividerWidth / 2f);
                     mDivider.setBounds(middle - halfWidth, from, middle + halfWidth, to);
                     mDivider.draw(canvas);
                 }

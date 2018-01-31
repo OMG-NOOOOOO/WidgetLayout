@@ -194,16 +194,16 @@ public class BorderDivider {
 
     public void drawBorder(Canvas canvas, int viewWidth, int viewHeight, int offsetX, int offsetY) {
         if (mBorderLeft.isValidated(true)) {
-            mBorderLeft.draw(canvas, offsetY, viewHeight + offsetY, (int) (offsetX + 0.45f + mBorderLeft.mDividerWidth / 2f), false);
+            mBorderLeft.draw(canvas, offsetY, viewHeight + offsetY, (int) (offsetX + 0.5f + mBorderLeft.mDividerWidth / 2f), false);
         }
         if (mBorderRight.isValidated(true)) {
-            mBorderRight.draw(canvas, offsetY, viewHeight + offsetY, (int) (offsetX + viewWidth - 0.45f - mBorderRight.mDividerWidth / 2f), false);
+            mBorderRight.draw(canvas, offsetY, viewHeight + offsetY, (int) (offsetX + viewWidth - 0.5f - mBorderRight.mDividerWidth / 2f), false);
         }
         if (mBorderTop.isValidated(true)) {
-            mBorderTop.draw(canvas, offsetX, offsetX + viewWidth, (int) (offsetY + 0.45f + mBorderTop.mDividerWidth / 2f), true);
+            mBorderTop.draw(canvas, offsetX, offsetX + viewWidth, (int) (offsetY + 0.5f + mBorderTop.mDividerWidth / 2f), true);
         }
         if (mBorderBottom.isValidated(true)) {
-            mBorderBottom.draw(canvas, offsetX, offsetX + viewWidth, (int) (offsetY + viewHeight - 0.45f - mBorderBottom.mDividerWidth / 2f), true);
+            mBorderBottom.draw(canvas, offsetX, offsetX + viewWidth, (int) (offsetY + viewHeight - 0.5f - mBorderBottom.mDividerWidth / 2f), true);
         }
     }
 
