@@ -180,7 +180,7 @@ public class ScrollLayout extends WidgetLayout implements ScrollingView, NestedS
         if (mEdgeEffectEnable) {
             // TODO If padding is not 0 and clipChildrenToPadding is false, to draw glows properly, we
             // need find children closest to edges. Not sure if it is worth the effort.
-            boolean clipToPadding = Build.VERSION.SDK_INT >= 21 &&getClipToPadding();
+            boolean clipToPadding = Build.VERSION.SDK_INT >= 21 && getClipToPadding();
             boolean needsInvalidate = false;
             if (mLeftGlow != null && !mLeftGlow.isFinished()) {
                 final int restore = c.save();
@@ -573,12 +573,17 @@ public class ScrollLayout extends WidgetLayout implements ScrollingView, NestedS
                         printDev("fling", String.format("velocityX=%d,velocityY=%d,scrollX,scrollY=%d,rangeX=%d,rangeY=%d", velocityX, velocityY, getScrollX(), getScrollY(), getHorizontalScrollRange(), getVerticalScrollRange()));
                     }
                     mFlingScroller.setScrollEnable(canScrollHorizontal, canScrollVertical);
-                    mFlingScroller.fling(velocityX, velocityY);
+                    fling(mFlingScroller, velocityX, velocityY);
                     return true;
                 }
             }
         }
         return false;
+    }
+
+    protected boolean fling(FlingScroller scroller, int velocityX, int velocityY) {
+        scroller.fling(velocityX, velocityY);
+        return true;
     }
 
     @Override
@@ -985,7 +990,12 @@ public class ScrollLayout extends WidgetLayout implements ScrollingView, NestedS
     }
     //end:NestScrollingParent
 
-    class FlingScroller implements Runnable {
+
+    public FlingScroller getScroller() {
+        return mFlingScroller;
+    }
+
+    public class FlingScroller implements Runnable {
         private int mLastFlingX;
         private int mLastFlingY;
         private ScrollerCompat mScroller;
@@ -997,6 +1007,11 @@ public class ScrollLayout extends WidgetLayout implements ScrollingView, NestedS
 
         private boolean mCanScrollHorizontal = true;
         private boolean mCanScrollVertical = true;
+
+        private int mMinFlingX;
+        private int mMaxFlingX;
+        private int mMinFlingY;
+        private int mMaxFlingY;
 
         public FlingScroller() {
             mScroller = ScrollerCompat.create(getContext(), getDefaultInterpolator());
@@ -1098,8 +1113,12 @@ public class ScrollLayout extends WidgetLayout implements ScrollingView, NestedS
         public void fling(int velocityX, int velocityY) {
             setScrollState(OnScrollChangeListener.SCROLL_STATE_SETTLING);
             mLastFlingX = mLastFlingY = 0;
+            int maxFlingX = mMaxFlingX <= 0 ? Integer.MAX_VALUE : mMaxFlingX;
+            int maxFlingY = mMaxFlingY <= 0 ? Integer.MAX_VALUE : mMaxFlingY;
+            int minFlingX = mMinFlingX >= 0 ? Integer.MIN_VALUE : mMinFlingX;
+            int minFlingY = mMinFlingY >= 0 ? Integer.MIN_VALUE : mMinFlingY;
             mScroller.fling(0, 0, velocityX, velocityY,
-                    Integer.MIN_VALUE, Integer.MAX_VALUE, Integer.MIN_VALUE, Integer.MAX_VALUE);
+                    minFlingX, maxFlingX, minFlingY, maxFlingY);
             postOnAnimation();
         }
 
@@ -1169,6 +1188,31 @@ public class ScrollLayout extends WidgetLayout implements ScrollingView, NestedS
         public void stop() {
             removeCallbacks(this);
             mScroller.abortAnimation();
+        }
+
+        public void setMaxFling(int maxFlingX, int maxFlingY) {
+            mMaxFlingX = maxFlingX;
+            mMaxFlingY = maxFlingY;
+        }
+
+        public void setMinFling(int minFlingX, int minFlingY) {
+            mMinFlingX = minFlingX;
+            mMinFlingY = minFlingY;
+        }
+
+        public void resetMinMaxFling(){
+            mMinFlingX=0;
+            mMinFlingY=0;
+            mMaxFlingX=0;
+            mMaxFlingY=0;
+        }
+
+        public int getFinalX() {
+            return mScroller.getFinalX();
+        }
+
+        public int getFinalY() {
+            return mScroller.getFinalY();
         }
     }
 

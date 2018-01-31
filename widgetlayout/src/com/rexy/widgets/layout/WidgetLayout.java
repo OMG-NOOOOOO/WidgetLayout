@@ -850,6 +850,7 @@ public class WidgetLayout extends ViewGroup {
         super.dispatchDraw(canvas);
         doAfterDraw(canvas, contentLeft, contentTop, contentWidth, contentHeight);
         mBorderDivider.drawBorder(canvas, width, height, getScrollX(), getScrollY());
+        doDrawOver(canvas,contentLeft,contentTop,contentWidth,contentHeight);
         if (mDrawerDecoration != null) {
             mDrawerDecoration.onDrawOver(this, canvas);
         }
@@ -903,6 +904,9 @@ public class WidgetLayout extends ViewGroup {
                 mBorderDivider.drawDivider(canvas, start, end, position, true);
             }
         }
+    }
+
+    protected void doDrawOver(Canvas canvas, int contentLeft, int contentTop, int contentWidth, int contentHeight){
     }
 
     //end:measure&layout&draw

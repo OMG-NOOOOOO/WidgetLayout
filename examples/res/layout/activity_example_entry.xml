@@ -17,6 +17,23 @@
     app:borderRight="@drawable/ic_launcher"
     app:widthPercent="95%"
     app:floatViewStartIndex="0">
+    <TextView
+        android:id="@+id/tvIndicator"
+        android:layout_margin="10dp"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content" />
+
+    <com.rexy.example.SlideSelectScrollView
+        android:id="@+id/slideView"
+        app:itemMargin="2dp"
+        android:layout_marginBottom="15dp"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:minHeight="70dp"
+        android:gravity="center_vertical"
+        app:contentMarginBottom="2dp"
+        app:borderBottomColor="#FFECECEC"
+        app:borderBottomWidth="2dp"  />
     <com.rexy.widgets.layout.ColumnLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"

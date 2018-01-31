@@ -295,9 +295,12 @@ public class WrapLayout extends WidgetLayout {
             for (; childIndex <= lineEndIndex; childIndex++) {
                 final View child = getChildAt(childIndex);
                 if (skipChild(child)) continue;
-                WidgetLayout.LayoutParams params = (WidgetLayout.LayoutParams) child.getLayoutParams();
                 int childWidth = child.getMeasuredWidth();
                 int childHeight = child.getMeasuredHeight();
+                WidgetLayout.LayoutParams params = (WidgetLayout.LayoutParams) child.getLayoutParams();
+                if(mEachLineMaxItemCount==1&&!mEachLineCenterHorizontal){
+                    childLeft = ViewHelper.getContentStartH(contentLeft, contentLeft + contentWidth, mLineWidth.get(lineIndex), 0, 0, params.gravity);
+                }
                 childLeft += params.leftMargin();
                 childRight = childLeft + childWidth;
                 childTop = ViewHelper.getContentStartV(lineTop, lineBottom, childHeight, params.topMargin(), params.bottomMargin(), lineVertical ? Gravity.CENTER_VERTICAL : params.gravity);
