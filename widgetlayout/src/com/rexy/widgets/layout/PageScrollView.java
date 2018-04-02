@@ -12,8 +12,8 @@ import android.view.Gravity;
 import android.view.View;
 
 import com.rexy.widgetlayout.R;
-import com.rexy.widgets.ViewHelper;
 import com.rexy.widgets.divider.BorderDivider;
+import com.rexy.widgets.utils.ViewUtils;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -585,7 +585,7 @@ public class PageScrollView extends ScrollLayout {
         Rect inset = mContentInset;
         if (hasPageHeaderView()) {
             LayoutParams params = (LayoutParams) mPageHeaderView.getLayoutParams();
-            childTop = ViewHelper.getContentStartV(Math.max(baseTop, getPaddingTop() + inset.top), Math.min(baseBottom, getHeight() - (getPaddingBottom() + inset.bottom))
+            childTop = ViewUtils.getContentStartV(Math.max(baseTop, getPaddingTop() + inset.top), Math.min(baseBottom, getHeight() - (getPaddingBottom() + inset.bottom))
                     , mPageHeaderView.getMeasuredHeight(), params.topMargin(), params.bottomMargin(), params.gravity);
             childBottom = childTop + mPageHeaderView.getMeasuredHeight();
             childLeft = baseLeft + params.leftMargin();
@@ -596,7 +596,7 @@ public class PageScrollView extends ScrollLayout {
 
         if (hasPageFooterView()) {
             LayoutParams params = (LayoutParams) mPageFooterView.getLayoutParams();
-            childTop = ViewHelper.getContentStartV(Math.max(baseTop, getPaddingTop() + inset.top), Math.min(baseBottom, getHeight() - (getPaddingBottom() + inset.bottom))
+            childTop = ViewUtils.getContentStartV(Math.max(baseTop, getPaddingTop() + inset.top), Math.min(baseBottom, getHeight() - (getPaddingBottom() + inset.bottom))
                     , mPageFooterView.getMeasuredHeight(), params.topMargin(), params.bottomMargin(), params.gravity);
             childBottom = childTop + mPageFooterView.getMeasuredHeight();
             childRight = baseRight - params.rightMargin();
@@ -613,7 +613,7 @@ public class PageScrollView extends ScrollLayout {
             LayoutParams params = (LayoutParams) child.getLayoutParams();
             childTop += params.topMargin();
             childBottom = childTop + child.getMeasuredHeight();
-            childLeft = ViewHelper.getContentStartH(baseLeft, baseRight, child.getMeasuredWidth(), params.leftMargin(), params.rightMargin(), isChildCenter ? Gravity.CENTER : params.gravity);
+            childLeft = ViewUtils.getContentStartH(baseLeft, baseRight, child.getMeasuredWidth(), params.leftMargin(), params.rightMargin(), isChildCenter ? Gravity.CENTER : params.gravity);
             childRight = childLeft + child.getMeasuredWidth();
             child.layout(childLeft, childTop, childRight, childBottom);
             childTop = childBottom + params.bottomMargin() + mMiddleMargin;
@@ -625,7 +625,7 @@ public class PageScrollView extends ScrollLayout {
         Rect inset = mContentInset;
         if (hasPageHeaderView()) {
             LayoutParams params = (LayoutParams) mPageHeaderView.getLayoutParams();
-            childLeft = ViewHelper.getContentStartH(Math.max(baseLeft, getPaddingLeft() + inset.left), Math.min(baseRight, getWidth() - (getPaddingRight() + inset.right))
+            childLeft = ViewUtils.getContentStartH(Math.max(baseLeft, getPaddingLeft() + inset.left), Math.min(baseRight, getWidth() - (getPaddingRight() + inset.right))
                     , mPageHeaderView.getMeasuredWidth(), params.leftMargin(), params.rightMargin(), params.gravity);
             childRight = childLeft + mPageHeaderView.getMeasuredWidth();
             childTop = baseTop + params.topMargin();
@@ -636,7 +636,7 @@ public class PageScrollView extends ScrollLayout {
 
         if (hasPageFooterView()) {
             LayoutParams params = (LayoutParams) mPageFooterView.getLayoutParams();
-            childLeft = ViewHelper.getContentStartH(Math.max(baseLeft, getPaddingLeft() + inset.left), Math.min(baseRight, getWidth() - (getPaddingRight() + inset.right))
+            childLeft = ViewUtils.getContentStartH(Math.max(baseLeft, getPaddingLeft() + inset.left), Math.min(baseRight, getWidth() - (getPaddingRight() + inset.right))
                     , mPageFooterView.getMeasuredWidth(), params.leftMargin(), params.rightMargin(), params.gravity);
             childRight = childLeft + mPageFooterView.getMeasuredWidth();
             childBottom = baseBottom - params.bottomMargin();
@@ -653,7 +653,7 @@ public class PageScrollView extends ScrollLayout {
             LayoutParams params = (LayoutParams) child.getLayoutParams();
             childLeft += params.leftMargin();
             childRight = childLeft + child.getMeasuredWidth();
-            childTop = ViewHelper.getContentStartV(baseTop, baseBottom, child.getMeasuredHeight(), params.topMargin(), params.bottomMargin(), isChildCenter ? Gravity.CENTER : params.gravity);
+            childTop = ViewUtils.getContentStartV(baseTop, baseBottom, child.getMeasuredHeight(), params.topMargin(), params.bottomMargin(), isChildCenter ? Gravity.CENTER : params.gravity);
             childBottom = childTop + child.getMeasuredHeight();
             child.layout(childLeft, childTop, childRight, childBottom);
             childLeft = childRight + params.bottomMargin() + mMiddleMargin;

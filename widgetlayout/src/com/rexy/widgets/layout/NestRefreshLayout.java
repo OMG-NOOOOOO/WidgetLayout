@@ -24,14 +24,15 @@ import android.webkit.WebView;
 import android.widget.AbsListView;
 import android.widget.ScrollView;
 
-import com.rexy.widgets.ViewHelper;
+
+import com.rexy.widgets.utils.ViewUtils;
 
 import java.util.Arrays;
 import java.util.LinkedList;
 import java.util.Queue;
 
 /**
- * TODO:功能说明
+
  * 每次下接刷新仅仅会影响二次或四次measure 和 layout (状态变法设置visible 引起)
  *
  * @author: renzheng
@@ -627,7 +628,7 @@ public class NestRefreshLayout<INDICATOR extends View & NestRefreshLayout.OnRefr
         if (!skipChild(mHeaderView)) {
             LayoutParams params = (LayoutParams) mHeaderView.getLayoutParams();
             int childWidth = mHeaderView.getMeasuredWidth(), childHeight = mHeaderView.getMeasuredHeight();
-            childLeft = ViewHelper.getContentStartH(contentLeft, contentRight, childWidth, params.leftMargin, params.rightMargin, params.gravity);
+            childLeft = ViewUtils.getContentStartH(contentLeft, contentRight, childWidth, params.leftMargin, params.rightMargin, params.gravity);
             childRight = childLeft + childWidth;
             childTop += params.topMargin;
             childBottom = childTop + childHeight;
@@ -647,7 +648,7 @@ public class NestRefreshLayout<INDICATOR extends View & NestRefreshLayout.OnRefr
             tempTop = childTop;
             LayoutParams params = (LayoutParams) mContentView.getLayoutParams();
             int childWidth = mContentView.getMeasuredWidth(), childHeight = mContentView.getMeasuredHeight();
-            childLeft = ViewHelper.getContentStartH(contentLeft, contentRight, childWidth, params.leftMargin, params.rightMargin, params.gravity);
+            childLeft = ViewUtils.getContentStartH(contentLeft, contentRight, childWidth, params.leftMargin, params.rightMargin, params.gravity);
             childRight = childLeft + childWidth;
             childTop += params.topMargin;
             childBottom = childTop + childHeight;
@@ -658,7 +659,7 @@ public class NestRefreshLayout<INDICATOR extends View & NestRefreshLayout.OnRefr
         if (!skipChild(mRefreshHeader)) {
             LayoutParams params = (LayoutParams) mRefreshHeader.getLayoutParams();
             int childWidth = mRefreshHeader.getMeasuredWidth(), childHeight = mRefreshHeader.getMeasuredHeight();
-            childLeft = ViewHelper.getContentStartH(contentLeft, contentRight, childWidth, params.leftMargin, params.rightMargin, params.gravity);
+            childLeft = ViewUtils.getContentStartH(contentLeft, contentRight, childWidth, params.leftMargin, params.rightMargin, params.gravity);
             childRight = childLeft + childWidth;
             childTop += params.topMargin;
             childBottom = childTop + childHeight;
@@ -669,7 +670,7 @@ public class NestRefreshLayout<INDICATOR extends View & NestRefreshLayout.OnRefr
         if (contentVisible && !skipChild(mRefreshFooter)) {
             LayoutParams params = (LayoutParams) mRefreshFooter.getLayoutParams();
             int childWidth = mRefreshFooter.getMeasuredWidth(), childHeight = mRefreshFooter.getMeasuredHeight();
-            childLeft = ViewHelper.getContentStartH(contentLeft, contentRight, childWidth, params.leftMargin, params.rightMargin, params.gravity);
+            childLeft = ViewUtils.getContentStartH(contentLeft, contentRight, childWidth, params.leftMargin, params.rightMargin, params.gravity);
             childRight = childLeft + childWidth;
             childBottom = biggestBottom - params.bottomMargin;
             childTop = childBottom - childHeight;
@@ -679,7 +680,7 @@ public class NestRefreshLayout<INDICATOR extends View & NestRefreshLayout.OnRefr
         if (!skipChild(mFooterView)) {
             LayoutParams params = (LayoutParams) mFooterView.getLayoutParams();
             int childWidth = mFooterView.getMeasuredWidth(), childHeight = mFooterView.getMeasuredHeight();
-            childLeft = ViewHelper.getContentStartH(contentLeft, contentRight, childWidth, params.leftMargin, params.rightMargin, params.gravity);
+            childLeft = ViewUtils.getContentStartH(contentLeft, contentRight, childWidth, params.leftMargin, params.rightMargin, params.gravity);
             childRight = childLeft + childWidth;
             if (isFooterViewFloat) {
                 childBottom = biggestBottom - params.bottomMargin;
@@ -700,7 +701,7 @@ public class NestRefreshLayout<INDICATOR extends View & NestRefreshLayout.OnRefr
             int childWidth = mMaskView.getMeasuredWidth(), childHeight = mMaskView.getMeasuredHeight();
             childTop = (isMaskContent ? tempTop : contentTop) + params.topMargin;
             childBottom = childTop + childHeight;
-            childLeft = ViewHelper.getContentStartH(contentLeft, contentRight, childWidth, params.leftMargin, params.rightMargin, params.gravity);
+            childLeft = ViewUtils.getContentStartH(contentLeft, contentRight, childWidth, params.leftMargin, params.rightMargin, params.gravity);
             childRight = childLeft + childWidth;
             mMaskView.layout(childLeft, childTop + offsetTopAndBottom, childRight, childBottom + offsetTopAndBottom);
         }

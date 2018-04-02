@@ -74,7 +74,7 @@
         <attr name="itemMarginVertical" format="dimension" />
 
         <!--horizontal divider drawable color width padding-->
-        <attr name="dividerHorizontal" format="reference" />
+        <attr name="dividerHorizontalDrawable" format="reference" />
         <attr name="dividerColorHorizontal" format="color" />
         <attr name="dividerWidthHorizontal" format="dimension" />
         <attr name="dividerPaddingHorizontal" format="dimension" />
@@ -82,7 +82,7 @@
         <attr name="dividerPaddingHorizontalEnd" format="dimension" />
 
         <!--vertical divider drawable color width padding-->
-        <attr name="dividerVertical" format="reference" />
+        <attr name="dividerVerticalDrawable" format="reference" />
         <attr name="dividerColorVertical" format="color" />
         <attr name="dividerWidthVertical" format="dimension" />
         <attr name="dividerPaddingVertical" format="dimension" />

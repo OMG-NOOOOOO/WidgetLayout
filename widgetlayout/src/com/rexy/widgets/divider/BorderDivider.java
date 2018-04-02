@@ -127,7 +127,7 @@ public class BorderDivider {
                 R.styleable.WidgetLayout_borderBottomMarginEnd
         );
         mDividerHorizontal = DividerDrawable.from(attr, widthDefault,
-                R.styleable.WidgetLayout_dividerHorizontal,
+                R.styleable.WidgetLayout_dividerHorizontalDrawable,
                 R.styleable.WidgetLayout_dividerColorHorizontal,
                 R.styleable.WidgetLayout_dividerWidthHorizontal,
                 R.styleable.WidgetLayout_dividerPaddingHorizontal,
@@ -135,7 +135,7 @@ public class BorderDivider {
                 R.styleable.WidgetLayout_dividerPaddingHorizontalEnd
         );
         mDividerVertical = DividerDrawable.from(attr, widthDefault,
-                R.styleable.WidgetLayout_dividerVertical,
+                R.styleable.WidgetLayout_dividerVerticalDrawable,
                 R.styleable.WidgetLayout_dividerColorVertical,
                 R.styleable.WidgetLayout_dividerWidthVertical,
                 R.styleable.WidgetLayout_dividerPaddingVertical,

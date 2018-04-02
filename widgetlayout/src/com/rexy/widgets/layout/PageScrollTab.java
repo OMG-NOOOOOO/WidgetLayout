@@ -25,7 +25,7 @@ import android.widget.Checkable;
 import android.widget.TextView;
 
 import com.rexy.widgetlayout.R;
-import com.rexy.widgets.adapter.ItemProvider;
+import com.rexy.widgets.adpter.ItemProvider;
 import com.rexy.widgets.view.CheckText;
 
 import java.util.Locale;

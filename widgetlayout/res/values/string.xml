@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="refresh_no_data">No More Data</string>
+    <string name="refresh_error">load data error</string>
+    <string name="refresh_obtain">Obtain More</string>
+
+    <string name="refresh_pull_down">Pull down</string>
+    <string name="refresh_pull_up">Pull up</string>
+    <string name="refresh_release">Release</string>
+    <string name="refresh_loading">Loading</string>
+</resources>

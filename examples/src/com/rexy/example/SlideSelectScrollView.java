@@ -14,7 +14,7 @@ import android.view.View;
 import android.view.ViewTreeObserver;
 import android.widget.TextView;
 
-import com.rexy.widgets.adapter.ItemProvider;
+import com.rexy.widgets.adpter.ItemProvider;
 import com.rexy.widgets.layout.ScrollLayout;
 import com.rexy.widgets.layout.WidgetLayout;
 
@@ -394,19 +394,15 @@ public class SlideSelectScrollView extends ScrollLayout {
                     mListener.onItemFling(position, offsetPercent);
                 }
                 print(String.format("scroll changed selected=%d,index=%d,offset=.2f", mCurrentPosition, position, offsetPercent));
-                updateViewWhileFling(view, offsetPercent, offsetPercent == 0);
+                updateViewWhileFling(view, position, offsetPercent, offsetPercent == 0);
             }
         }
     }
 
-    private void updateViewWhileFling(View view, float percent, boolean selected) {
+    private void updateViewWhileFling(View view, int index, float percent, boolean selected) {
         if ((mSelectColor != 0 || mSelectScale > 0) && (view instanceof TextView)) {
             TextView textView = (TextView) view;
             TextView textViewPrevious = mPreviousView == null ? null : mPreviousView.get();
-            if (textViewPrevious != null && textViewPrevious != textView) {
-                updateItemText(textViewPrevious, 1);
-                mPreviousView = new WeakReference(textView);
-            }
             if (selected) {
                 if (mSelectColor != 0) {
                     textView.setTextColor(mSelectColor);
@@ -418,6 +414,15 @@ public class SlideSelectScrollView extends ScrollLayout {
                 if (mSelectScale != 0) {
                     updateItemText(textView, 1 + Math.max(0, 1 - Math.abs(percent)) * (mSelectScale - 1));
                 }
+                if (mCurrentPosition == index && mSelectColor != 0) {
+                    textView.setTextColor(mSelectColor);
+                }
+            }
+            if (textViewPrevious == null || textViewPrevious != textView) {
+                if(textViewPrevious!=null){
+                    updateItemText(textViewPrevious, 1);
+                }
+                mPreviousView = new WeakReference(textView);
             }
         }
     }

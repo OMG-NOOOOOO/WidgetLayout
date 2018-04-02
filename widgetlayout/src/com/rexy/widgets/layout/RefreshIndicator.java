@@ -1,7 +1,11 @@
 package com.rexy.widgets.layout;
 
+import android.annotation.SuppressLint;
 import android.content.Context;
-import android.graphics.Typeface;
+import android.content.res.Resources;
+import android.graphics.drawable.AnimationDrawable;
+import android.graphics.drawable.Drawable;
+import android.support.v4.graphics.drawable.DrawableWrapper;
 import android.util.AttributeSet;
 import android.view.Gravity;
 import android.view.View;
@@ -20,15 +24,9 @@ public class RefreshIndicator extends WrapLayout implements NestRefreshLayout.On
     int mLastRotateType = 0;
     boolean isRefreshViewAdded;
     boolean isRefreshPullType;
-    String[] mIndicatorTexts = new String[]{
-            "获取数据中",
-            "下拉刷新",
-            "上拉加载更多",
-            "松开刷新",
-            "松开加载更多",
-            "请放手刷新",
-            "请放手加载更多",
-    };
+    String[] mIndicatorTexts;
+
+    private Drawable mProgressDrawable;
 
     public RefreshIndicator(Context context) {
         super(context);
@@ -46,12 +44,29 @@ public class RefreshIndicator extends WrapLayout implements NestRefreshLayout.On
     }
 
     private void init(Context context, AttributeSet attrs) {
+        Resources res=context.getResources();
+        mIndicatorTexts = new String[]{
+            /*获取数据中*/res.getString(R.string.refresh_loading),
+            /*下拉刷新*/res.getString(R.string.refresh_pull_down),
+            /*上拉加载更多*/res.getString(R.string.refresh_pull_up),
+            /*松开刷新*/res.getString(R.string.refresh_release),
+            /*松开加载更多*/res.getString(R.string.refresh_release),
+           /*请放手刷新*/ res.getString(R.string.refresh_release),
+           /*请放手加载更多*/res.getString(R.string.refresh_release),
+        };
         setGravity(Gravity.CENTER);
         setEachLineMinItemCount(1);
         setEachLineMaxItemCount(2);
         setEachLineCenterHorizontal(true);
         setEachLineCenterVertical(true);
-        setMinimumHeight((int) (context.getResources().getDisplayMetrics().density*50));
+        setMinimumHeight((int) (context.getResources().getDisplayMetrics().density * 60));
+    }
+
+    public void setProgressBarDrawable(Drawable drawable) {
+        mProgressDrawable = drawable;
+        if (mProgressBar != null) {
+            mProgressBar.setIndeterminateDrawable(drawable);
+        }
     }
 
     @Override
@@ -108,14 +123,22 @@ public class RefreshIndicator extends WrapLayout implements NestRefreshLayout.On
         mTextView = new TextView(context);
         mProgressBar = new ProgressBar(context);
         mImageView = new ImageView(context);
-        mImageView.setImageResource(R.drawable.widget_layout_ic_arrow_down);
+        mImageView.setImageResource(R.mipmap.icon_arrow_down);
         mTextView.setTextSize(16);
-        mTextView.setTypeface(Typeface.DEFAULT,Typeface.BOLD);
-        LayoutParams lpLeft = new LayoutParams(-2, -2);
-        lpLeft.gravity = Gravity.CENTER;
-        lpLeft.maxHeight = lpLeft.maxWidth = (int) (density * 35);
-        addView(mImageView, lpLeft);
-        addView(mProgressBar, lpLeft);
+        if (mProgressDrawable != null) {
+            mProgressBar.setIndeterminateDrawable(mProgressDrawable);
+        }
+        LayoutParams lpLeft1 = new LayoutParams(-2, -2);
+        lpLeft1.gravity = Gravity.CENTER;
+        lpLeft1.maxHeight = lpLeft1.maxWidth = (int) (32*density+0.5f);
+        lpLeft1.rightMargin = (int) (8*density+0.5f);
+
+        LayoutParams lpLeft2 = new LayoutParams(lpLeft1);
+        lpLeft2.width = lpLeft2.height = (int) (20*density+0.5f);
+        lpLeft2.rightMargin = (int) (10*density+0.5f);
+
+        addView(mImageView, lpLeft1);
+        addView(mProgressBar, lpLeft2);
         addView(mTextView);
     }
 
@@ -134,6 +157,23 @@ public class RefreshIndicator extends WrapLayout implements NestRefreshLayout.On
         }
     }
 
+    @SuppressLint("RestrictedApi")
+    private void updateAnimationDrawable(Drawable target, boolean start) {
+        if (target != null) {
+            Drawable drawable = target;
+            while (drawable instanceof DrawableWrapper) {
+                drawable = ((DrawableWrapper) drawable).getWrappedDrawable();
+            }
+            if (drawable instanceof AnimationDrawable) {
+                if (start) {
+                    ((AnimationDrawable) drawable).start();
+                } else {
+                    ((AnimationDrawable) drawable).stop();
+                }
+            }
+        }
+    }
+
     @Override
     public void onRefreshStateChanged(NestRefreshLayout parent, int state, int preState, int moveDistance) {
         if (isRefreshViewAdded) {
@@ -148,6 +188,7 @@ public class RefreshIndicator extends WrapLayout implements NestRefreshLayout.On
                 }
                 if (mProgressBar != null) {
                     mProgressBar.setVisibility(View.GONE);
+                    updateAnimationDrawable(mProgressDrawable, false);
                 }
                 if (mImageView != null) {
                     mImageView.setVisibility(View.VISIBLE);
@@ -179,7 +220,10 @@ public class RefreshIndicator extends WrapLayout implements NestRefreshLayout.On
                 mImageView.clearAnimation();
             }
             if (mProgressBar != null) {
-                mProgressBar.setVisibility(View.VISIBLE);
+                if (mProgressBar.getVisibility() != View.VISIBLE) {
+                    updateAnimationDrawable(mProgressDrawable, true);
+                    mProgressBar.setVisibility(View.VISIBLE);
+                }
             }
         }
     }

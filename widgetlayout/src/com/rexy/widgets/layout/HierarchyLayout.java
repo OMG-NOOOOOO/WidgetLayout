@@ -21,9 +21,7 @@ import android.view.ViewConfiguration;
 import android.view.ViewGroup;
 import android.view.Window;
 
-import com.rexy.widgets.ViewHelper;
-import com.rexy.widgets.view.ViewHierarchyInfo;
-import com.rexy.widgets.view.ViewHierarchyTree;
+import com.rexy.widgets.utils.ViewUtils;
 
 import static android.graphics.Paint.ANTI_ALIAS_FLAG;
 import static android.graphics.Paint.Style.STROKE;
@@ -315,7 +313,7 @@ public class HierarchyLayout extends WrapLayout {
             mTree.destroy();
         }
         mLeafSize = -1;
-        mTree = ViewHelper.getViewHierarchyOf(this);
+        mTree = ViewUtils.getViewHierarchyOf(this);
         int width = mLayoutBounds.width(), height = mLayoutBounds.height();
         mHierarchyTreeHorizontal = width > height;
         int longSize = Math.max(width, height), shortSize = Math.min(width, height);

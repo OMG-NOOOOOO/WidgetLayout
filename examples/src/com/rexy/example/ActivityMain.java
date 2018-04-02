@@ -11,7 +11,7 @@ import com.rexy.example.extend.BaseActivity;
 import com.rexy.example.extend.CardDrawable;
 import com.rexy.example.extend.ViewUtils;
 import com.rexy.widgetlayout.example.R;
-import com.rexy.widgets.adapter.ItemProvider;
+import com.rexy.widgets.adpter.ItemProvider;
 
 /**
  * Created by rexy on 17/4/11.

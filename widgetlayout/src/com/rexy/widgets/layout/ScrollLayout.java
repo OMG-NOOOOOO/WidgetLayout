@@ -66,6 +66,8 @@ public class ScrollLayout extends WidgetLayout implements ScrollingView, NestedS
     private final int[] mScrollConsumed = new int[2];
     private final int[] mNestedOffsets = new int[2];
 
+    private final boolean sUpperL = Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP;
+
     private NestedScrollingChildHelper mScrollingChildHelper;
 
     private EdgeEffectCompat mLeftGlow, mTopGlow, mRightGlow, mBottomGlow;
@@ -951,51 +953,72 @@ public class ScrollLayout extends WidgetLayout implements ScrollingView, NestedS
     //start:NestedScrollingParent
     @Override
     public int getNestedScrollAxes() {
-        return super.getNestedScrollAxes();
+        if (sUpperL) {
+            return super.getNestedScrollAxes();
+        } else {
+            return 1 << 1;
+        }
     }
 
     @Override
     public boolean onStartNestedScroll(View child, View target, int nestedScrollAxes) {
-        return super.onStartNestedScroll(child, target, nestedScrollAxes);
+        if (sUpperL) {
+            return super.onStartNestedScroll(child, target, nestedScrollAxes);
+        } else {
+            return false;
+        }
     }
 
     @Override
     public void onNestedScrollAccepted(View child, View target, int axes) {
-        super.onNestedScrollAccepted(child, target, axes);
+        if (sUpperL) {
+            super.onNestedScrollAccepted(child, target, axes);
+        }
     }
 
     @Override
     public void onStopNestedScroll(View child) {
-        super.onStopNestedScroll(child);
+        if (sUpperL) {
+            super.onStopNestedScroll(child);
+        }
     }
 
     @Override
     public void onNestedPreScroll(View target, int dx, int dy, int[] consumed) {
-        super.onNestedPreScroll(target, dx, dy, consumed);
+        if (sUpperL) {
+            super.onNestedPreScroll(target, dx, dy, consumed);
+        }
     }
 
     @Override
     public void onNestedScroll(View target, int dxConsumed, int dyConsumed, int dxUnconsumed, int dyUnconsumed) {
-        super.onNestedScroll(target, dxConsumed, dyConsumed, dxUnconsumed, dyUnconsumed);
+        if (sUpperL) {
+            super.onNestedScroll(target, dxConsumed, dyConsumed, dxUnconsumed, dyUnconsumed);
+        }
     }
 
     @Override
     public boolean onNestedPreFling(View target, float velocityX, float velocityY) {
-        return super.onNestedPreFling(target, velocityX, velocityY);
+        if (sUpperL) {
+            return super.onNestedPreFling(target, velocityX, velocityY);
+        }
+        return false;
     }
 
     @Override
     public boolean onNestedFling(View target, float velocityX, float velocityY, boolean consumed) {
-        return super.onNestedFling(target, velocityX, velocityY, consumed);
+        if (sUpperL) {
+            return super.onNestedFling(target, velocityX, velocityY, consumed);
+        }
+        return false;
     }
     //end:NestScrollingParent
 
-
-    public FlingScroller getScroller() {
-        return mFlingScroller;
-    }
-
     public class FlingScroller implements Runnable {
+        private int mMinFlingX;
+        private int mMaxFlingX;
+        private int mMinFlingY;
+        private int mMaxFlingY;
         private int mLastFlingX;
         private int mLastFlingY;
         private ScrollerCompat mScroller;
@@ -1007,11 +1030,6 @@ public class ScrollLayout extends WidgetLayout implements ScrollingView, NestedS
 
         private boolean mCanScrollHorizontal = true;
         private boolean mCanScrollVertical = true;
-
-        private int mMinFlingX;
-        private int mMaxFlingX;
-        private int mMinFlingY;
-        private int mMaxFlingY;
 
         public FlingScroller() {
             mScroller = ScrollerCompat.create(getContext(), getDefaultInterpolator());
@@ -1189,7 +1207,6 @@ public class ScrollLayout extends WidgetLayout implements ScrollingView, NestedS
             removeCallbacks(this);
             mScroller.abortAnimation();
         }
-
         public void setMaxFling(int maxFlingX, int maxFlingY) {
             mMaxFlingX = maxFlingX;
             mMaxFlingY = maxFlingY;

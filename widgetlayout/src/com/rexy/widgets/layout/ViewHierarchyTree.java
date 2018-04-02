@@ -1,4 +1,4 @@
-package com.rexy.widgets.view;
+package com.rexy.widgets.layout;
 
 import android.support.v4.util.Pair;
 import android.util.SparseArray;

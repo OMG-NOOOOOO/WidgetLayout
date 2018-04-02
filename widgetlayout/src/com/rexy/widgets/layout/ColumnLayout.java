@@ -10,8 +10,8 @@ import android.view.Gravity;
 import android.view.View;
 
 import com.rexy.widgetlayout.R;
-import com.rexy.widgets.ViewHelper;
 import com.rexy.widgets.divider.BorderDivider;
+import com.rexy.widgets.utils.ViewUtils;
 
 import java.util.regex.Pattern;
 
@@ -277,8 +277,8 @@ public class ColumnLayout extends WidgetLayout {
                 int gravityVertical = mColumnCenterVertical ? Gravity.CENTER_VERTICAL : params.gravity;
                 int childWidth = child.getMeasuredWidth();
                 int childHeight = child.getMeasuredHeight();
-                int childLeft = ViewHelper.getContentStartH(columnLeft, columnRight, childWidth, params.leftMargin(), params.rightMargin(), gravityHorizontal);
-                int childTop = ViewHelper.getContentStartV(columnTop, columnBottom, childHeight, params.topMargin(), params.bottomMargin(), gravityVertical);
+                int childLeft = ViewUtils.getContentStartH(columnLeft, columnRight, childWidth, params.leftMargin(), params.rightMargin(), gravityHorizontal);
+                int childTop = ViewUtils.getContentStartV(columnTop, columnBottom, childHeight, params.topMargin(), params.bottomMargin(), gravityVertical);
                 child.layout(childLeft, childTop, childLeft + childWidth, childTop + childHeight);
                 columnLeft = columnRight;
                 if (middleMarginHorizontal > 0) {

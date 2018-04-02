@@ -17,9 +17,9 @@ import android.widget.FrameLayout;
 import android.widget.LinearLayout;
 
 import com.rexy.widgetlayout.R;
-import com.rexy.widgets.ViewHelper;
 import com.rexy.widgets.divider.BorderDivider;
 import com.rexy.widgets.drawable.FloatDrawable;
+import com.rexy.widgets.utils.ViewUtils;
 
 /**
  * <p>
@@ -289,6 +289,7 @@ public class WidgetLayout extends ViewGroup {
             }
             typed2.recycle();
         }
+        setMotionEventSplittingEnabled(false);
     }
 
     //start:log
@@ -764,11 +765,11 @@ public class WidgetLayout extends ViewGroup {
         final int unusedRight = getPaddingRight() + inset.right;
         final int unusedTop = getPaddingTop() + inset.top;
         final int unusedBottom = getPaddingBottom() + inset.bottom;
-        int contentLeft = ViewHelper.getContentStartH(unusedLeft, getWidth() - unusedRight, contentWidth, 0, 0, mGravity);
+        int contentLeft = ViewUtils.getContentStartH(unusedLeft, getWidth() - unusedRight, contentWidth, 0, 0, mGravity);
         if (contentLeft < unusedLeft && mTouchScrollEnable && orientation(HORIZONTAL)) {
             contentLeft = unusedLeft;
         }
-        int contentTop = ViewHelper.getContentStartV(unusedTop, getHeight() - unusedBottom, contentHeight, 0, 0, mGravity);
+        int contentTop = ViewUtils.getContentStartV(unusedTop, getHeight() - unusedBottom, contentHeight, 0, 0, mGravity);
         if (contentTop < unusedTop && mTouchScrollEnable && orientation(VERTICAL)) {
             contentTop = unusedTop;
         }
@@ -801,7 +802,7 @@ public class WidgetLayout extends ViewGroup {
                 final View child = getChildAt(i);
                 if (skipChild(child)) continue;
                 LayoutParams params = (LayoutParams) child.getLayoutParams();
-                childTop = ViewHelper.getContentStartH(baseTop, baseBottom, child.getMeasuredHeight(), params.topMargin(), params.bottomMargin(), params.gravity);
+                childTop = ViewUtils.getContentStartH(baseTop, baseBottom, child.getMeasuredHeight(), params.topMargin(), params.bottomMargin(), params.gravity);
                 childBottom = childTop + child.getMeasuredHeight();
                 childLeft += params.leftMargin();
                 childRight = childLeft + child.getMeasuredWidth();
@@ -817,7 +818,7 @@ public class WidgetLayout extends ViewGroup {
                 LayoutParams params = (LayoutParams) child.getLayoutParams();
                 childTop += params.topMargin();
                 childBottom = childTop + child.getMeasuredHeight();
-                childLeft = ViewHelper.getContentStartH(baseLeft, baseRight, child.getMeasuredWidth(), params.leftMargin(), params.rightMargin(), params.gravity);
+                childLeft = ViewUtils.getContentStartH(baseLeft, baseRight, child.getMeasuredWidth(), params.leftMargin(), params.rightMargin(), params.gravity);
                 childRight = childLeft + child.getMeasuredWidth();
                 child.layout(childLeft, childTop, childRight, childBottom);
                 childTop = childBottom + params.bottomMargin() + itemMargin;
@@ -908,7 +909,6 @@ public class WidgetLayout extends ViewGroup {
 
     protected void doDrawOver(Canvas canvas, int contentLeft, int contentTop, int contentWidth, int contentHeight){
     }
-
     //end:measure&layout&draw
 
 

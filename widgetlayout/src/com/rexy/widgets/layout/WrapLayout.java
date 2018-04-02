@@ -10,8 +10,8 @@ import android.view.Gravity;
 import android.view.View;
 
 import com.rexy.widgetlayout.R;
-import com.rexy.widgets.ViewHelper;
 import com.rexy.widgets.divider.BorderDivider;
+import com.rexy.widgets.utils.ViewUtils;
 
 /**
  * <!--水平方向Item 的间距-->
@@ -290,7 +290,7 @@ public class WrapLayout extends WidgetLayout {
         for (int lineIndex = 0; lineIndex < lineCount; lineIndex++) {
             lineEndIndex = mLineEndIndex.get(lineIndex);
             lineMaxHeight = mLineHeight.get(lineIndex);
-            childLeft = ViewHelper.getContentStartH(contentLeft, contentLeft + contentWidth, mLineWidth.get(lineIndex), 0, 0, lineGravity);
+            childLeft = ViewUtils.getContentStartH(contentLeft, contentLeft + contentWidth, mLineWidth.get(lineIndex), 0, 0, lineGravity);
             lineBottom = lineTop + lineMaxHeight;
             for (; childIndex <= lineEndIndex; childIndex++) {
                 final View child = getChildAt(childIndex);
@@ -299,11 +299,11 @@ public class WrapLayout extends WidgetLayout {
                 int childHeight = child.getMeasuredHeight();
                 WidgetLayout.LayoutParams params = (WidgetLayout.LayoutParams) child.getLayoutParams();
                 if(mEachLineMaxItemCount==1&&!mEachLineCenterHorizontal){
-                    childLeft = ViewHelper.getContentStartH(contentLeft, contentLeft + contentWidth, mLineWidth.get(lineIndex), 0, 0, params.gravity);
+                    childLeft = ViewUtils.getContentStartH(contentLeft, contentLeft + contentWidth, mLineWidth.get(lineIndex), 0, 0, params.gravity);
                 }
                 childLeft += params.leftMargin();
                 childRight = childLeft + childWidth;
-                childTop = ViewHelper.getContentStartV(lineTop, lineBottom, childHeight, params.topMargin(), params.bottomMargin(), lineVertical ? Gravity.CENTER_VERTICAL : params.gravity);
+                childTop = ViewUtils.getContentStartV(lineTop, lineBottom, childHeight, params.topMargin(), params.bottomMargin(), lineVertical ? Gravity.CENTER_VERTICAL : params.gravity);
                 childBottom = childTop + childHeight;
                 child.layout(childLeft, childTop, childRight, childBottom);
                 childLeft = childRight + params.rightMargin();

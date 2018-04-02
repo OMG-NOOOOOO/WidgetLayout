@@ -1,4 +1,4 @@
-package com.rexy.widgets.view;
+package com.rexy.widgets.layout;
 
 import android.graphics.Rect;
 import android.support.v4.util.Pools;

@@ -8,7 +8,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 import android.widget.ToggleButton;
 
-import com.rexy.widgets.adapter.ItemProvider;
+import com.rexy.widgets.adpter.ItemProvider;
 import com.rexy.widgets.layout.LabelLayout;
 import com.rexy.widgets.layout.WrapLayout;
 import com.rexy.example.extend.ViewUtils;

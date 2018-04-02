@@ -11,14 +11,14 @@ import android.view.Gravity;
 import android.view.View;
 
 import com.rexy.widgetlayout.R;
-import com.rexy.widgets.adapter.ItemProvider;
+import com.rexy.widgets.adpter.ItemProvider;
 import com.rexy.widgets.view.CheckText;
 
 import java.util.Iterator;
 import java.util.LinkedList;
 
 /**
- * TODO:功能说明
+
  *
  * @author: rexy
  * @date: 2017-06-02 15:47

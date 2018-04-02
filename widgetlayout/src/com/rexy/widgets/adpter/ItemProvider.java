@@ -1,4 +1,4 @@
-package com.rexy.widgets.adapter;
+package com.rexy.widgets.adpter;
 
 import android.view.View;
 import android.view.ViewGroup;
