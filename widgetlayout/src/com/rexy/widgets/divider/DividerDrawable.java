@@ -82,28 +82,26 @@ public class DividerDrawable {
         return validated;
     }
 
-    public void draw(Canvas canvas, int from, int to, int middle, boolean horizontal) {
+    public void draw(Canvas canvas, int from, int to, float middle, boolean horizontal) {
         from += mDividerMarginStart;
         to -= mDividerMarginEnd;
         if (to > from && mDividerWidth > 0 && (mDivider != null || mPaint != null)) {
-            if (horizontal) {
-                if (mDivider == null) {
+            if (mDivider == null) {
+                if (horizontal) {
                     canvas.drawLine(from, middle, to, middle, mPaint);
                 } else {
-                    float halfWidth = mDividerWidth / 2f;
-                    float middleStart = middle - halfWidth + 0.25f, middleEnd = middle + halfWidth + 0.25f;
-                    mDivider.setBounds(from, (int) middleStart, to, (int) middleEnd);
-                    mDivider.draw(canvas);
+                    canvas.drawLine(middle, from, middle, to, mPaint);
                 }
             } else {
-                if (mDivider == null) {
-                    canvas.drawLine(middle, from, middle, to, mPaint);
+                float halfWidth = mDividerWidth / 2f;
+                float middleStart = middle - halfWidth, middleEnd = middle + halfWidth;
+                int start = (int) middleStart, end = (int) middleEnd;
+                if (horizontal) {
+                    mDivider.setBounds(from, start, to, end);
                 } else {
-                    float halfWidth = mDividerWidth / 2f;
-                    float middleStart = middle - halfWidth + 0.25f, middleEnd = middle + halfWidth + 0.25f;
-                    mDivider.setBounds((int) middleStart, from, (int) middleEnd, to);
-                    mDivider.draw(canvas);
+                    mDivider.setBounds(start, from, end, to);
                 }
+                mDivider.draw(canvas);
             }
         }
     }

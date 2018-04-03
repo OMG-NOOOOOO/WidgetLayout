@@ -46,14 +46,13 @@
         app:columnNumber="1"
         app:columnCenterVertical="true"
         app:stretchColumns="*"
-        app:borderLeftColor="#6f0"
-        app:borderLeftWidth="3dp"
-        app:borderTop="@android:drawable/stat_sys_phone_call_on_hold"
-        app:borderTopWidth="10dp"
-        app:borderRightColor="#f0f"
-        app:borderRightWidth="10dp"
-        app:borderBottom="@drawable/ic_launcher"
-        app:borderBottomWidth="3dp"
+
+        app:borderTop="@drawable/shape_line_horizontal"
+        app:borderBottom="@drawable/shape_line_horizontal"
+        app:borderLeft="@drawable/shape_line_vertical"
+        app:borderRight="@drawable/shape_line_vertical"
+
+
         app:contentMarginBottom="10dp"
         app:contentMarginLeft="15dp"
         app:contentMarginRight="15dp"
