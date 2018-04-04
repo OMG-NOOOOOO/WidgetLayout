@@ -92,7 +92,12 @@ public class PageScrollTab extends PageScrollView {
         @Override
         public void onClick(View view) {
             Object tag = view.getTag(TAB_INDEX);
-            int cur = (tag instanceof Integer) ? (Integer) tag : mCurrentPosition;
+            int cur;
+            if (tag instanceof Integer) {
+                cur = (Integer) tag;
+            } else {
+                cur = indexOfItemView(view);
+            }
             int pre = mCurrentPosition;
             boolean handled = mTabClick == null ? false : mTabClick.onTabClicked(PageScrollTab.this, view, cur, mPreCheckView, pre);
             handTabClick(cur, pre, handled);

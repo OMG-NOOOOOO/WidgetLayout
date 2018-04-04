@@ -12,13 +12,14 @@ import com.rexy.example.extend.CardDrawable;
 import com.rexy.example.extend.ViewUtils;
 import com.rexy.widgetlayout.example.R;
 import com.rexy.widgets.adpter.ItemProvider;
+import com.rexy.widgets.layout.SlideSelectView;
 
 /**
  * Created by rexy on 17/4/11.
  */
 public class ActivityMain extends BaseActivity implements View.OnClickListener {
 
-    SlideSelectScrollView mSlideSelectView;
+    SlideSelectView mSlideSelectView;
     TextView mTvIndicator;
 
     @Override
@@ -74,7 +75,7 @@ public class ActivityMain extends BaseActivity implements View.OnClickListener {
                 return 20;
             }
         });
-        mSlideSelectView.setSlideSelectListener(new SlideSelectScrollView.SlideSelectListener() {
+        mSlideSelectView.setSlideSelectListener(new SlideSelectView.SlideSelectListener() {
             @Override
             public void onItemSelected(int selectedIndex, int previousIndex) {
                 mTvIndicator.setText(String.format("itemSelected(current=%d,previous=%d)",selectedIndex,previousIndex));

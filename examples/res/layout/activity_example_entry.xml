@@ -23,7 +23,7 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content" />
 
-    <com.rexy.example.SlideSelectScrollView
+    <com.rexy.widgets.layout.SlideSelectView
         android:id="@+id/slideView"
         app:itemMargin="2dp"
         android:layout_marginBottom="15dp"
@@ -31,6 +31,15 @@
         android:layout_height="wrap_content"
         android:minHeight="70dp"
         android:gravity="center_vertical"
+        android:textSize="16sp"
+        android:textColor="#CC000000"
+        app:indicatorColor="#FFFF762B"
+        app:selectedTextColor="#FFFF8010"
+        app:indicatorHeight="2dp"
+        app:indicatorWidth="80dp"
+        app:indicatorTriangleHeight="4dp"
+        app:indicatorTriangleWidth="6dp"
+        app:selectedTextScale="1.625"
         app:contentMarginBottom="2dp"
         app:borderBottomColor="#FFECECEC"
         app:borderBottomWidth="2dp"  />

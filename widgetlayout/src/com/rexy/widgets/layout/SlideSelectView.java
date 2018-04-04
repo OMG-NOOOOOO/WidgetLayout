@@ -1,6 +1,8 @@
-package com.rexy.example;
+package com.rexy.widgets.layout;
 
 import android.content.Context;
+import android.content.res.ColorStateList;
+import android.content.res.TypedArray;
 import android.graphics.Canvas;
 import android.graphics.Paint;
 import android.graphics.Path;
@@ -14,9 +16,8 @@ import android.view.View;
 import android.view.ViewTreeObserver;
 import android.widget.TextView;
 
+import com.rexy.widgetlayout.R;
 import com.rexy.widgets.adpter.ItemProvider;
-import com.rexy.widgets.layout.ScrollLayout;
-import com.rexy.widgets.layout.WidgetLayout;
 
 import java.lang.ref.WeakReference;
 
@@ -24,8 +25,10 @@ import java.lang.ref.WeakReference;
  * Created by rexy on 2018/3/28.
  */
 
-public class SlideSelectScrollView extends ScrollLayout {
+public class SlideSelectView extends ScrollLayout {
     private static int TAB_INDEX = com.rexy.widgetlayout.R.id.widgetLayoutViewIndexType;
+    private static int mDefaultTextColor = 0xFF666666;
+    private static int mDefaultSelectedTextColor = 0xFFFF8010;
     /**
      * 以下是设置tab item 的最小padding 值。
      */
@@ -34,17 +37,17 @@ public class SlideSelectScrollView extends ScrollLayout {
     private int mItemMinPaddingBottom = 0;
 
     private int mTextSize = 16;
-    private int mTextColor = 0xFF666666;
-    private int mTextColorResId = 0;
 
-    private int mIndicatorWidth = 250;
-    private int mIndicatorHeight = 5;
     private int mIndicatorColor = 0xFFFF8010;
-    private int mIndicatorTriangleHeight = 16;
-    private int mIndicatorTriangleWidth = 24;
+    private int mIndicatorWidth = 100;
+    private int mIndicatorHeight = 2;
+    private int mIndicatorTriangleHeight = 4;
+    private int mIndicatorTriangleWidth = 6;
 
     private float mSelectScale = 1.625f;
-    private int mSelectColor = 0xFFFF8010;
+
+    private ColorStateList mColorStateList;
+    private ColorStateList mSelectedColorStateList;
 
     private int mLeftMakeUp;
     private int mRightMakeUp;
@@ -52,14 +55,19 @@ public class SlideSelectScrollView extends ScrollLayout {
     protected ItemProvider mItemProvider = null;
     private Path mPath = new Path();
     private Paint mPaint = new Paint(Paint.ANTI_ALIAS_FLAG);
-    private WidgetLayout.LayoutParams mItemLayoutParams;
+    private LayoutParams mItemLayoutParams;
     WeakReference<TextView> mPreviousView;
 
     private OnClickListener mItemClick = new OnClickListener() {
         @Override
         public void onClick(View view) {
             Object tag = view.getTag(TAB_INDEX);
-            int cur = (tag instanceof Integer) ? (Integer) tag : mCurrentPosition;
+            int cur;
+            if (tag instanceof Integer) {
+                cur = (Integer) tag;
+            } else {
+                cur = indexOfItemView(view);
+            }
             int pre = mCurrentPosition;
             handItemClick(cur, pre);
         }
@@ -102,29 +110,64 @@ public class SlideSelectScrollView extends ScrollLayout {
         }
     }
 
-    public SlideSelectScrollView(Context context) {
+    public SlideSelectView(Context context) {
         super(context);
         init(context, null);
     }
 
-    public SlideSelectScrollView(Context context, AttributeSet attrs) {
+    public SlideSelectView(Context context, AttributeSet attrs) {
         super(context, attrs);
         init(context, attrs);
     }
 
-    public SlideSelectScrollView(Context context, AttributeSet attrs, int defStyleAttr) {
+    public SlideSelectView(Context context, AttributeSet attrs, int defStyleAttr) {
         super(context, attrs, defStyleAttr);
         init(context, attrs);
     }
 
-    public SlideSelectScrollView(Context context, AttributeSet attrs, int defStyleAttr, int defStyleRes) {
+    public SlideSelectView(Context context, AttributeSet attrs, int defStyleAttr, int defStyleRes) {
         super(context, attrs, defStyleAttr, defStyleRes);
         init(context, attrs);
     }
 
     private void init(Context context, AttributeSet attrs) {
+        float density = context.getResources().getDisplayMetrics().density;
         mTextSize = (int) TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_SP, mTextSize, context.getResources().getDisplayMetrics());
+        mIndicatorWidth = (int) (mIndicatorWidth * density + 0.5f);
+        mIndicatorHeight = (int) (mIndicatorHeight * density + 0.5f);
+        mIndicatorTriangleHeight = (int) (mIndicatorTriangleHeight * density + 0.5f);
+        mIndicatorTriangleWidth = (int) (mIndicatorTriangleWidth * density + 0.5f);
         setOrientation(HORIZONTAL);
+        TypedArray a = attrs == null ? null : context.obtainStyledAttributes(attrs, R.styleable.SlideSelectView);
+        if (a != null) {
+            mTextSize = a.getDimensionPixelSize(
+                    R.styleable.SlideSelectView_android_textSize, mTextSize);
+            mItemMinPaddingTop = a.getDimensionPixelSize(
+                    R.styleable.SlideSelectView_itemMinPaddingTop, mItemMinPaddingTop);
+            mItemMinPaddingBottom = a.getDimensionPixelSize(
+                    R.styleable.SlideSelectView_itemMinPaddingBottom, mItemMinPaddingBottom);
+            mItemMinPaddingHorizontal = a.getDimensionPixelSize(
+                    R.styleable.SlideSelectView_itemMinPaddingHorizontal, mItemMinPaddingHorizontal);
+            mIndicatorWidth = a.getDimensionPixelSize(
+                    R.styleable.SlideSelectView_indicatorWidth, mIndicatorWidth);
+            mIndicatorHeight = a.getDimensionPixelSize(
+                    R.styleable.SlideSelectView_indicatorHeight, mIndicatorHeight);
+            mIndicatorTriangleWidth = a.getDimensionPixelSize(
+                    R.styleable.SlideSelectView_indicatorTriangleWidth, mIndicatorTriangleWidth);
+            mIndicatorTriangleHeight = a.getDimensionPixelSize(
+                    R.styleable.SlideSelectView_indicatorTriangleHeight, mIndicatorTriangleHeight);
+            mSelectScale = a.getFloat(R.styleable.SlideSelectView_selectedTextScale, mSelectScale);
+            mIndicatorColor = a.getColor(R.styleable.SlideSelectView_indicatorColor, mIndicatorColor);
+            mColorStateList = a.getColorStateList(R.styleable.SlideSelectView_android_textColor);
+            mSelectedColorStateList = a.getColorStateList(R.styleable.SlideSelectView_selectedTextColor);
+            a.recycle();
+        }
+        if (mColorStateList == null) {
+            mColorStateList = ColorStateList.valueOf(mDefaultTextColor);
+        }
+        if (mSelectedColorStateList == null) {
+            mSelectedColorStateList = ColorStateList.valueOf(mDefaultSelectedTextColor);
+        }
     }
 
     public void setTextSize(int textSize) {
@@ -132,13 +175,59 @@ public class SlideSelectScrollView extends ScrollLayout {
         updateItemStyles();
     }
 
-    public void setTextColor(int textColor) {
-        this.mTextColor = textColor;
-        updateItemStyles();
+    public void setSelectedColor(int textColor) {
+        if (mSelectedColorStateList.getDefaultColor() != textColor) {
+            mSelectedColorStateList = ColorStateList.valueOf(textColor);
+            invalidate();
+        }
     }
 
-    public void setTextColorId(int resId) {
-        this.mTextColorResId = resId;
+    public void setSelectedScale(float scale) {
+        if (scale > 0 && mSelectScale != scale) {
+            mSelectScale = scale;
+        }
+    }
+
+    public void setIndicatorColor(int color) {
+        if (mPaint.getColor() != color) {
+            mPaint.setColor(color);
+            invalidate();
+        }
+    }
+
+    public void setIndicatorWidth(int width) {
+        if (mIndicatorWidth != width) {
+            mIndicatorWidth = width;
+            invalidate();
+        }
+    }
+
+    public void setIndicatorHeight(int height) {
+        if (mIndicatorHeight != height) {
+            mIndicatorHeight = height;
+            invalidate();
+        }
+    }
+
+    public void setIndicatorTriangleWidth(int width) {
+        if (mIndicatorTriangleWidth != width) {
+            mIndicatorTriangleWidth = width;
+            invalidate();
+        }
+    }
+
+    public void setIndicatorTriangleHeight(int height) {
+        if (mIndicatorTriangleHeight != height) {
+            mIndicatorTriangleHeight = height;
+            invalidate();
+        }
+    }
+
+    public void setTextColor(int textColor) {
+        if (mColorStateList.getDefaultColor() != textColor) {
+            mColorStateList = ColorStateList.valueOf(textColor);
+            invalidate();
+        }
         updateItemStyles();
     }
 
@@ -168,7 +257,7 @@ public class SlideSelectScrollView extends ScrollLayout {
         }
     }
 
-    public void setLayoutParams(WidgetLayout.LayoutParams lp) {
+    public void setLayoutParams(LayoutParams lp) {
         mItemLayoutParams = lp;
     }
 
@@ -177,7 +266,7 @@ public class SlideSelectScrollView extends ScrollLayout {
         boolean isViewTab = (provider instanceof ItemProvider.ViewProvider);
         for (int i = 0; i < count; i++) {
             if (isViewTab) {
-                addItem(i, ((ItemProvider.ViewProvider) provider).getView(i, null, SlideSelectScrollView.this));
+                addItem(i, ((ItemProvider.ViewProvider) provider).getView(i, null, SlideSelectView.this));
             } else {
                 CharSequence label = provider.getTitle(i);
                 addItem(i, makeItem(label));
@@ -229,10 +318,8 @@ public class SlideSelectScrollView extends ScrollLayout {
         if (textScale != 0) {
             textView.setTextSize(TypedValue.COMPLEX_UNIT_PX, mTextSize * textScale);
         }
-        if (mTextColorResId != 0) {
-            textView.setTextColor(getContext().getResources().getColorStateList(mTextColorResId));
-        } else if (mTextColor != 0) {
-            textView.setTextColor(mTextColor);
+        if (mColorStateList != null) {
+            textView.setTextColor(mColorStateList);
         }
     }
 
@@ -250,7 +337,7 @@ public class SlideSelectScrollView extends ScrollLayout {
     }
 
     private int getViewWidthWithInsetMargin(View view) {
-        WidgetLayout.LayoutParams lp = view == null ? null : (LayoutParams) view.getLayoutParams();
+        LayoutParams lp = view == null ? null : (LayoutParams) view.getLayoutParams();
         return lp == null ? 0 : lp.width(view);
     }
 
@@ -323,7 +410,7 @@ public class SlideSelectScrollView extends ScrollLayout {
     }
 
     @Override
-    protected boolean fling(ScrollLayout.FlingScroller scroller, int velocityX, int velocityY) {
+    protected boolean fling(FlingScroller scroller, int velocityX, int velocityY) {
         boolean handled = super.fling(scroller, velocityX, velocityY);
         if (handled) {
             scroller.stop();
@@ -389,7 +476,7 @@ public class SlideSelectScrollView extends ScrollLayout {
             View view = getItemView(position);
             if (view != null) {
                 int offsetX = offsetX(view, true, true) - scrollX;
-                float offsetPercent = offsetX / ((float) ((WidgetLayout.LayoutParams) view.getLayoutParams()).width(view) / 2);
+                float offsetPercent = offsetX / ((float) ((LayoutParams) view.getLayoutParams()).width(view) / 2);
                 if (mListener != null) {
                     mListener.onItemFling(position, offsetPercent);
                 }
@@ -400,12 +487,12 @@ public class SlideSelectScrollView extends ScrollLayout {
     }
 
     private void updateViewWhileFling(View view, int index, float percent, boolean selected) {
-        if ((mSelectColor != 0 || mSelectScale > 0) && (view instanceof TextView)) {
+        if ((mSelectedColorStateList != null || mSelectScale > 0) && (view instanceof TextView)) {
             TextView textView = (TextView) view;
             TextView textViewPrevious = mPreviousView == null ? null : mPreviousView.get();
             if (selected) {
-                if (mSelectColor != 0) {
-                    textView.setTextColor(mSelectColor);
+                if (mSelectedColorStateList != null) {
+                    textView.setTextColor(mSelectedColorStateList);
                 }
                 if (mSelectScale != 0) {
                     textView.setTextSize(TypedValue.COMPLEX_UNIT_PX, mTextSize * mSelectScale);
@@ -414,12 +501,12 @@ public class SlideSelectScrollView extends ScrollLayout {
                 if (mSelectScale != 0) {
                     updateItemText(textView, 1 + Math.max(0, 1 - Math.abs(percent)) * (mSelectScale - 1));
                 }
-                if (mCurrentPosition == index && mSelectColor != 0) {
-                    textView.setTextColor(mSelectColor);
+                if (mCurrentPosition == index && mSelectedColorStateList != null) {
+                    textView.setTextColor(mSelectedColorStateList);
                 }
             }
             if (textViewPrevious == null || textViewPrevious != textView) {
-                if(textViewPrevious!=null){
+                if (textViewPrevious != null) {
                     updateItemText(textViewPrevious, 1);
                 }
                 mPreviousView = new WeakReference(textView);
@@ -443,7 +530,7 @@ public class SlideSelectScrollView extends ScrollLayout {
                 if (++itemIndex == 0) {
                     finalCentre += (child.getLeft() + child.getWidth() / 2);
                 }
-                WidgetLayout.LayoutParams lp = (LayoutParams) child.getLayoutParams();
+                LayoutParams lp = (LayoutParams) child.getLayoutParams();
                 int viewLeft = child.getLeft() - lp.leftMargin();
                 int viewRight = child.getRight() + lp.rightMargin();
                 if (finalCentre < viewLeft) {

@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <declare-styleable name="SlideSelectView">
+        <!--底部指示线-->
+        <attr name="indicatorColor" />
+        <attr name="indicatorHeight" />
+        <attr name="indicatorWidth" />
+        <attr name="indicatorTriangleWidth" format="dimension" />
+        <attr name="indicatorTriangleHeight" format="dimension" />
+
+        <!--item 文字颜色-->
+        <attr name="android:textSize" format="dimension" />
+        <attr name="android:textColor" format="reference|color" />
+        <attr name="selectedTextScale" format="float" />
+        <attr name="selectedTextColor" format="reference|color" />
+
+        <!-- item 的最小 Padding 设置-->
+        <attr name="itemMinPaddingTop" />
+        <attr name="itemMinPaddingBottom" />
+        <attr name="itemMinPaddingHorizontal" />
+
+    </declare-styleable>
+</resources>
