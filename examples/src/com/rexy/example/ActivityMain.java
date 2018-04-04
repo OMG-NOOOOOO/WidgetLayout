@@ -77,12 +77,12 @@ public class ActivityMain extends BaseActivity implements View.OnClickListener {
         });
         mSlideSelectView.setSlideSelectListener(new SlideSelectView.SlideSelectListener() {
             @Override
-            public void onItemSelected(int selectedIndex, int previousIndex) {
+            public void onItemSelected(int selectedIndex, int previousIndex,ViewGroup p) {
                 mTvIndicator.setText(String.format("itemSelected(current=%d,previous=%d)",selectedIndex,previousIndex));
             }
 
             @Override
-            public void onItemFling(int index, float offsetPercent) {
+            public void onItemFling(int index, float offsetPercent,ViewGroup p) {
                 mTvIndicator.setText(String.format("itemFling(selected=%d,index=%d,offset=%.2f)",mSlideSelectView.getSelectedIndex(),index,offsetPercent));
             }
         });

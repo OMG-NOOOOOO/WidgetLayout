@@ -575,8 +575,7 @@ public class ScrollLayout extends WidgetLayout implements ScrollingView, NestedS
                         printDev("fling", String.format("velocityX=%d,velocityY=%d,scrollX,scrollY=%d,rangeX=%d,rangeY=%d", velocityX, velocityY, getScrollX(), getScrollY(), getHorizontalScrollRange(), getVerticalScrollRange()));
                     }
                     mFlingScroller.setScrollEnable(canScrollHorizontal, canScrollVertical);
-                    fling(mFlingScroller, velocityX, velocityY);
-                    return true;
+                    return fling(mFlingScroller, velocityX, velocityY);
                 }
             }
         }
