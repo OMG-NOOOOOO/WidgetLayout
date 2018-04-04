@@ -9,7 +9,6 @@ import android.graphics.Path;
 import android.graphics.Rect;
 import android.os.Build;
 import android.util.AttributeSet;
-import android.util.Log;
 import android.util.TypedValue;
 import android.view.Gravity;
 import android.view.View;
@@ -406,7 +405,7 @@ public class SlideSelectView extends ScrollLayout {
 
     @Override
     protected int formatDuration(int duration) {
-        return Math.max(0, Math.min(Math.max(duration, 250), 800));
+        return Math.max(0, Math.min(Math.max((int) (duration * 1.5f), 250), 800));
     }
 
     @Override
@@ -454,14 +453,9 @@ public class SlideSelectView extends ScrollLayout {
         return adjust;
     }
 
-    private void print(CharSequence msg) {
-        Log.d("selectView", msg.toString());
-    }
-
     @Override
     protected void onScrollStateChanged(int newState, int prevState) {
         super.onScrollStateChanged(newState, prevState);
-        print(String.format("state changed from %d to %d", prevState, newState));
         if (newState == OnScrollChangeListener.SCROLL_STATE_IDLE) {
             setSelectedItem(getAdjustSelectItem(getScrollX()), true);
         }
@@ -480,7 +474,6 @@ public class SlideSelectView extends ScrollLayout {
                 if (mListener != null) {
                     mListener.onItemFling(position, offsetPercent);
                 }
-                print(String.format("scroll changed selected=%d,index=%d,offset=.2f", mCurrentPosition, position, offsetPercent));
                 updateViewWhileFling(view, position, offsetPercent, offsetPercent == 0);
             }
         }
