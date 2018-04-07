@@ -169,6 +169,7 @@ public class SlideSelectView extends ScrollLayout {
         if (mSelectedColorStateList == null) {
             mSelectedColorStateList = ColorStateList.valueOf(mDefaultSelectedTextColor);
         }
+        setLogTag("selectView", false);
     }
 
     public void setTextSize(int textSize) {
@@ -410,14 +411,28 @@ public class SlideSelectView extends ScrollLayout {
     protected void cancelTouch(boolean resetToIdle) {
         int fling = 0;
         if (OnScrollChangeListener.SCROLL_STATE_IDLE != getScrollState()) {
-            fling = flingToWhere(0, 0, false);
+            int scrolled = getScrollX();
+            int targetScroll = computeOffset(getItemView(mCurrentPosition), 0, true);
+            if ((fling = targetScroll - scrolled) != 0) {
+                setSelectedItem(mCurrentPosition, true);
+            }
         }
         super.cancelTouch(resetToIdle && fling == 0);
     }
 
     @Override
-    protected int formatDuration(int duration) {
-        return Math.max(0, Math.min(Math.max((int) (duration * 1.5f), 250), 800));
+    protected boolean fling(int movedX, int movedY, int velocityX, int velocityY) {
+        boolean handled = super.fling(movedX, movedY, velocityX, velocityY);
+        if (!handled) {
+            int scrollX = getScrollX();
+            int adjustIndex = getAdjustSelectItem(scrollX);
+            int willScroll = computeOffset(getItemView(adjustIndex), 0, true);
+            if (willScroll != scrollX) {
+                setSelectedItem(adjustIndex, true);
+                handled = true;
+            }
+        }
+        return handled;
     }
 
     @Override
@@ -428,52 +443,25 @@ public class SlideSelectView extends ScrollLayout {
             scroller.stop();
             int scrollX = getScrollX();
             int finalX = scroller.getFinalX();
-            int deltaX = getAdjustFlingDelta(scrollX, finalX);
-            if (deltaX == 0) {
-                handled = false;
+            int adjustIndex = getAdjustSelectItem(scrollX + finalX);
+            if (adjustIndex == mCurrentPosition) {
+                int adjustFinalX = computeOffset(getItemView(adjustIndex), 0, true) - scrollX;
+                if (Math.abs(adjustFinalX) > Math.abs(finalX)) {
+                    int moved = adjustFinalX - finalX;
+                    adjustIndex = flingToWhere(adjustIndex, moved, moved);
+                }
+            }
+            int willScroll = computeOffset(getItemView(adjustIndex), 0, true);
+            if (willScroll == scrollX) {
                 setScrollState(OnScrollChangeListener.SCROLL_STATE_IDLE);
             } else {
-                if (deltaX > 0) {
-                    scroller.setMaxFling(deltaX, 0);
-                } else {
-                    scroller.setMinFling(deltaX, 0);
-                }
-                scroller.fling(velocityX, velocityY);
-                scroller.resetMinMaxFling();
+                setSelectedItem(adjustIndex, true);
             }
+            handled = true;
         }
         return handled;
     }
-
-    private int getAdjustFlingDelta(int scrollX, int finalX) {
-        int adjust = 0;
-        int adjustIndex = getAdjustSelectItem(scrollX + finalX);
-        int deltaX = offsetX(getItemView(adjustIndex), true, true) - scrollX;
-        if (finalX > 0 && deltaX > 0) {
-            if (deltaX < finalX) {
-                adjust = deltaX;
-            } else if (adjustIndex > 0) {
-                adjust = offsetX(getItemView(adjustIndex - 1), true, true) - scrollX;
-            }
-        }
-        if (finalX < 0 && deltaX < 0) {
-            if (deltaX > finalX) {
-                adjust = deltaX;
-            } else if (adjust < getItemViewCount() - 1) {
-                adjust = offsetX(getItemView(adjustIndex + 1), true, true) - scrollX;
-            }
-        }
-        return adjust;
-    }
-
-    @Override
-    protected void onScrollStateChanged(int newState, int prevState) {
-        super.onScrollStateChanged(newState, prevState);
-        if (newState == OnScrollChangeListener.SCROLL_STATE_IDLE) {
-            setSelectedItem(getAdjustSelectItem(getScrollX()), true);
-        }
-    }
-
+    
     @Override
     protected void onScrollChanged(int scrollX, int scrollY, Rect visibleBounds, boolean fromScrollChanged) {
         super.onScrollChanged(scrollX, scrollY, visibleBounds, fromScrollChanged);
@@ -482,7 +470,7 @@ public class SlideSelectView extends ScrollLayout {
             int position = getAdjustSelectItem(scrollX);
             View view = getItemView(position);
             if (view != null) {
-                int offsetX = offsetX(view, true, true) - scrollX;
+                int offsetX = computeOffset(view, 0, true) - scrollX;
                 float offsetPercent = offsetX / ((float) ((LayoutParams) view.getLayoutParams()).width(view) / 2);
                 if (mListener != null) {
                     mListener.onItemFling(position, offsetPercent, this);
@@ -564,42 +552,43 @@ public class SlideSelectView extends ScrollLayout {
         return adjustIndex;
     }
 
-    private int flingToWhere(int moved, int velocity, boolean fling) {
-        int scrolled = getScrollX(), willScroll;
-        if (velocity == 0) {
-            velocity = -(int) Math.signum(moved);
-        }
-        int targetIndex = mCurrentPosition;
-        int itemSize = getViewWidthWithInsetMargin(getItemView(mCurrentPosition));
-        int absVelocity = velocity > 0 ? velocity : -velocity;
-        int pageItemCount = getItemViewCount();
+    private int flingToWhere(int current, int moved, int velocity) {
+        int targetIndex = current;
         if (Math.abs(moved) > mTouchSlop) {
+            if (velocity == 0) {
+                velocity = -(int) Math.signum(moved);
+            }
+            int itemSize = getViewWidthWithInsetMargin(getItemView(current));
+            int absVelocity = velocity > 0 ? velocity : -velocity;
+            int pageItemCount = getItemViewCount();
+
             int halfItemSize = itemSize / 2;
             if (absVelocity > mMinFlingVelocity) {
-                if (velocity > 0 && mCurrentPosition < pageItemCount - 1 && (velocity / 10 - moved) > halfItemSize) {
+                if (velocity > 0 && current < pageItemCount - 1 && (velocity / 10 - moved) > halfItemSize) {
                     targetIndex++;
                 }
-                if (velocity < 0 && mCurrentPosition > 0 && (moved - velocity / 10) > halfItemSize) {
+                if (velocity < 0 && current > 0 && (moved - velocity / 10) > halfItemSize) {
                     targetIndex--;
                 }
             } else {
-                if (moved > halfItemSize && mCurrentPosition > 0) {
+                if (moved > halfItemSize && current > 0) {
                     targetIndex--;
                 }
-                if (moved < -halfItemSize && mCurrentPosition < pageItemCount - 1) {
+                if (moved < -halfItemSize && current < pageItemCount - 1) {
                     targetIndex++;
                 }
             }
         }
-        int targetScroll = computeScrollOffset(getItemView(targetIndex), 0, true);
-        if ((willScroll = targetScroll - scrolled) != 0) {
-            setScrollState(OnScrollChangeListener.SCROLL_STATE_IDLE);
-            setSelectedItem(targetIndex, true);
-        }
-        return willScroll;
+        return targetIndex;
     }
 
-    protected int computeScrollOffset(View child, int offset, boolean centreWithParent) {
+
+    @Override
+    protected int formatDuration(int duration) {
+        return Math.max(0, Math.min(Math.max((int) (duration * 1.5f), 250), 800));
+    }
+
+    protected int computeOffset(View child, int offset, boolean centreWithParent) {
         int scrollRange, targetScroll;
         targetScroll = offsetX(child, centreWithParent, true) + offset;
         scrollRange = getHorizontalScrollRange();
